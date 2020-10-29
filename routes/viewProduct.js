@@ -11,7 +11,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-// import LottieView from 'lottie-react-native';
+import LottieView from 'lottie-react-native';
 import CustomModal from '../shared/modal';
 import FlatButton from '../shared/button';
 import {Rating, AirbnbRating} from 'react-native-ratings';
@@ -242,7 +242,7 @@ function ViewProduct({navigation}) {
           justifyContent: 'center',
           alignItems: 'center',
         }}>
-        {/* <LottieView
+        <LottieView
           source={require('../assets/json/loader2.json')}
           autoPlay
           style={{
@@ -251,7 +251,7 @@ function ViewProduct({navigation}) {
             height: 200,
           }}
           loop
-        /> */}
+        />
       </View>
     );
   } else {

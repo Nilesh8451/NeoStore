@@ -10,7 +10,7 @@ import {
   ImageBackground,
 } from 'react-native';
 import Swiper from 'react-native-swiper';
-// import LottieView from 'lottie-react-native';
+import LottieView from 'lottie-react-native';
 
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
@@ -64,7 +64,7 @@ function Home({navigation}) {
           justifyContent: 'center',
           alignItems: 'center',
         }}>
-        {/* <LottieView
+        <LottieView
           source={require('../assets/json/loader2.json')}
           autoPlay
           style={{
@@ -73,7 +73,7 @@ function Home({navigation}) {
             height: 200,
           }}
           loop
-        /> */}
+        />
       </View>
     );
   } else {
