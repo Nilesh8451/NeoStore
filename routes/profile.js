@@ -5,7 +5,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
-function Profile() {
+function Profile(props) {
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
       <ScrollView>
@@ -135,7 +135,8 @@ function Profile() {
               <Text style={{fontSize: 17, marginLeft: 20}}>My Orders</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => props.navigation.navigate('ChangePassword')}>
             <View
               style={{
                 flexDirection: 'row',
@@ -174,7 +175,8 @@ function Profile() {
             </View>
           </TouchableOpacity>
 
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => props.navigation.navigate('AddAddress')}>
             <View
               style={{
                 flexDirection: 'row',
@@ -213,7 +215,8 @@ function Profile() {
             </View>
           </TouchableOpacity>
 
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => props.navigation.navigate('UpdateAddress')}>
             <View
               style={{
                 flexDirection: 'row',
@@ -246,7 +249,7 @@ function Profile() {
                 />
               </View>
 
-              <Text style={{fontSize: 17, marginLeft: 20}}>Delete Address</Text>
+              <Text style={{fontSize: 17, marginLeft: 20}}>Update Address</Text>
             </View>
           </TouchableOpacity>
         </View>

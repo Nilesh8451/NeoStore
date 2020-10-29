@@ -4,6 +4,9 @@ import {createStackNavigator} from '@react-navigation/stack';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Profile from '../routes/profile';
 import EditProfile from '../routes/editProfile';
+import ChangePassword from '../routes/changePassword';
+import AddAddress from '../routes/addAddress';
+import UpdateAddress from '../routes/updateAddress';
 
 const Stack = createStackNavigator();
 
@@ -55,6 +58,35 @@ function ProfileStack({navigation}) {
         component={EditProfile}
         options={{
           title: 'Edit Profile',
+          headerStyle: {backgroundColor: '#2874F0'},
+          headerTintColor: 'white',
+        }}
+      />
+
+      <Stack.Screen
+        name="ChangePassword"
+        component={ChangePassword}
+        options={{
+          title: 'Change Password',
+          headerStyle: {backgroundColor: '#2874F0'},
+          headerTintColor: 'white',
+        }}
+      />
+      <Stack.Screen
+        name="AddAddress"
+        component={AddAddress}
+        options={{
+          title: 'Add New Address',
+          headerStyle: {backgroundColor: '#2874F0'},
+          headerTintColor: 'white',
+        }}
+      />
+
+      <Stack.Screen
+        name="UpdateAddress"
+        component={UpdateAddress}
+        options={{
+          title: 'Update Address',
           headerStyle: {backgroundColor: '#2874F0'},
           headerTintColor: 'white',
         }}

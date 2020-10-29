@@ -15,47 +15,29 @@ import FlatButton from '../shared/button';
 
 import Toast from 'react-native-simple-toast';
 
-const mySchema = yup.object({
-  optInput: yup
+const placeSchema = yup.object({
+  address: yup.string().required(),
+  pincode: yup
     .string()
     .required()
-    .matches(/^\d{4}$/, 'Must contain only 4 digit number'),
-  password: yup
+    .min(6)
+    .max(6)
+    .matches(/^[0-9]+$/, 'Must contain only digit'),
+  city: yup
     .string()
     .required()
-    .min(8)
-    .max(12)
-    .matches(/^[a-zA-Z0-9_]*$/, 'Must Be Alphanumeric Characters'),
-  confirmPassowrd: yup
+    .matches(/^[a-zA-Z]+$/, 'Must contain only alphabets'),
+  state: yup
     .string()
     .required()
-    .oneOf([yup.ref('password')], 'Must be same as password'),
+    .matches(/^[a-zA-Z]+$/, 'Must contain only alphabets'),
+  country: yup
+    .string()
+    .required()
+    .matches(/^[a-zA-Z]+$/, 'Must contain only alphabets'),
 });
 
-function SetPassword({navigation}) {
-  const [securePassword, setSecurePassword] = useState(true);
-  const [secureCPassword, setSecureCPassword] = useState(true);
-  const [PEyeStyle, setPEyeStyle] = useState('eye-slash');
-  const [CPEyeStyle, setCPEyeStyle] = useState('eye-slash');
-
-  handlePasswordEyeClick = () => {
-    setSecurePassword(!securePassword);
-    if (PEyeStyle === 'eye-slash') {
-      setPEyeStyle('eye');
-    } else {
-      setPEyeStyle('eye-slash');
-    }
-  };
-
-  handleCPasswordEyeClick = () => {
-    setSecureCPassword(!secureCPassword);
-    if (CPEyeStyle === 'eye-slash') {
-      setCPEyeStyle('eye');
-    } else {
-      setCPEyeStyle('eye-slash');
-    }
-  };
-
+function AddAddress({navigation}) {
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -63,27 +45,26 @@ function SetPassword({navigation}) {
           <View style={styles.container}>
             <Formik
               initialValues={{
-                optInput: '',
-                password: '',
-                confirmPassowrd: '',
+                address: '',
+                pincode: '',
+                city: '',
+                state: '',
+                country: '',
               }}
-              validationSchema={mySchema}
+              validationSchema={placeSchema}
               onSubmit={(values, action) => {
                 console.log(values);
-                Toast.show('Your Password Changed Successfully', Toast.LONG);
+                Toast.show('Address Added Successfully', Toast.LONG);
                 navigation.popToTop();
                 action.resetForm();
               }}>
               {(formikProps) => (
                 <View style={styles.mainDiv}>
-                  <Text style={styles.companyName}>
-                    Neo<Text style={{color: '#2874F0'}}>STORE</Text>
-                  </Text>
                   <View style={styles.card}>
                     <View style={styles.cardContent}>
-                      <View>
+                      <View style={{justifyContent: 'center'}}>
                         <FontAwesome5
-                          name={'key'}
+                          name={'address-card'}
                           color={'black'}
                           solid
                           size={18}
@@ -97,25 +78,25 @@ function SetPassword({navigation}) {
                         />
                         <TextInput
                           style={styles.input}
-                          keyboardType="number-pad"
-                          placeholder="Enter OTP"
-                          value={formikProps.values.optInput}
-                          onChangeText={formikProps.handleChange('optInput')}
-                          onBlur={formikProps.handleBlur('optInput')}
+                          placeholder="Enter Your Address"
+                          multiline
+                          value={formikProps.values.address}
+                          onChangeText={formikProps.handleChange('address')}
+                          onBlur={formikProps.handleBlur('address')}
                         />
 
-                        {formikProps.touched.optInput &&
-                          formikProps.errors.optInput && (
+                        {formikProps.touched.address &&
+                          formikProps.errors.address && (
                             <Text style={styles.errorText}>
-                              {formikProps.touched.optInput &&
-                                formikProps.errors.optInput}
+                              {formikProps.touched.address &&
+                                formikProps.errors.address}
                             </Text>
                           )}
                       </View>
                       <View>
                         <View style={{justifyContent: 'center'}}>
                           <FontAwesome5
-                            name={'lock'}
+                            name={'map-pin'}
                             color={'black'}
                             solid
                             size={18}
@@ -125,36 +106,23 @@ function SetPassword({navigation}) {
                               top: 35,
                               opacity: 0.5,
                             }}
-                            onPress={() => handleEyeClick()}
+                            onPress={() => {}}
                           />
                           <TextInput
                             style={styles.input}
-                            placeholder="Enter New Password"
-                            secureTextEntry={securePassword}
-                            value={formikProps.values.password}
-                            onChangeText={formikProps.handleChange('password')}
-                            onBlur={formikProps.handleBlur('password')}
-                          />
-                          <FontAwesome5
-                            name={PEyeStyle}
-                            color={'black'}
-                            solid
-                            size={18}
-                            style={{
-                              position: 'absolute',
-                              right: 13,
-                              paddingTop: 18,
-                              opacity: 0.6,
-                            }}
-                            onPress={() => handlePasswordEyeClick()}
+                            keyboardType="number-pad"
+                            placeholder="Enter Your Pin Code"
+                            value={formikProps.values.pincode}
+                            onChangeText={formikProps.handleChange('pincode')}
+                            onBlur={formikProps.handleBlur('pincode')}
                           />
                         </View>
 
-                        {formikProps.touched.password &&
-                          formikProps.errors.password && (
+                        {formikProps.touched.pincode &&
+                          formikProps.errors.pincode && (
                             <Text style={styles.errorText}>
-                              {formikProps.touched.password &&
-                                formikProps.errors.password}
+                              {formikProps.touched.pincode &&
+                                formikProps.errors.pincode}
                             </Text>
                           )}
                       </View>
@@ -162,7 +130,7 @@ function SetPassword({navigation}) {
                       <View>
                         <View style={{justifyContent: 'center'}}>
                           <FontAwesome5
-                            name={'lock'}
+                            name={'city'}
                             color={'black'}
                             solid
                             size={18}
@@ -172,38 +140,88 @@ function SetPassword({navigation}) {
                               top: 35,
                               opacity: 0.5,
                             }}
-                            onPress={() => handleEyeClick()}
+                            onPress={() => {}}
                           />
                           <TextInput
                             style={styles.input}
-                            placeholder="Enter Password Again"
-                            secureTextEntry={secureCPassword}
-                            value={formikProps.values.confirmPassowrd}
-                            onChangeText={formikProps.handleChange(
-                              'confirmPassowrd',
-                            )}
-                            onBlur={formikProps.handleBlur('confirmPassowrd')}
+                            placeholder="Enter Your City Name"
+                            value={formikProps.values.city}
+                            onChangeText={formikProps.handleChange('city')}
+                            onBlur={formikProps.handleBlur('city')}
                           />
+                        </View>
+
+                        {formikProps.touched.city &&
+                          formikProps.errors.city && (
+                            <Text style={styles.errorText}>
+                              {formikProps.touched.city &&
+                                formikProps.errors.city}
+                            </Text>
+                          )}
+                      </View>
+
+                      <View>
+                        <View style={{justifyContent: 'center'}}>
                           <FontAwesome5
-                            name={CPEyeStyle}
+                            name={'playstation'}
                             color={'black'}
                             solid
                             size={18}
                             style={{
-                              position: 'absolute',
-                              right: 13,
-                              paddingTop: 18,
-                              opacity: 0.6,
+                              position: 'relative',
+                              left: 13,
+                              top: 35,
+                              opacity: 0.5,
                             }}
-                            onPress={() => handleCPasswordEyeClick()}
+                            onPress={() => {}}
+                          />
+                          <TextInput
+                            style={styles.input}
+                            placeholder="Enter Your State Name"
+                            value={formikProps.values.state}
+                            onChangeText={formikProps.handleChange('state')}
+                            onBlur={formikProps.handleBlur('state')}
                           />
                         </View>
 
-                        {formikProps.touched.confirmPassowrd &&
-                          formikProps.errors.confirmPassowrd && (
+                        {formikProps.touched.state &&
+                          formikProps.errors.state && (
                             <Text style={styles.errorText}>
-                              {formikProps.touched.confirmPassowrd &&
-                                formikProps.errors.confirmPassowrd}
+                              {formikProps.touched.state &&
+                                formikProps.errors.state}
+                            </Text>
+                          )}
+                      </View>
+
+                      <View>
+                        <View style={{justifyContent: 'center'}}>
+                          <FontAwesome5
+                            name={'flag'}
+                            color={'black'}
+                            solid
+                            size={18}
+                            style={{
+                              position: 'relative',
+                              left: 13,
+                              top: 35,
+                              opacity: 0.5,
+                            }}
+                            onPress={() => {}}
+                          />
+                          <TextInput
+                            style={styles.input}
+                            placeholder="Enter Your Country Name"
+                            value={formikProps.values.country}
+                            onChangeText={formikProps.handleChange('country')}
+                            onBlur={formikProps.handleBlur('country')}
+                          />
+                        </View>
+
+                        {formikProps.touched.country &&
+                          formikProps.errors.country && (
+                            <Text style={styles.errorText}>
+                              {formikProps.touched.country &&
+                                formikProps.errors.country}
                             </Text>
                           )}
                       </View>
@@ -211,7 +229,7 @@ function SetPassword({navigation}) {
                       <View style={styles.buttonDiv}>
                         <View style={styles.button}>
                           <FlatButton
-                            title="SUBMIT"
+                            title="Submit"
                             // color="#f01d71"
                             disabled={!formikProps.isValid}
                             color={!formikProps.isValid ? 'gray' : '#2874F0'}
@@ -277,7 +295,7 @@ const styles = StyleSheet.create({
     borderColor: 'gray',
     padding: 12,
     fontSize: 16,
-    paddingLeft: 40,
+    paddingLeft: 45,
     paddingRight: 40,
     borderRadius: 2,
   },
@@ -329,4 +347,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SetPassword;
+export default AddAddress;

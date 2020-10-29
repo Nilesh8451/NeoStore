@@ -16,10 +16,12 @@ import FlatButton from '../shared/button';
 import Toast from 'react-native-simple-toast';
 
 const mySchema = yup.object({
-  optInput: yup
+  oldPassword: yup
     .string()
     .required()
-    .matches(/^\d{4}$/, 'Must contain only 4 digit number'),
+    .min(8)
+    .max(12)
+    .matches(/^[a-zA-Z0-9_]*$/, 'Must Be Alphanumeric Characters'),
   password: yup
     .string()
     .required()
@@ -32,13 +34,24 @@ const mySchema = yup.object({
     .oneOf([yup.ref('password')], 'Must be same as password'),
 });
 
-function SetPassword({navigation}) {
+function ChangePassword({navigation}) {
+  const [secureOldPassword, setSecureOldPassword] = useState(true);
   const [securePassword, setSecurePassword] = useState(true);
   const [secureCPassword, setSecureCPassword] = useState(true);
+  const [OPEyeStyle, setOPEyeStyle] = useState('eye-slash');
   const [PEyeStyle, setPEyeStyle] = useState('eye-slash');
   const [CPEyeStyle, setCPEyeStyle] = useState('eye-slash');
 
-  handlePasswordEyeClick = () => {
+  const handleOPasswordEyeClick = () => {
+    setSecureOldPassword(!secureOldPassword);
+    if (OPEyeStyle === 'eye-slash') {
+      setOPEyeStyle('eye');
+    } else {
+      setOPEyeStyle('eye-slash');
+    }
+  };
+
+  const handlePasswordEyeClick = () => {
     setSecurePassword(!securePassword);
     if (PEyeStyle === 'eye-slash') {
       setPEyeStyle('eye');
@@ -47,7 +60,7 @@ function SetPassword({navigation}) {
     }
   };
 
-  handleCPasswordEyeClick = () => {
+  const handleCPasswordEyeClick = () => {
     setSecureCPassword(!secureCPassword);
     if (CPEyeStyle === 'eye-slash') {
       setCPEyeStyle('eye');
@@ -63,7 +76,7 @@ function SetPassword({navigation}) {
           <View style={styles.container}>
             <Formik
               initialValues={{
-                optInput: '',
+                oldPassword: '',
                 password: '',
                 confirmPassowrd: '',
               }}
@@ -76,14 +89,11 @@ function SetPassword({navigation}) {
               }}>
               {(formikProps) => (
                 <View style={styles.mainDiv}>
-                  <Text style={styles.companyName}>
-                    Neo<Text style={{color: '#2874F0'}}>STORE</Text>
-                  </Text>
                   <View style={styles.card}>
                     <View style={styles.cardContent}>
                       <View>
                         <FontAwesome5
-                          name={'key'}
+                          name={'lock'}
                           color={'black'}
                           solid
                           size={18}
@@ -97,18 +107,31 @@ function SetPassword({navigation}) {
                         />
                         <TextInput
                           style={styles.input}
-                          keyboardType="number-pad"
-                          placeholder="Enter OTP"
-                          value={formikProps.values.optInput}
-                          onChangeText={formikProps.handleChange('optInput')}
-                          onBlur={formikProps.handleBlur('optInput')}
+                          placeholder="Enter OLD Password"
+                          secureTextEntry={secureOldPassword}
+                          value={formikProps.values.oldPassword}
+                          onChangeText={formikProps.handleChange('oldPassword')}
+                          onBlur={formikProps.handleBlur('oldPassword')}
                         />
-
-                        {formikProps.touched.optInput &&
-                          formikProps.errors.optInput && (
+                        <FontAwesome5
+                          name={OPEyeStyle}
+                          color={'black'}
+                          solid
+                          size={18}
+                          style={{
+                            position: 'absolute',
+                            right: 13,
+                            //   paddingTop: 18,
+                            top: 35,
+                            opacity: 0.6,
+                          }}
+                          onPress={() => handleOPasswordEyeClick()}
+                        />
+                        {formikProps.touched.oldPassword &&
+                          formikProps.errors.oldPassword && (
                             <Text style={styles.errorText}>
-                              {formikProps.touched.optInput &&
-                                formikProps.errors.optInput}
+                              {formikProps.touched.oldPassword &&
+                                formikProps.errors.oldPassword}
                             </Text>
                           )}
                       </View>
@@ -211,7 +234,7 @@ function SetPassword({navigation}) {
                       <View style={styles.buttonDiv}>
                         <View style={styles.button}>
                           <FlatButton
-                            title="SUBMIT"
+                            title="Update Password"
                             // color="#f01d71"
                             disabled={!formikProps.isValid}
                             color={!formikProps.isValid ? 'gray' : '#2874F0'}
@@ -329,4 +352,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SetPassword;
+export default ChangePassword;

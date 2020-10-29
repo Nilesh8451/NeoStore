@@ -19,83 +19,85 @@ const mySchema = yup.object({
 
 function ForgotPassword({navigation}) {
   return (
-    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <ScrollView>
-        <View style={styles.container}>
-          <Formik
-            initialValues={{
-              email: '',
-            }}
-            validationSchema={mySchema}
-            onSubmit={(values, action) => {
-              console.log(values);
-              navigation.navigate('SetPassword');
-              action.resetForm();
-            }}>
-            {(formikProps) => (
-              <View style={styles.mainDiv}>
-                <Text style={styles.companyName}>
-                  Neo<Text style={{color: '#2874F0'}}>STORE</Text>
-                </Text>
-                <View style={styles.card}>
-                  <View style={styles.cardContent}>
-                    <View>
-                      <Text
-                        style={{
-                          marginLeft: 7,
-                          fontSize: 19,
-                          marginBottom: -7,
-                        }}>
-                        Forgot Password?
-                      </Text>
-                      <FontAwesome5
-                        name={'envelope'}
-                        color={'black'}
-                        solid
-                        size={18}
-                        style={{
-                          position: 'relative',
-                          left: 13,
-                          top: 35,
-                          opacity: 0.5,
-                        }}
-                        onPress={() => handleEyeClick()}
-                      />
-                      <TextInput
-                        style={styles.input}
-                        placeholder="Enter Email"
-                        value={formikProps.values.email}
-                        onChangeText={formikProps.handleChange('email')}
-                        onBlur={formikProps.handleBlur('email')}
-                      />
-
-                      {formikProps.touched.email &&
-                        formikProps.errors.email && (
-                          <Text style={styles.errorText}>
-                            {formikProps.touched.email &&
-                              formikProps.errors.email}
-                          </Text>
-                        )}
-                    </View>
-                    <View style={styles.buttonDiv}>
-                      <View style={styles.button}>
-                        <FlatButton
-                          title="SUBMIT"
-                          // color="#f01d71"
-                          disabled={!formikProps.isValid}
-                          color={!formikProps.isValid ? 'gray' : '#2874F0'}
-                          onPress={formikProps.handleSubmit}
+    <View style={{flex: 1, backgroundColor: 'white'}}>
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+        <ScrollView>
+          <View style={styles.container}>
+            <Formik
+              initialValues={{
+                email: '',
+              }}
+              validationSchema={mySchema}
+              onSubmit={(values, action) => {
+                console.log(values);
+                navigation.navigate('SetPassword');
+                action.resetForm();
+              }}>
+              {(formikProps) => (
+                <View style={styles.mainDiv}>
+                  <Text style={styles.companyName}>
+                    Neo<Text style={{color: '#2874F0'}}>STORE</Text>
+                  </Text>
+                  <View style={styles.card}>
+                    <View style={styles.cardContent}>
+                      <View>
+                        <Text
+                          style={{
+                            marginLeft: 7,
+                            fontSize: 19,
+                            marginBottom: -7,
+                          }}>
+                          Forgot Password?
+                        </Text>
+                        <FontAwesome5
+                          name={'envelope'}
+                          color={'black'}
+                          solid
+                          size={18}
+                          style={{
+                            position: 'relative',
+                            left: 13,
+                            top: 35,
+                            opacity: 0.5,
+                          }}
+                          onPress={() => handleEyeClick()}
                         />
+                        <TextInput
+                          style={styles.input}
+                          placeholder="Enter Email"
+                          value={formikProps.values.email}
+                          onChangeText={formikProps.handleChange('email')}
+                          onBlur={formikProps.handleBlur('email')}
+                        />
+
+                        {formikProps.touched.email &&
+                          formikProps.errors.email && (
+                            <Text style={styles.errorText}>
+                              {formikProps.touched.email &&
+                                formikProps.errors.email}
+                            </Text>
+                          )}
+                      </View>
+                      <View style={styles.buttonDiv}>
+                        <View style={styles.button}>
+                          <FlatButton
+                            title="SUBMIT"
+                            // color="#f01d71"
+                            disabled={!formikProps.isValid}
+                            color={!formikProps.isValid ? 'gray' : '#2874F0'}
+                            onPress={formikProps.handleSubmit}
+                          />
+                        </View>
                       </View>
                     </View>
                   </View>
                 </View>
-              </View>
-            )}
-          </Formik>
-        </View>
-      </ScrollView>
-    </TouchableWithoutFeedback>
+              )}
+            </Formik>
+          </View>
+        </ScrollView>
+      </TouchableWithoutFeedback>
+    </View>
   );
 }
 
