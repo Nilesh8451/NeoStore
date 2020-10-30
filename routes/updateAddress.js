@@ -6,30 +6,34 @@ import {
   StyleSheet,
   TouchableWithoutFeedback,
   Alert,
+  Image,
 } from 'react-native';
 import FlatButton from '../shared/button';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Toast from 'react-native-simple-toast';
 
-function UpdateAddress() {
+function UpdateAddress(props) {
   const [userAddress, setUserAddress] = useState([
     {
       address:
         '201/A, sai sheena park, sai baba nagar, navghar road, bhayander East',
       city: 'Mumbai',
       pincode: '401051',
+      state: 'maharashtra',
       country: 'India',
     },
     {
       address: '201/A, sai sheena park',
       city: 'Mumbai',
       pincode: '401051',
+      state: 'gujrat',
       country: 'India',
     },
     {
       address: '201/A, sai sheena park, sai baba nagar',
       city: 'Mumbai',
       pincode: '401051',
+      state: 'delhi',
       country: 'India',
     },
   ]);
@@ -49,7 +53,7 @@ function UpdateAddress() {
     ]);
   };
 
-  return (
+  return userAddress.length > 0 ? (
     <View
       style={{
         flex: 1,
@@ -70,9 +74,14 @@ function UpdateAddress() {
                 <FlatButton
                   title="Edit"
                   disabled={false}
-                  paddingVertical={7}
+                  paddingVertical={5}
+                  paddingHorizontal={12}
                   color={'#2874F0'}
-                  onPress={() => {}}
+                  onPress={() => {
+                    props.navigation.navigate('EditAddress', {
+                      address: add,
+                    });
+                  }}
                 />
               </View>
               <TouchableWithoutFeedback
@@ -85,14 +94,14 @@ function UpdateAddress() {
                     position: 'absolute',
                     right: 20,
                     top: 20,
-                    padding: 5,
-                    backgroundColor: 'red',
+                    padding: 4,
+                    backgroundColor: '#EE5233',
                   }}>
                   <FontAwesome5
                     name={'times'}
                     color={'black'}
                     solid
-                    size={18}
+                    size={16}
                     style={{
                       opacity: 0.9,
                       color: 'white',
@@ -104,6 +113,27 @@ function UpdateAddress() {
           ))}
         </View>
       </ScrollView>
+    </View>
+  ) : (
+    <View style={styles.container}>
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: 'white',
+          marginHorizontal: 10,
+          marginVertical: 10,
+          paddingVertical: 30,
+          // justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <Image
+          source={require('../assets/images/emptycart.png')}
+          style={{width: 70, height: 70, opacity: 0.9}}
+        />
+        <Text style={{fontSize: 18, marginTop: 10}}>
+          YOU HAVEN'T ADDED ANY ADDRESS YET
+        </Text>
+      </View>
     </View>
   );
 }

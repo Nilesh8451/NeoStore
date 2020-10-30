@@ -13,7 +13,12 @@ const Drawer = createDrawerNavigator();
 function App() {
   return (
     <NavigationContainer>
-      <Drawer.Navigator initialRouteName="ProfileDrawer">
+      <Drawer.Navigator initialRouteName="HomeDrawer">
+        <Drawer.Screen
+          name="HomeDrawer"
+          component={HomeStack}
+          options={{title: 'Home'}}
+        />
         <Drawer.Screen
           name="LoginDrawer"
           component={LoginStack}
@@ -23,11 +28,6 @@ function App() {
           name="RegisterDrawer"
           component={RegisterStack}
           options={{title: 'Register'}}
-        />
-        <Drawer.Screen
-          name="HomeDrawer"
-          component={HomeStack}
-          options={{title: 'Home'}}
         />
         <Drawer.Screen
           name="ProfileDrawer"

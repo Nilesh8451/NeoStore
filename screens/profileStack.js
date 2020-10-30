@@ -7,6 +7,9 @@ import EditProfile from '../routes/editProfile';
 import ChangePassword from '../routes/changePassword';
 import AddAddress from '../routes/addAddress';
 import UpdateAddress from '../routes/updateAddress';
+import EditAddress from '../routes/editAddress';
+import MyOrders from '../routes/myOrders';
+import OrderDetail from '../routes/orderDetail';
 
 const Stack = createStackNavigator();
 
@@ -54,6 +57,16 @@ function ProfileStack({navigation}) {
       />
 
       <Stack.Screen
+        name="MyOrders"
+        component={MyOrders}
+        options={{
+          title: 'My Orders',
+          headerStyle: {backgroundColor: '#2874F0'},
+          headerTintColor: 'white',
+        }}
+      />
+
+      <Stack.Screen
         name="EditProfile"
         component={EditProfile}
         options={{
@@ -90,6 +103,26 @@ function ProfileStack({navigation}) {
           headerStyle: {backgroundColor: '#2874F0'},
           headerTintColor: 'white',
         }}
+      />
+
+      <Stack.Screen
+        name="EditAddress"
+        component={EditAddress}
+        options={{
+          title: 'Edit Address',
+          headerStyle: {backgroundColor: '#2874F0'},
+          headerTintColor: 'white',
+        }}
+      />
+
+      <Stack.Screen
+        name="OrderDetail"
+        component={OrderDetail}
+        options={({route}) => ({
+          title: `${route.params.order_id}`,
+          headerStyle: {backgroundColor: '#2874F0'},
+          headerTintColor: 'white',
+        })}
       />
     </Stack.Navigator>
   );

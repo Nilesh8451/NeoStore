@@ -8,13 +8,37 @@ import {
   Image,
   TouchableOpacity,
   ImageBackground,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from 'react-native';
 import Swiper from 'react-native-swiper';
 import LottieView from 'lottie-react-native';
-
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
+
 function Home({navigation}) {
+  const [searchInput, setSearchInput] = useState('');
+
+  const [searchResult, setSearchResult] = useState([
+    {product_name: 'Bed with nano material', id: '1'},
+    {
+      product_name: 'Bed some product of newly added into database asd',
+      id: '2',
+    },
+    {product_name: 'Bad Products with Opacity of 11', id: '3'},
+    {product_name: 'Iphone 11', id: '4'},
+    {product_name: 'Iphone 11', id: '5'},
+    {product_name: 'Iphone 11', id: '6'},
+    {product_name: 'Iphone 11', id: '7'},
+    {product_name: 'Iphone 11', id: '8'},
+    {product_name: 'Iphone 11', id: '9'},
+    {product_name: 'Iphone 11', id: '10'},
+    {product_name: 'Iphone 11', id: '14'},
+    {product_name: 'Iphone 11', id: '24'},
+    {product_name: 'Iphone 11', id: '34'},
+    {product_name: 'Iphone 11', id: '44'},
+    {product_name: 'Iphone 11', id: '54'},
+  ]);
+
   const [popularProd, setPopularProd] = useState([
     {
       id: 1,
@@ -80,11 +104,17 @@ function Home({navigation}) {
     return (
       <View style={styles.container}>
         <ScrollView
-          contentContainerStyle={{
-            // flex: 1,
-            // paddingVertical: 60,
-            backgroundColor: 'pink',
-          }}>
+          keyboardDismissMode={searchInput.length > 0 ? 'on-drag' : 'none'}
+          keyboardShouldPersistTaps={
+            searchInput.length > 0 ? 'always' : 'never'
+          }
+          contentContainerStyle={
+            {
+              // flex: 1,
+              // paddingVertical: 60,
+              // backgroundColor: 'pink',
+            }
+          }>
           <View style={styles.searchBox}>
             <View
               style={{
@@ -110,138 +140,235 @@ function Home({navigation}) {
               <TextInput
                 style={styles.input}
                 placeholder="Email"
-                // value={formikProps.values.email}
-                // onChangeText={formikProps.handleChange('email')}
-                // onBlur={formikProps.handleBlur('email')}
+                value={searchInput}
+                onChangeText={(val) => setSearchInput(val)}
               />
             </View>
           </View>
-          <View style={{width: '100%', backgroundColor: '#2874F0'}}>
-            <View style={styles.sliderContainer}>
-              <Swiper
-                autoplay
-                horizontal={true}
-                height={200}
-                activeDotColor="#FF6347">
-                <View style={styles.slide}>
-                  <TouchableOpacity>
-                    <Image
-                      source={require('../assets/images/food-banner1.jpg')}
-                      resizeMode="cover"
-                      style={styles.sliderImage}
-                    />
-                  </TouchableOpacity>
+          {searchInput.length === 0 ? (
+            <View>
+              <View style={{width: '100%', backgroundColor: '#2874F0'}}>
+                <View style={styles.sliderContainer}>
+                  <Swiper
+                    autoplay
+                    horizontal={true}
+                    height={200}
+                    activeDotColor="#FF6347">
+                    <View style={styles.slide}>
+                      <TouchableOpacity>
+                        <Image
+                          source={require('../assets/images/food-banner1.jpg')}
+                          resizeMode="cover"
+                          style={styles.sliderImage}
+                        />
+                      </TouchableOpacity>
+                    </View>
+
+                    <View style={styles.slide}>
+                      <TouchableOpacity>
+                        <Image
+                          source={require('../assets/images/food-banner2.jpg')}
+                          resizeMode="cover"
+                          style={styles.sliderImage}
+                        />
+                      </TouchableOpacity>
+                    </View>
+                    <View style={styles.slide}>
+                      <TouchableOpacity>
+                        <Image
+                          source={require('../assets/images/food-banner3.jpg')}
+                          resizeMode="cover"
+                          style={styles.sliderImage}
+                        />
+                      </TouchableOpacity>
+                    </View>
+                  </Swiper>
+                </View>
+              </View>
+
+              <View style={styles.popularProducts}>
+                <View style={styles.popularProductsHeader}>
+                  <Text style={{fontSize: 18}}>Popular Products</Text>
+                  <TouchableWithoutFeedback
+                    onPress={() => {
+                      navigation.navigate('ViewProduct');
+                      console.log('clicked on view all');
+                    }}>
+                    <Text style={{fontSize: 17, marginTop: 10}}>View All</Text>
+                  </TouchableWithoutFeedback>
                 </View>
 
-                <View style={styles.slide}>
-                  <TouchableOpacity>
-                    <Image
-                      source={require('../assets/images/food-banner2.jpg')}
-                      resizeMode="cover"
-                      style={styles.sliderImage}
-                    />
-                  </TouchableOpacity>
+                <View style={styles.productCardContainer}>
+                  {popularProd.map((product, index) => (
+                    <TouchableWithoutFeedback
+                      key={product.id}
+                      onPress={() => {
+                        console.log('Clicked on Card');
+                        navigation.navigate('ProductDetail', {
+                          product_name: product.product_name,
+                          product: product,
+                        });
+                      }}>
+                      <View style={styles.productCardContent}>
+                        <View style={styles.productCard}>
+                          <ImageBackground
+                            source={require('../assets/images/food-banner1.jpg')}
+                            style={{
+                              width: '100%',
+                              height: '100%',
+                              // borderRadius: 20,
+                            }}
+                            resizeMode={'cover'}
+                            borderRadius={6}
+                            imageStyle={{}}>
+                            <View
+                              style={{
+                                flex: 1,
+                                borderRadius: 6,
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent:
+                                  index % 2 ? 'flex-start' : 'flex-end',
+                                backgroundColor: 'rgba( 0, 0, 0, 0.5 )',
+                                shadowColor: '#000',
+                                shadowOffset: {
+                                  width: 0,
+                                  height: 3,
+                                },
+                                shadowOpacity: 0.27,
+                                shadowRadius: 4.65,
+
+                                elevation: 3,
+                              }}>
+                              <View
+                                style={{
+                                  marginLeft: index % 2 && 30,
+                                  marginRight: index % 2 ? 0 : 30,
+                                  alignItems:
+                                    index % 2 ? 'flex-start' : 'flex-end',
+                                  maxWidth: 200,
+                                }}>
+                                <Text
+                                  style={{
+                                    fontSize: 20,
+                                    color: 'white',
+                                    fontWeight: 'bold',
+                                  }}
+                                  numberOfLines={1}>
+                                  {product.product_name}
+                                </Text>
+                                <Text
+                                  style={{
+                                    fontSize: 16,
+                                    color: 'white',
+                                    fontWeight: 'bold',
+                                  }}>
+                                  {product.product_price}
+                                </Text>
+                              </View>
+                            </View>
+                          </ImageBackground>
+                        </View>
+                      </View>
+                    </TouchableWithoutFeedback>
+                  ))}
                 </View>
-                <View style={styles.slide}>
-                  <TouchableOpacity>
-                    <Image
-                      source={require('../assets/images/food-banner3.jpg')}
-                      resizeMode="cover"
-                      style={styles.sliderImage}
-                    />
-                  </TouchableOpacity>
-                </View>
-              </Swiper>
+              </View>
             </View>
-          </View>
-
-          <View style={styles.popularProducts}>
-            <View style={styles.popularProductsHeader}>
-              <Text style={{fontSize: 18}}>Popular Products</Text>
-              <TouchableWithoutFeedback
-                onPress={() => {
-                  navigation.navigate('ViewProduct');
-                  console.log('clicked on view all');
-                }}>
-                <Text style={{fontSize: 17, marginTop: 10}}>View All</Text>
-              </TouchableWithoutFeedback>
-            </View>
-
-            <View style={styles.productCardContainer}>
-              {popularProd.map((product, index) => (
-                <TouchableWithoutFeedback
-                  key={product.id}
-                  onPress={() => {
-                    console.log('Clicked on Card');
-                    navigation.navigate('ProductDetail', {
-                      product_name: product.product_name,
-                      product: product,
-                    });
-                  }}>
-                  <View style={styles.productCardContent}>
-                    <View style={styles.productCard}>
-                      <ImageBackground
-                        source={require('../assets/images/food-banner1.jpg')}
+          ) : (
+            <View
+              style={{
+                flex: 1,
+                // backgroundColor: 'yellow',
+                marginTop: 10,
+              }}>
+              {searchResult.length > 0 ? (
+                <ScrollView
+                  keyboardDismissMode={'on-drag'}
+                  keyboardShouldPersistTaps={'always'}>
+                  {searchResult.map((res, ind) => (
+                    <TouchableWithoutFeedback
+                      key={ind}
+                      onPress={() => {
+                        console.log(`Clicked on ${res.product_name}`);
+                        Keyboard.dismiss();
+                      }}>
+                      <View
                         style={{
                           width: '100%',
-                          height: '100%',
-                          // borderRadius: 20,
-                        }}
-                        resizeMode={'cover'}
-                        borderRadius={6}
-                        imageStyle={{}}>
+                          paddingHorizontal: 20,
+                          paddingVertical: 10,
+                          flexDirection: 'row',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          borderBottomWidth: 1,
+                          borderBottomColor: 'gray',
+                        }}>
                         <View
                           style={{
-                            flex: 1,
-                            borderRadius: 6,
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            justifyContent:
-                              index % 2 ? 'flex-start' : 'flex-end',
-                            backgroundColor: 'rgba( 0, 0, 0, 0.5 )',
-                            shadowColor: '#000',
-                            shadowOffset: {
-                              width: 0,
-                              height: 3,
-                            },
-                            shadowOpacity: 0.27,
-                            shadowRadius: 4.65,
-
-                            elevation: 3,
+                            width: '80%',
+                            // backgroundColor: 'pink',
                           }}>
-                          <View
+                          <Text
                             style={{
-                              marginLeft: index % 2 && 30,
-                              marginRight: index % 2 ? 0 : 30,
-                              alignItems: index % 2 ? 'flex-start' : 'flex-end',
-                              maxWidth: 200,
+                              fontSize: 16,
+                              fontWeight: 'bold',
+                              opacity: 0.8,
                             }}>
-                            <Text
-                              style={{
-                                fontSize: 20,
-                                color: 'white',
-                                fontWeight: 'bold',
-                              }}
-                              numberOfLines={1}>
-                              {product.product_name}
-                            </Text>
-                            <Text
-                              style={{
-                                fontSize: 16,
-                                color: 'white',
-                                fontWeight: 'bold',
-                              }}>
-                              {product.product_price}
-                            </Text>
-                          </View>
+                            {res.product_name}
+                          </Text>
                         </View>
-                      </ImageBackground>
-                    </View>
+                        <View
+                          style={{
+                            // backgroundColor: 'red',
+                            padding: 4,
+                            paddingHorizontal: 6,
+                          }}>
+                          <FontAwesome5
+                            name={'long-arrow-alt-left'}
+                            color={'black'}
+                            // backgroundColor="black"
+                            solid
+                            size={21}
+                            style={{
+                              transform: [{rotate: '45deg'}],
+                              opacity: 0.6,
+                            }}
+                            onPress={() => {
+                              setSearchInput(res.product_name);
+                            }}
+                          />
+                        </View>
+                      </View>
+                    </TouchableWithoutFeedback>
+                  ))}
+                </ScrollView>
+              ) : (
+                <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+                  <View
+                    style={{
+                      width: '100%',
+                      // backgroundColor: 'red',
+                      paddingVertical: 40,
+                      alignItems: 'center',
+                    }}>
+                    <FontAwesome5
+                      name={'frown'}
+                      color={'black'}
+                      // backgroundColor="black"
+                      solid
+                      size={80}
+                      style={{opacity: 0.3}}
+                      onPress={() => handleEyeClick()}
+                    />
+                    <Text style={{marginTop: 15, fontSize: 20}}>
+                      No Such Product Available
+                    </Text>
                   </View>
                 </TouchableWithoutFeedback>
-              ))}
+              )}
             </View>
-          </View>
+          )}
         </ScrollView>
       </View>
     );
@@ -251,7 +378,7 @@ function Home({navigation}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: 'yellow',
+    backgroundColor: 'white',
   },
   searchBox: {
     backgroundColor: '#2874F0',

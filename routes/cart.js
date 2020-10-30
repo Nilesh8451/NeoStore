@@ -4,13 +4,11 @@ import {
   Text,
   StyleSheet,
   TouchableWithoutFeedback,
-  FlatList,
   Image,
   Alert,
   ScrollView,
 } from 'react-native';
 import {Formik} from 'formik';
-import {Rating} from 'react-native-ratings';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Toast from 'react-native-simple-toast';
 import FlatButton from '../shared/button';
@@ -54,6 +52,28 @@ function Cart(props) {
       product_price: 70000,
     },
   ]);
+
+  const handleDelete = (product) => {
+    Alert.alert(
+      'Warning!',
+      `Are you sure you want to delete ${product.product_name} from your cart`,
+      [
+        {
+          text: 'NO',
+        },
+        {
+          text: 'YES',
+          onPress: () => {
+            console.log('Deleted');
+            Toast.show(
+              `${product.product_name} removed from your cart successfully`,
+              Toast.LONG,
+            );
+          },
+        },
+      ],
+    );
+  };
 
   return allProducts.length > 0 ? (
     <View>
@@ -127,7 +147,7 @@ function Cart(props) {
                                 style={{
                                   // width: 30,
                                   height: '100%',
-                                  padding: 5,
+                                  padding: 4,
                                   paddingHorizontal: 9,
                                   // borderRadius: 30,
                                   justifyContent: 'center',
@@ -140,7 +160,7 @@ function Cart(props) {
                                   name={'minus'}
                                   color={'black'}
                                   solid
-                                  size={18}
+                                  size={17}
                                   style={{opacity: 0.6}}
                                   onPress={() => {
                                     if (formikProps.values.currentCount > 1) {
@@ -166,7 +186,7 @@ function Cart(props) {
                               <View
                                 style={{
                                   height: '100%',
-                                  padding: 5,
+                                  padding: 4,
                                   paddingHorizontal: 9,
                                   // borderRadius: 30,
                                   justifyContent: 'center',
@@ -184,7 +204,7 @@ function Cart(props) {
                                 style={{
                                   // width: 30,
                                   height: '100%',
-                                  padding: 5,
+                                  padding: 4,
                                   paddingHorizontal: 9,
                                   // borderRadius: 30,
                                   justifyContent: 'center',
@@ -194,7 +214,7 @@ function Cart(props) {
                                   name={'plus'}
                                   color={'black'}
                                   solid
-                                  size={18}
+                                  size={17}
                                   style={{opacity: 0.6}}
                                   onPress={() => {
                                     if (formikProps.values.currentCount < 10) {
@@ -221,7 +241,32 @@ function Cart(props) {
                           </View>
                         </View>
                       </View>
-                      <View
+                      <TouchableWithoutFeedback
+                        onPress={() => {
+                          console.log('clicked');
+                          handleDelete(item);
+                        }}>
+                        <View
+                          style={{
+                            position: 'absolute',
+                            right: 20,
+                            top: 20,
+                            padding: 3,
+                            backgroundColor: '#EE5233',
+                          }}>
+                          <FontAwesome5
+                            name={'times'}
+                            color={'black'}
+                            solid
+                            size={16}
+                            style={{
+                              opacity: 0.9,
+                              color: 'white',
+                            }}
+                          />
+                        </View>
+                      </TouchableWithoutFeedback>
+                      {/* <View
                         style={{
                           position: 'absolute',
                           top: 20,
@@ -255,7 +300,7 @@ function Cart(props) {
                             );
                           }}
                         />
-                      </View>
+                      </View> */}
                     </View>
                   </TouchableWithoutFeedback>
                 )}
@@ -342,9 +387,11 @@ function Cart(props) {
               title="Place Order"
               disabled={false}
               color={'#2874F0'}
-              // 2874F0
-              // FF0000
-              onPress={() => {}}
+              onPress={() => {
+                props.navigation.navigate('OrderSummary', {
+                  product: [...allProducts],
+                });
+              }}
             />
           </View>
         </View>

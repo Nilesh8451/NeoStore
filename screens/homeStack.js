@@ -2,10 +2,12 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Home from '../routes/home';
-import {View, Text} from 'react-native';
+import {View, Text, Keyboard} from 'react-native';
 import Cart from '../routes/cart';
 import ViewProduct from '../routes/viewProduct';
 import ProductDetail from '../routes/productDetail';
+import OrderSummary from '../routes/orderSummary';
+
 const Stack = createStackNavigator();
 
 function HomeStack({navigation}) {
@@ -34,7 +36,10 @@ function HomeStack({navigation}) {
               style={{
                 marginLeft: 20,
               }}
-              onPress={() => navigation.openDrawer()}
+              onPress={() => {
+                Keyboard.dismiss();
+                navigation.openDrawer();
+              }}
             />
           ),
           headerRight: () => (
@@ -172,6 +177,20 @@ function HomeStack({navigation}) {
           headerStyle: {backgroundColor: '#2874F0'},
           headerTintColor: 'white',
         })}
+      />
+
+      <Stack.Screen
+        name="OrderSummary"
+        component={OrderSummary}
+        options={{
+          title: 'Order Summary',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#2874F0',
+            // borderBottomWidth: 0,
+            elevation: 0,
+          },
+        }}
       />
     </Stack.Navigator>
   );

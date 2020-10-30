@@ -8,6 +8,8 @@ export default function FlatButton({
   disabled,
   paddingHorizontal = 10,
   paddingVertical = 11,
+  fontSize = 16,
+  textTransform = 'uppercase',
 }) {
   return (
     <TouchableOpacity onPress={onPress} disabled={disabled}>
@@ -18,7 +20,14 @@ export default function FlatButton({
           paddingHorizontal: paddingHorizontal,
           paddingVertical: paddingVertical,
         }}>
-        <Text style={styles.buttonText}>{title}</Text>
+        <Text
+          style={{
+            ...styles.buttonText,
+            fontSize: fontSize,
+            textTransform: textTransform,
+          }}>
+          {title}
+        </Text>
       </View>
     </TouchableOpacity>
   );
@@ -32,8 +41,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: 'white',
     fontWeight: 'bold',
-    textTransform: 'uppercase',
-    fontSize: 16,
+
     textAlign: 'center',
   },
 });

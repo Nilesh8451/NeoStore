@@ -10,6 +10,8 @@ import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 
 function ProductDetail({navigation, route}) {
   const product = route.params.product;
+  const productArray = [];
+  productArray.push(product);
   const [openModal, setOpenModal] = useState(false);
   const [ratingValue, setRatingValue] = useState('');
 
@@ -181,6 +183,9 @@ function ProductDetail({navigation, route}) {
             disabled={!true}
             color={!true ? 'gray' : '#2874F0'}
             onPress={() => {
+              navigation.navigate('OrderSummary', {
+                product: productArray,
+              });
               // Toast.show('Item Added To Cart Successfully', Toast.LONG);
               // navigation.pop();
             }}
