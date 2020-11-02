@@ -11,7 +11,7 @@ import {connect} from 'react-redux';
 import {signOut} from '../redux/user/userAction';
 
 function DrawerContent({...props}) {
-  console.log(props);
+  // console.log(props);
 
   signoutHandler = () => {
     Alert.alert('Warning!', 'Are you sure you want to signout', [

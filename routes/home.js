@@ -18,7 +18,9 @@ import {
   getAllCategoriesData,
   getDefaultTopRatingProducts,
 } from '../redux/dashboard/dashboardAction';
+import {restoreLoginData} from '../redux/user/userAction';
 import {connect} from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function Home({
   LoadingData,
@@ -26,11 +28,12 @@ function Home({
   topRatedProduct,
   getAllCategories,
   getTopRatingProducts,
+  restoreData,
   navigation,
 }) {
-  console.log('Cate', categories);
-  console.log('top', topRatedProduct);
-  console.log('isloading', LoadingData);
+  // console.log('Cate', categories);
+  // console.log('top', topRatedProduct);
+  // console.log('isloading', LoadingData);
   const [searchInput, setSearchInput] = useState('');
 
   const [searchResult, setSearchResult] = useState([
@@ -54,40 +57,19 @@ function Home({
     {product_name: 'Iphone 11', id: '54'},
   ]);
 
-  const [popularProd, setPopularProd] = useState([
-    {
-      id: 1,
-      rating: 3.5,
-      product_name: 'Some Product Name',
-      product_price: 40000,
-    },
-    {
-      id: 2,
-      rating: 3,
-      product_name: 'Some Product Name',
-      product_price: 40000,
-    },
-    {
-      id: 3,
-      rating: 4.5,
-      product_name: 'Some Product Name',
-      product_price: 40000,
-    },
-    {
-      id: 4,
-      rating: 5,
-      product_name: 'Some Product Name',
-      product_price: 40000,
-    },
-    {
-      id: 5,
-      rating: 4.5,
-      product_name: 'Some Product Name',
-      product_price: 40000,
-    },
-  ]);
+  const restoreUserInfo = async () => {
+    try {
+      const user = await AsyncStorage.getItem('userInfo');
+      const parseUserData = await JSON.parse(user);
+      console.log('user Restored data', parseUserData);
+      if (user !== null) {
+        restoreData(parseUserData);
+      }
+    } catch (error) {}
+  };
 
   useEffect(() => {
+    restoreUserInfo();
     getAllCategories();
     getTopRatingProducts();
   }, []);
@@ -120,24 +102,16 @@ function Home({
           keyboardShouldPersistTaps={
             searchInput.length > 0 ? 'always' : 'never'
           }
-          contentContainerStyle={
-            {
-              // flex: 1,
-              // paddingVertical: 60,
-              // backgroundColor: 'pink',
-            }
-          }>
+          contentContainerStyle={{}}>
           <View style={styles.searchBox}>
             <View
               style={{
                 marginBottom: 12,
-                // flexDirection: 'column',
                 marginHorizontal: 5,
               }}>
               <FontAwesome5
                 name={'search'}
                 color={'black'}
-                // backgroundColor="black"
                 solid
                 size={21}
                 style={{
@@ -475,6 +449,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     getAllCategories: () => dispatch(getAllCategoriesData()),
     getTopRatingProducts: () => dispatch(getDefaultTopRatingProducts()),
+    restoreData: (user) => dispatch(restoreLoginData(user)),
   };
 };
 

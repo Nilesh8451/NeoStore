@@ -1,4 +1,10 @@
-import {LOGIN_SUCCESS, LOGIN_REQUEST, LOGIN_FAILURE, SIGNOUT} from './types';
+import {
+  LOGIN_SUCCESS,
+  LOGIN_REQUEST,
+  LOGIN_FAILURE,
+  RESTORE_LOGINDATA,
+  SIGNOUT,
+} from './types';
 import Toast from 'react-native-simple-toast';
 
 const initialState = {
@@ -27,6 +33,14 @@ const userReducer = (state = initialState, action) => {
         user: {},
         isLoading: false,
         error: action.data,
+      };
+
+    case RESTORE_LOGINDATA:
+      return {
+        ...state,
+        user: action.data,
+        isLoading: false,
+        error: null,
       };
 
     case SIGNOUT:
