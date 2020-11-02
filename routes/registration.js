@@ -7,12 +7,16 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   ScrollView,
+  Alert,
 } from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {Formik} from 'formik';
 import * as yup from 'yup';
 import FlatButton from '../shared/button';
 import RadioForm from 'react-native-simple-radio-button';
+import Toast from 'react-native-simple-toast';
+import axios from 'axios';
+import {baseUrl, register} from '../baseUrl';
 
 const loginSchema = yup.object({
   firstname: yup
@@ -101,7 +105,26 @@ function Registration({navigation}) {
             validationSchema={loginSchema}
             onSubmit={(values, action) => {
               console.log(values);
-              action.resetForm();
+              axios
+                .post(`${baseUrl}/${register}`, {
+                  first_name: values.firstname,
+                  last_name: values.lastname,
+                  email: values.email,
+                  pass: values.password,
+                  confirmPass: values.confirmPassowrd,
+                  phone_no: values.phoneno,
+                  gender: values.gender,
+                })
+                .then((res) => {
+                  Toast.show(res.data.message, Toast.LONG);
+                  action.resetForm();
+                  navigation.navigate('LoginDrawer');
+                })
+                .catch((e) => {
+                  Alert.alert('OOPS!', e.response.data.message);
+                });
+
+              // action.resetForm();
             }}>
             {(formikProps) => (
               <View style={styles.mainDiv}>

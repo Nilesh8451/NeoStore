@@ -1,10 +1,15 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {View, Text, ScrollView, StyleSheet, Image} from 'react-native';
 import FlatButton from '../shared/button';
 
 function OrderSummary(props) {
   console.log(props.route.params.product);
   const products = props.route.params.product;
+
+  const [selectedAddress, setSelectedAddress] = useState(
+    '201/A, sai baba nagar, navghar road, bhayander east',
+  );
+
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
       <ScrollView contentContainerStyle={{paddingBottom: 80}}>
@@ -36,7 +41,7 @@ function OrderSummary(props) {
                   fontWeight: 'bold',
                   fontStyle: 'italic',
                 }}>
-                201/A, sai baba nagar, navghar road, bhayander east
+                {selectedAddress}
               </Text>
               <View style={{width: '100%', marginTop: 8}}>
                 <FlatButton
@@ -46,7 +51,9 @@ function OrderSummary(props) {
                   paddingHorizontal={10}
                   color={'#2874F0'}
                   onPress={() => {
-                    // navigation.navigate('OrderSummary');
+                    props.navigation.navigate('SelectAddress', {
+                      setSelectedAddress: setSelectedAddress,
+                    });
                   }}
                 />
               </View>
@@ -75,7 +82,7 @@ function OrderSummary(props) {
                       //   backgroundColor: 'yellow',
                     }}>
                     <Text style={{fontSize: 21, fontWeight: 'bold'}}>
-                      My producr Name wih anything
+                      {product.DashboardProducts[0].product_name}
                     </Text>
                   </View>
                   <View
@@ -85,7 +92,9 @@ function OrderSummary(props) {
                     }}>
                     <Image
                       style={{width: 70, height: 70}}
-                      source={require('../assets/images/food-banner1.jpg')}
+                      source={{
+                        uri: `http://180.149.241.208:3022/${product.DashboardProducts[0].product_image}`,
+                      }}
                     />
                   </View>
                 </View>
@@ -103,7 +112,7 @@ function OrderSummary(props) {
                     }}>
                     <Text
                       style={{fontSize: 18, fontWeight: 'bold', opacity: 0.7}}>
-                      Engineering Wood
+                      {product.DashboardProducts[0].product_producer}
                     </Text>
                   </View>
                   <View
@@ -112,7 +121,7 @@ function OrderSummary(props) {
                       //    backgroundColor: 'pink'
                     }}>
                     <Text style={{fontSize: 18, fontWeight: 'bold'}}>
-                      Rs 10000
+                      {product.DashboardProducts[0].product_cost}
                     </Text>
                   </View>
                 </View>

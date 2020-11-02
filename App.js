@@ -6,6 +6,7 @@ import LoginStack from './screens/loginStack';
 import RegisterStack from './screens/registrationStack';
 import HomeStack from './screens/homeStack';
 import ProfileStack from './screens/profileStack';
+import DrawerContent from './routes/drawerContent';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -13,26 +14,28 @@ const Drawer = createDrawerNavigator();
 function App() {
   return (
     <NavigationContainer>
-      <Drawer.Navigator initialRouteName="HomeDrawer">
+      <Drawer.Navigator
+        initialRouteName="HomeDrawer"
+        drawerContent={(props) => <DrawerContent {...props} />}>
         <Drawer.Screen
           name="HomeDrawer"
           component={HomeStack}
-          options={{title: 'Home'}}
+          options={{title: 'Home', swipeEnabled: false}}
         />
         <Drawer.Screen
           name="LoginDrawer"
           component={LoginStack}
-          options={{title: 'Login'}}
+          options={{title: 'Login', swipeEnabled: false}}
         />
         <Drawer.Screen
           name="RegisterDrawer"
           component={RegisterStack}
-          options={{title: 'Register'}}
+          options={{title: 'Register', swipeEnabled: false}}
         />
         <Drawer.Screen
           name="ProfileDrawer"
           component={ProfileStack}
-          options={{title: 'MY Account'}}
+          options={{title: 'MY Account', swipeEnabled: false}}
         />
       </Drawer.Navigator>
     </NavigationContainer>

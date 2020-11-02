@@ -7,6 +7,7 @@ import Cart from '../routes/cart';
 import ViewProduct from '../routes/viewProduct';
 import ProductDetail from '../routes/productDetail';
 import OrderSummary from '../routes/orderSummary';
+import SelectAddress from '../routes/selectAddress';
 
 const Stack = createStackNavigator();
 
@@ -184,6 +185,20 @@ function HomeStack({navigation}) {
         component={OrderSummary}
         options={{
           title: 'Order Summary',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#2874F0',
+            // borderBottomWidth: 0,
+            elevation: 0,
+          },
+        }}
+      />
+
+      <Stack.Screen
+        name="SelectAddress"
+        component={SelectAddress}
+        options={{
+          title: 'Select Address',
           headerTintColor: 'white',
           headerStyle: {
             backgroundColor: '#2874F0',

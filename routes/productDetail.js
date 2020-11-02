@@ -10,10 +10,22 @@ import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 
 function ProductDetail({navigation, route}) {
   const product = route.params.product;
+  console.log('My Product', product);
   const productArray = [];
   productArray.push(product);
   const [openModal, setOpenModal] = useState(false);
   const [ratingValue, setRatingValue] = useState('');
+  const [subImages, setSubImages] = useState([]);
+
+  useEffect(() => {
+    setSubImages([product.DashboardProducts[0].product_image]);
+
+    product.DashboardProducts[0].subImages[0].product_subImages.map((img) => {
+      setSubImages((prevState) => {
+        return [...prevState, img];
+      });
+    });
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -46,42 +58,33 @@ function ProductDetail({navigation, route}) {
                 horizontal={true}
                 height={200}
                 activeDotColor="#FF6347">
-                <View style={styles.slide}>
-                  <Image
-                    source={require('../assets/images/food-banner1.jpg')}
-                    resizeMode="cover"
-                    style={styles.sliderImage}
-                  />
-                </View>
-
-                <View style={styles.slide}>
-                  <Image
-                    source={require('../assets/images/food-banner2.jpg')}
-                    resizeMode="cover"
-                    style={styles.sliderImage}
-                  />
-                </View>
-                <View style={styles.slide}>
-                  <Image
-                    source={require('../assets/images/food-banner3.jpg')}
-                    resizeMode="cover"
-                    style={styles.sliderImage}
-                  />
-                </View>
-                <View style={styles.slide}>
-                  <Image
-                    source={require('../assets/images/food-banner3.jpg')}
-                    resizeMode="cover"
-                    style={styles.sliderImage}
-                  />
-                </View>
+                {subImages.map((img, index) => (
+                  <View style={styles.slide} key={index}>
+                    <Image
+                      source={{
+                        uri: `http://180.149.241.208:3022/${img}`,
+                      }}
+                      resizeMode="cover"
+                      style={styles.sliderImage}
+                    />
+                  </View>
+                ))}
               </Swiper>
             </View>
             <View style={styles.productContent}>
-              <Text style={{fontSize: 25}}>{product.product_name}</Text>
+              <Text style={{fontSize: 25}}>
+                {product.DashboardProducts[0].product_name}
+              </Text>
 
               <Text style={{fontSize: 18, marginTop: 10}}>
-                Product Category - <Text>Bed</Text>
+                Product Category -{' '}
+                <Text>
+                  {' '}
+                  {
+                    product.DashboardProducts[0].product_category[0]
+                      .category_name
+                  }
+                </Text>
               </Text>
               <Text
                 style={{
@@ -90,7 +93,7 @@ function ProductDetail({navigation, route}) {
                   marginTop: 10,
                   color: '#EF5B3E',
                 }}>
-                ₹20000
+                {product.DashboardProducts[0].product_cost}
               </Text>
 
               <View
@@ -102,23 +105,25 @@ function ProductDetail({navigation, route}) {
                 }}>
                 <Rating
                   ratingCount={5}
-                  startingValue={product.rating}
+                  startingValue={parseFloat(
+                    product.DashboardProducts[0].product_rating,
+                  )}
                   imageSize={20}
                   type={'custom'}
                   readonly={true}
                 />
               </View>
               <Text style={{marginTop: 13, fontSize: 17}}>
-                <Text style={{fontWeight: 'bold'}}>Produced By : </Text> MAyheu
-                Colke
+                <Text style={{fontWeight: 'bold'}}>Produced By : </Text>{' '}
+                {product.DashboardProducts[0].product_producer}
               </Text>
               <Text style={{marginTop: 13, fontSize: 17}}>
                 <Text style={{fontWeight: 'bold'}}>Product Description : </Text>
-                Make your mou. Part bed, part mattress, the Mou mattress bed is
+                {product.DashboardProducts[0].product_desc}
               </Text>
               <Text style={{marginTop: 13, fontSize: 17}}>
                 <Text style={{fontWeight: 'bold'}}>Product Dimension : </Text>
-                78 * 8
+                {product.DashboardProducts[0].product_dimension}
               </Text>
             </View>
           </View>
@@ -128,7 +133,7 @@ function ProductDetail({navigation, route}) {
       <TouchableWithoutFeedback
         onPress={() => {
           Toast.show(
-            `${product.product_name} Added To Cart Successfully`,
+            `${product.DashboardProducts[0].product_name} Added To Cart Successfully`,
             Toast.LONG,
           );
           navigation.pop();

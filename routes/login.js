@@ -14,6 +14,9 @@ import {Formik} from 'formik';
 import * as yup from 'yup';
 import FlatButton from '../shared/button';
 import Toast from 'react-native-simple-toast';
+import {connect} from 'react-redux';
+import {login} from '../redux/user/userAction';
+import LottieView from 'lottie-react-native';
 
 const loginSchema = yup.object({
   email: yup.string().required().email(),
@@ -25,7 +28,7 @@ const loginSchema = yup.object({
     .matches(/^[a-zA-Z0-9_]*$/, 'Must Be Alphanumeric Characters'),
 });
 
-function Login({navigation}) {
+function Login({user, isLoading, error, loginFn, navigation}) {
   const [securePassword, setSecurePassword] = useState(true);
   const [eyeStyle, setEyeStyle] = useState('eye-slash');
 
@@ -38,8 +41,9 @@ function Login({navigation}) {
     }
   };
 
-  return (
+  return isLoading === false ? (
     <View style={{flex: 1, backgroundColor: 'white'}}>
+      {user.token && navigation.navigate('HomeDrawer')}
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <ScrollView
           contentContainerStyle={{
@@ -52,9 +56,10 @@ function Login({navigation}) {
               validationSchema={loginSchema}
               onSubmit={(values, action) => {
                 console.log(values);
-                Toast.show('Login Successfully', Toast.LONG);
-                navigation.navigate('HomeDrawer');
-                action.resetForm();
+                loginFn(values);
+                // Toast.show('Login Successfully', Toast.LONG);
+                // navigation.navigate('HomeDrawer');
+                // action.resetForm();
               }}>
               {(formikProps) => (
                 <View style={styles.mainDiv}>
@@ -202,6 +207,24 @@ function Login({navigation}) {
         </ScrollView>
       </TouchableWithoutFeedback>
     </View>
+  ) : (
+    <View
+      style={{
+        ...styles.container,
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}>
+      <LottieView
+        source={require('../assets/json/loader2.json')}
+        autoPlay
+        style={{
+          // backgroundColor: 'red',
+          width: 200,
+          height: 200,
+        }}
+        loop
+      />
+    </View>
   );
 }
 
@@ -303,4 +326,18 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Login;
+const mapStateToProps = (state) => {
+  return {
+    user: state.userReducer.user,
+    isLoading: state.userReducer.isLoading,
+    error: state.userReducer.error,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    loginFn: (user) => dispatch(login(user)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

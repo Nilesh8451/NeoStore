@@ -14,8 +14,23 @@ import {
 import Swiper from 'react-native-swiper';
 import LottieView from 'lottie-react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import {
+  getAllCategoriesData,
+  getDefaultTopRatingProducts,
+} from '../redux/dashboard/dashboardAction';
+import {connect} from 'react-redux';
 
-function Home({navigation}) {
+function Home({
+  LoadingData,
+  categories,
+  topRatedProduct,
+  getAllCategories,
+  getTopRatingProducts,
+  navigation,
+}) {
+  console.log('Cate', categories);
+  console.log('top', topRatedProduct);
+  console.log('isloading', LoadingData);
   const [searchInput, setSearchInput] = useState('');
 
   const [searchResult, setSearchResult] = useState([
@@ -72,15 +87,12 @@ function Home({navigation}) {
     },
   ]);
 
-  const [isLoading, setIsLoading] = useState(true);
-
   useEffect(() => {
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
+    getAllCategories();
+    getTopRatingProducts();
   }, []);
 
-  if (isLoading) {
+  if (LoadingData) {
     return (
       <View
         style={{
@@ -154,34 +166,21 @@ function Home({navigation}) {
                     horizontal={true}
                     height={200}
                     activeDotColor="#FF6347">
-                    <View style={styles.slide}>
-                      <TouchableOpacity>
-                        <Image
-                          source={require('../assets/images/food-banner1.jpg')}
-                          resizeMode="cover"
-                          style={styles.sliderImage}
-                        />
-                      </TouchableOpacity>
-                    </View>
-
-                    <View style={styles.slide}>
-                      <TouchableOpacity>
-                        <Image
-                          source={require('../assets/images/food-banner2.jpg')}
-                          resizeMode="cover"
-                          style={styles.sliderImage}
-                        />
-                      </TouchableOpacity>
-                    </View>
-                    <View style={styles.slide}>
-                      <TouchableOpacity>
-                        <Image
-                          source={require('../assets/images/food-banner3.jpg')}
-                          resizeMode="cover"
-                          style={styles.sliderImage}
-                        />
-                      </TouchableOpacity>
-                    </View>
+                    {categories.map((category, index) => {
+                      return (
+                        <View style={styles.slide} key={index}>
+                          <TouchableOpacity>
+                            <Image
+                              source={{
+                                uri: `http://180.149.241.208:3022/${category.product_image}`,
+                              }}
+                              resizeMode="cover"
+                              style={styles.sliderImage}
+                            />
+                          </TouchableOpacity>
+                        </View>
+                      );
+                    })}
                   </Swiper>
                 </View>
               </View>
@@ -199,20 +198,23 @@ function Home({navigation}) {
                 </View>
 
                 <View style={styles.productCardContainer}>
-                  {popularProd.map((product, index) => (
+                  {topRatedProduct.map((product, index) => (
                     <TouchableWithoutFeedback
-                      key={product.id}
+                      key={index}
                       onPress={() => {
                         console.log('Clicked on Card');
                         navigation.navigate('ProductDetail', {
-                          product_name: product.product_name,
+                          product_name:
+                            product.DashboardProducts[0].product_name,
                           product: product,
                         });
                       }}>
                       <View style={styles.productCardContent}>
                         <View style={styles.productCard}>
                           <ImageBackground
-                            source={require('../assets/images/food-banner1.jpg')}
+                            source={{
+                              uri: `http://180.149.241.208:3022/${product.DashboardProducts[0].product_image}`,
+                            }}
                             style={{
                               width: '100%',
                               height: '100%',
@@ -255,15 +257,15 @@ function Home({navigation}) {
                                     fontWeight: 'bold',
                                   }}
                                   numberOfLines={1}>
-                                  {product.product_name}
+                                  {product.DashboardProducts[0].product_name}
                                 </Text>
                                 <Text
                                   style={{
-                                    fontSize: 16,
+                                    fontSize: 17,
                                     color: 'white',
                                     fontWeight: 'bold',
                                   }}>
-                                  {product.product_price}
+                                  {product.DashboardProducts[0].product_cost}
                                 </Text>
                               </View>
                             </View>
@@ -461,4 +463,19 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Home;
+const mapStateToProps = (state) => {
+  return {
+    categories: state.dashBoardReducer.categories,
+    topRatedProduct: state.dashBoardReducer.topRatedProduct,
+    LoadingData: state.dashBoardReducer.isLoading,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getAllCategories: () => dispatch(getAllCategoriesData()),
+    getTopRatingProducts: () => dispatch(getDefaultTopRatingProducts()),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);
