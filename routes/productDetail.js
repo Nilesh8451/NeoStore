@@ -7,37 +7,45 @@ import CustomModal from '../shared/modal';
 import Toast from 'react-native-simple-toast';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
+import axios from 'axios';
+import LottieView from 'lottie-react-native';
+import {baseUrl, getProductById} from '../baseUrl';
 
 function ProductDetail({navigation, route}) {
-  const product = route.params.product;
-  console.log('My Product', product);
+  const product_id = route.params.product_id;
   const productArray = [];
-  productArray.push(product);
   const [openModal, setOpenModal] = useState(false);
   const [ratingValue, setRatingValue] = useState('');
   const [subImages, setSubImages] = useState([]);
+  const [myProduct, setMYProduct] = useState({});
 
   useEffect(() => {
-    setSubImages([product.DashboardProducts[0].product_image]);
+    axios
+      .get(`${baseUrl}/${getProductById}/${product_id}`)
+      .then((res) => {
+        console.log('This is res', res.data.product_details[0]);
+        productArray.push(res.data.product_details[0]);
+        setMYProduct(res.data.product_details[0]);
+        setSubImages([res.data.product_details[0].product_image]);
 
-    product.DashboardProducts[0].subImages[0].product_subImages.map((img) => {
-      setSubImages((prevState) => {
-        return [...prevState, img];
+        res.data.product_details[0].subImages_id.product_subImages.map(
+          (img) => {
+            setSubImages((prevState) => {
+              return [...prevState, img];
+            });
+          },
+        );
+      })
+      .catch((e) => {
+        console.log(e);
       });
-    });
   }, []);
 
-  return (
+  console.log('Sube images', subImages);
+
+  return myProduct._id ? (
     <View style={styles.container}>
-      <ScrollView
-        contentContainerStyle={
-          {
-            // flex: 1,
-            // paddingVertical: 60,
-            // width: '100%',
-            // backgroundColor: 'pink',
-          }
-        }>
+      <ScrollView contentContainerStyle={{}}>
         <View
           style={{
             flex: 1,
@@ -55,6 +63,7 @@ function ProductDetail({navigation, route}) {
             <View style={styles.sliderContainer}>
               <Swiper
                 autoplay
+                loop
                 horizontal={true}
                 height={200}
                 activeDotColor="#FF6347">
@@ -72,19 +81,11 @@ function ProductDetail({navigation, route}) {
               </Swiper>
             </View>
             <View style={styles.productContent}>
-              <Text style={{fontSize: 25}}>
-                {product.DashboardProducts[0].product_name}
-              </Text>
+              <Text style={{fontSize: 25}}>{myProduct?.product_name}</Text>
 
               <Text style={{fontSize: 18, marginTop: 10}}>
                 Product Category -{' '}
-                <Text>
-                  {' '}
-                  {
-                    product.DashboardProducts[0].product_category[0]
-                      .category_name
-                  }
-                </Text>
+                <Text> {myProduct?.category_id?.category_name}</Text>
               </Text>
               <Text
                 style={{
@@ -93,7 +94,7 @@ function ProductDetail({navigation, route}) {
                   marginTop: 10,
                   color: '#EF5B3E',
                 }}>
-                {product.DashboardProducts[0].product_cost}
+                {myProduct?.product_cost}
               </Text>
 
               <View
@@ -105,9 +106,7 @@ function ProductDetail({navigation, route}) {
                 }}>
                 <Rating
                   ratingCount={5}
-                  startingValue={parseFloat(
-                    product.DashboardProducts[0].product_rating,
-                  )}
+                  startingValue={parseFloat(myProduct?.product_rating)}
                   imageSize={20}
                   type={'custom'}
                   readonly={true}
@@ -115,15 +114,15 @@ function ProductDetail({navigation, route}) {
               </View>
               <Text style={{marginTop: 13, fontSize: 17}}>
                 <Text style={{fontWeight: 'bold'}}>Produced By : </Text>{' '}
-                {product.DashboardProducts[0].product_producer}
+                {myProduct?.product_producer}
               </Text>
               <Text style={{marginTop: 13, fontSize: 17}}>
                 <Text style={{fontWeight: 'bold'}}>Product Description : </Text>
-                {product.DashboardProducts[0].product_desc}
+                {myProduct?.product_desc}
               </Text>
               <Text style={{marginTop: 13, fontSize: 17}}>
                 <Text style={{fontWeight: 'bold'}}>Product Dimension : </Text>
-                {product.DashboardProducts[0].product_dimension}
+                {myProduct?.product_dimension}
               </Text>
             </View>
           </View>
@@ -133,7 +132,7 @@ function ProductDetail({navigation, route}) {
       <TouchableWithoutFeedback
         onPress={() => {
           Toast.show(
-            `${product.DashboardProducts[0].product_name} Added To Cart Successfully`,
+            `${myProduct?.product_name} Added To Cart Successfully`,
             Toast.LONG,
           );
           navigation.pop();
@@ -251,6 +250,24 @@ function ProductDetail({navigation, route}) {
           />
         </View>
       </View>
+    </View>
+  ) : (
+    <View
+      style={{
+        ...styles.container,
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}>
+      <LottieView
+        source={require('../assets/json/loader2.json')}
+        autoPlay
+        style={{
+          // backgroundColor: 'red',
+          width: 200,
+          height: 200,
+        }}
+        loop
+      />
     </View>
   );
 }

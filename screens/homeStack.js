@@ -8,10 +8,11 @@ import ViewProduct from '../routes/viewProduct';
 import ProductDetail from '../routes/productDetail';
 import OrderSummary from '../routes/orderSummary';
 import SelectAddress from '../routes/selectAddress';
+import {connect} from 'react-redux';
 
 const Stack = createStackNavigator();
 
-function HomeStack({navigation}) {
+function HomeStack({user, navigation}) {
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -62,6 +63,7 @@ function HomeStack({navigation}) {
                   navigation.navigate('Cart');
                 }}
               />
+
               <View
                 style={{
                   position: 'absolute',
@@ -82,7 +84,7 @@ function HomeStack({navigation}) {
                     padding: 2,
                     paddingHorizontal: 4,
                   }}>
-                  2
+                  {user?.cart_count === undefined ? 0 : user?.cart_count}
                 </Text>
               </View>
             </View>
@@ -211,4 +213,10 @@ function HomeStack({navigation}) {
   );
 }
 
-export default HomeStack;
+const mapStateToProps = (state) => {
+  return {
+    user: state.userReducer.user,
+  };
+};
+
+export default connect(mapStateToProps)(HomeStack);

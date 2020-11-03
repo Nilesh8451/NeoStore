@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -11,33 +11,13 @@ import {
 import FlatButton from '../shared/button';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Toast from 'react-native-simple-toast';
+import axios from 'axios';
+import {baseUrl, getUserAddress} from '../baseUrl';
+import LottieView from 'lottie-react-native';
+import {getCustomerAddress} from '../redux/user/userAction';
+import {connect} from 'react-redux';
 
 function UpdateAddress(props) {
-  const [userAddress, setUserAddress] = useState([
-    {
-      address:
-        '201/A, sai sheena park, sai baba nagar, navghar road, bhayander East',
-      city: 'Mumbai',
-      pincode: '401051',
-      state: 'maharashtra',
-      country: 'India',
-    },
-    {
-      address: '201/A, sai sheena park',
-      city: 'Mumbai',
-      pincode: '401051',
-      state: 'gujrat',
-      country: 'India',
-    },
-    {
-      address: '201/A, sai sheena park, sai baba nagar',
-      city: 'Mumbai',
-      pincode: '401051',
-      state: 'delhi',
-      country: 'India',
-    },
-  ]);
-
   const handleDelete = () => {
     Alert.alert('Warning!', `Are you sure you want to delete this address`, [
       {
@@ -53,7 +33,28 @@ function UpdateAddress(props) {
     ]);
   };
 
-  return userAddress.length > 0 ? (
+  useEffect(() => {
+    props.getCustAdd(props.route.params.token);
+  }, []);
+
+  return props.isLoading ? (
+    <View
+      style={{
+        ...styles.container,
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}>
+      <LottieView
+        source={require('../assets/json/loader2.json')}
+        autoPlay
+        style={{
+          width: 200,
+          height: 200,
+        }}
+        loop
+      />
+    </View>
+  ) : props.userAdd.length > 0 ? (
     <View
       style={{
         flex: 1,
@@ -61,7 +62,7 @@ function UpdateAddress(props) {
       }}>
       <ScrollView>
         <View style={styles.container}>
-          {userAddress.map((add, index) => (
+          {props.userAdd.map((add, index) => (
             <View style={styles.addressCard} key={index}>
               <View style={styles.cardContent}>
                 <Text style={{width: '70%', fontSize: 17}}>{add.address}</Text>
@@ -74,12 +75,14 @@ function UpdateAddress(props) {
                 <FlatButton
                   title="Edit"
                   disabled={false}
-                  paddingVertical={5}
-                  paddingHorizontal={12}
+                  paddingVertical={4}
+                  paddingHorizontal={14}
+                  fontSize={14}
                   color={'#2874F0'}
                   onPress={() => {
                     props.navigation.navigate('EditAddress', {
                       address: add,
+                      token: props.route.params.token,
                     });
                   }}
                 />
@@ -95,16 +98,16 @@ function UpdateAddress(props) {
                     right: 20,
                     top: 20,
                     padding: 4,
-                    backgroundColor: '#EE5233',
+                    // backgroundColor: '#EE5233',
                   }}>
                   <FontAwesome5
-                    name={'times'}
+                    name={'trash-alt'}
                     color={'black'}
                     solid
-                    size={16}
+                    size={18}
                     style={{
                       opacity: 0.9,
-                      color: 'white',
+                      color: 'black',
                     }}
                   />
                 </View>
@@ -115,13 +118,11 @@ function UpdateAddress(props) {
       </ScrollView>
     </View>
   ) : (
-    <View style={styles.container}>
+    <View style={{flex: 1, backgroundColor: 'white'}}>
       <View
         style={{
           flex: 1,
-          backgroundColor: 'white',
-          marginHorizontal: 10,
-          marginVertical: 10,
+          marginVertical: 20,
           paddingVertical: 30,
           // justifyContent: 'center',
           alignItems: 'center',
@@ -158,4 +159,17 @@ const styles = StyleSheet.create({
   },
 });
 
-export default UpdateAddress;
+const mapStateToProps = (state) => {
+  return {
+    userAdd: state.userReducer.userAddress,
+    isLoading: state.userReducer.isLoading,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getCustAdd: (token) => dispatch(getCustomerAddress(token)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(UpdateAddress);

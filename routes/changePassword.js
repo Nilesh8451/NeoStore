@@ -7,13 +7,16 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   ScrollView,
+  Alert,
+  ActivityIndicator,
 } from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {Formik} from 'formik';
 import * as yup from 'yup';
 import FlatButton from '../shared/button';
-
 import Toast from 'react-native-simple-toast';
+import axios from 'axios';
+import {baseUrl, changePassword} from '../baseUrl';
 
 const mySchema = yup.object({
   oldPassword: yup
@@ -34,13 +37,16 @@ const mySchema = yup.object({
     .oneOf([yup.ref('password')], 'Must be same as password'),
 });
 
-function ChangePassword({navigation}) {
+function ChangePassword(props) {
   const [secureOldPassword, setSecureOldPassword] = useState(true);
   const [securePassword, setSecurePassword] = useState(true);
   const [secureCPassword, setSecureCPassword] = useState(true);
   const [OPEyeStyle, setOPEyeStyle] = useState('eye-slash');
   const [PEyeStyle, setPEyeStyle] = useState('eye-slash');
   const [CPEyeStyle, setCPEyeStyle] = useState('eye-slash');
+  const [loadingAPI, setLoadingAPI] = useState(false);
+
+  console.log(props.route.params.token);
 
   const handleOPasswordEyeClick = () => {
     setSecureOldPassword(!secureOldPassword);
@@ -83,60 +89,52 @@ function ChangePassword({navigation}) {
               validationSchema={mySchema}
               onSubmit={(values, action) => {
                 console.log(values);
-                Toast.show('Your Password Changed Successfully', Toast.LONG);
-                navigation.popToTop();
-                action.resetForm();
+
+                setLoadingAPI(true);
+
+                axios
+                  .post(
+                    `${baseUrl}/${changePassword}`,
+                    {
+                      oldPass: values.oldPassword,
+                      newPass: values.password,
+                      confirmPass: values.confirmPassowrd,
+                    },
+                    {
+                      headers: {
+                        Authorization: `bearer ${props.route.params.token}`,
+                      },
+                    },
+                  )
+                  .then((res) => {
+                    Toast.show(
+                      'Your Password Changed Successfully',
+                      Toast.LONG,
+                    );
+                    setLoadingAPI(false);
+                    props.navigation.popToTop();
+                    action.resetForm();
+                  })
+                  .catch((e) => {
+                    setLoadingAPI(false);
+                    Alert.alert('OOPS!', e.response.data.message);
+                  });
               }}>
               {(formikProps) => (
                 <View style={styles.mainDiv}>
-                  <View style={styles.card}>
-                    <View style={styles.cardContent}>
-                      <View>
-                        <FontAwesome5
-                          name={'lock'}
-                          color={'black'}
-                          solid
-                          size={18}
-                          style={{
-                            position: 'relative',
-                            left: 13,
-                            top: 35,
-                            opacity: 0.5,
-                          }}
-                          onPress={() => {}}
-                        />
-                        <TextInput
-                          style={styles.input}
-                          placeholder="Enter OLD Password"
-                          secureTextEntry={secureOldPassword}
-                          value={formikProps.values.oldPassword}
-                          onChangeText={formikProps.handleChange('oldPassword')}
-                          onBlur={formikProps.handleBlur('oldPassword')}
-                        />
-                        <FontAwesome5
-                          name={OPEyeStyle}
-                          color={'black'}
-                          solid
-                          size={18}
-                          style={{
-                            position: 'absolute',
-                            right: 13,
-                            //   paddingTop: 18,
-                            top: 35,
-                            opacity: 0.6,
-                          }}
-                          onPress={() => handleOPasswordEyeClick()}
-                        />
-                        {formikProps.touched.oldPassword &&
-                          formikProps.errors.oldPassword && (
-                            <Text style={styles.errorText}>
-                              {formikProps.touched.oldPassword &&
-                                formikProps.errors.oldPassword}
-                            </Text>
-                          )}
-                      </View>
-                      <View>
-                        <View style={{justifyContent: 'center'}}>
+                  {loadingAPI ? (
+                    <View
+                      style={{
+                        // flex: 1,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}>
+                      <ActivityIndicator size={'large'} color={'blue'} />
+                    </View>
+                  ) : (
+                    <View style={styles.card}>
+                      <View style={styles.cardContent}>
+                        <View>
                           <FontAwesome5
                             name={'lock'}
                             color={'black'}
@@ -148,102 +146,152 @@ function ChangePassword({navigation}) {
                               top: 35,
                               opacity: 0.5,
                             }}
-                            onPress={() => handleEyeClick()}
+                            onPress={() => {}}
                           />
                           <TextInput
                             style={styles.input}
-                            placeholder="Enter New Password"
-                            secureTextEntry={securePassword}
-                            value={formikProps.values.password}
-                            onChangeText={formikProps.handleChange('password')}
-                            onBlur={formikProps.handleBlur('password')}
-                          />
-                          <FontAwesome5
-                            name={PEyeStyle}
-                            color={'black'}
-                            solid
-                            size={18}
-                            style={{
-                              position: 'absolute',
-                              right: 13,
-                              paddingTop: 18,
-                              opacity: 0.6,
-                            }}
-                            onPress={() => handlePasswordEyeClick()}
-                          />
-                        </View>
-
-                        {formikProps.touched.password &&
-                          formikProps.errors.password && (
-                            <Text style={styles.errorText}>
-                              {formikProps.touched.password &&
-                                formikProps.errors.password}
-                            </Text>
-                          )}
-                      </View>
-
-                      <View>
-                        <View style={{justifyContent: 'center'}}>
-                          <FontAwesome5
-                            name={'lock'}
-                            color={'black'}
-                            solid
-                            size={18}
-                            style={{
-                              position: 'relative',
-                              left: 13,
-                              top: 35,
-                              opacity: 0.5,
-                            }}
-                            onPress={() => handleEyeClick()}
-                          />
-                          <TextInput
-                            style={styles.input}
-                            placeholder="Enter Password Again"
-                            secureTextEntry={secureCPassword}
-                            value={formikProps.values.confirmPassowrd}
+                            placeholder="Enter OLD Password"
+                            secureTextEntry={secureOldPassword}
+                            value={formikProps.values.oldPassword}
                             onChangeText={formikProps.handleChange(
-                              'confirmPassowrd',
+                              'oldPassword',
                             )}
-                            onBlur={formikProps.handleBlur('confirmPassowrd')}
+                            onBlur={formikProps.handleBlur('oldPassword')}
                           />
                           <FontAwesome5
-                            name={CPEyeStyle}
+                            name={OPEyeStyle}
                             color={'black'}
                             solid
                             size={18}
                             style={{
                               position: 'absolute',
                               right: 13,
-                              paddingTop: 18,
+                              //   paddingTop: 18,
+                              top: 35,
                               opacity: 0.6,
                             }}
-                            onPress={() => handleCPasswordEyeClick()}
+                            onPress={() => handleOPasswordEyeClick()}
                           />
+                          {formikProps.touched.oldPassword &&
+                            formikProps.errors.oldPassword && (
+                              <Text style={styles.errorText}>
+                                {formikProps.touched.oldPassword &&
+                                  formikProps.errors.oldPassword}
+                              </Text>
+                            )}
+                        </View>
+                        <View>
+                          <View style={{justifyContent: 'center'}}>
+                            <FontAwesome5
+                              name={'lock'}
+                              color={'black'}
+                              solid
+                              size={18}
+                              style={{
+                                position: 'relative',
+                                left: 13,
+                                top: 35,
+                                opacity: 0.5,
+                              }}
+                              onPress={() => handleEyeClick()}
+                            />
+                            <TextInput
+                              style={styles.input}
+                              placeholder="Enter New Password"
+                              secureTextEntry={securePassword}
+                              value={formikProps.values.password}
+                              onChangeText={formikProps.handleChange(
+                                'password',
+                              )}
+                              onBlur={formikProps.handleBlur('password')}
+                            />
+                            <FontAwesome5
+                              name={PEyeStyle}
+                              color={'black'}
+                              solid
+                              size={18}
+                              style={{
+                                position: 'absolute',
+                                right: 13,
+                                paddingTop: 18,
+                                opacity: 0.6,
+                              }}
+                              onPress={() => handlePasswordEyeClick()}
+                            />
+                          </View>
+
+                          {formikProps.touched.password &&
+                            formikProps.errors.password && (
+                              <Text style={styles.errorText}>
+                                {formikProps.touched.password &&
+                                  formikProps.errors.password}
+                              </Text>
+                            )}
                         </View>
 
-                        {formikProps.touched.confirmPassowrd &&
-                          formikProps.errors.confirmPassowrd && (
-                            <Text style={styles.errorText}>
-                              {formikProps.touched.confirmPassowrd &&
-                                formikProps.errors.confirmPassowrd}
-                            </Text>
-                          )}
-                      </View>
+                        <View>
+                          <View style={{justifyContent: 'center'}}>
+                            <FontAwesome5
+                              name={'lock'}
+                              color={'black'}
+                              solid
+                              size={18}
+                              style={{
+                                position: 'relative',
+                                left: 13,
+                                top: 35,
+                                opacity: 0.5,
+                              }}
+                              onPress={() => handleEyeClick()}
+                            />
+                            <TextInput
+                              style={styles.input}
+                              placeholder="Enter Password Again"
+                              secureTextEntry={secureCPassword}
+                              value={formikProps.values.confirmPassowrd}
+                              onChangeText={formikProps.handleChange(
+                                'confirmPassowrd',
+                              )}
+                              onBlur={formikProps.handleBlur('confirmPassowrd')}
+                            />
+                            <FontAwesome5
+                              name={CPEyeStyle}
+                              color={'black'}
+                              solid
+                              size={18}
+                              style={{
+                                position: 'absolute',
+                                right: 13,
+                                paddingTop: 18,
+                                opacity: 0.6,
+                              }}
+                              onPress={() => handleCPasswordEyeClick()}
+                            />
+                          </View>
 
-                      <View style={styles.buttonDiv}>
-                        <View style={styles.button}>
-                          <FlatButton
-                            title="Update Password"
-                            // color="#f01d71"
-                            disabled={!formikProps.isValid}
-                            color={!formikProps.isValid ? 'gray' : '#2874F0'}
-                            onPress={formikProps.handleSubmit}
-                          />
+                          {formikProps.touched.confirmPassowrd &&
+                            formikProps.errors.confirmPassowrd && (
+                              <Text style={styles.errorText}>
+                                {formikProps.touched.confirmPassowrd &&
+                                  formikProps.errors.confirmPassowrd}
+                              </Text>
+                            )}
+                        </View>
+
+                        <View style={styles.buttonDiv}>
+                          <View style={styles.button}>
+                            <FlatButton
+                              title="Update Password"
+                              // color="#f01d71"
+                              disabled={!formikProps.isValid}
+                              color={!formikProps.isValid ? 'gray' : '#2874F0'}
+                              onPress={formikProps.handleSubmit}
+                            />
+                          </View>
                         </View>
                       </View>
                     </View>
-                  </View>
+                  )}
                 </View>
               )}
             </Formik>

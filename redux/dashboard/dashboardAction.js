@@ -19,7 +19,7 @@ export const getAllCategoriesData = () => {
     axios
       .get(`${baseUrl}/${getAllCategories}`)
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         dispatch({type: GETALLCATEGORIES_SUCCESS, data: res.data});
       })
       .catch((e) => {
@@ -35,7 +35,7 @@ export const getDefaultTopRatingProducts = () => {
     axios
       .get(`${baseUrl}/${defaultTopRatingProduct}`)
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         dispatch({type: GETTOPRATINGPRODUCT_SUCCESS, data: res.data});
       })
       .catch((e) => {

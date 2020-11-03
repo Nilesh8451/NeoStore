@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -12,8 +12,11 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {Formik} from 'formik';
 import * as yup from 'yup';
 import FlatButton from '../shared/button';
-
 import Toast from 'react-native-simple-toast';
+import axios from 'axios';
+import {baseUrl, updateUserAddress} from '../baseUrl';
+import {getCustomerAddress} from '../redux/user/userAction';
+import {connect} from 'react-redux';
 
 const placeSchema = yup.object({
   address: yup.string().required(),
@@ -38,8 +41,11 @@ const placeSchema = yup.object({
 });
 
 function EditAddress(props) {
-  //   console.log(props.route.params.address);
+  console.log(props.route.params.address);
+  console.log(props.route.params.token);
+
   const addressObj = props.route.params.address;
+
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -48,7 +54,7 @@ function EditAddress(props) {
             <Formik
               initialValues={{
                 address: addressObj.address,
-                pincode: addressObj.pincode,
+                pincode: addressObj.pincode.toString(),
                 city: addressObj.city,
                 state: addressObj.state,
                 country: addressObj.country,
@@ -56,9 +62,33 @@ function EditAddress(props) {
               validationSchema={placeSchema}
               onSubmit={(values, action) => {
                 console.log(values);
-                Toast.show('Address Updated Successfully', Toast.LONG);
-                props.navigation.popToTop();
-                action.resetForm();
+
+                axios
+                  .put(
+                    `${baseUrl}/${updateUserAddress}`,
+                    {
+                      address_id: addressObj.address_id,
+                      address: values.address,
+                      pincode: values.pincode,
+                      city: values.city,
+                      state: values.state,
+                      country: values.country,
+                    },
+                    {
+                      headers: {
+                        Authorization: `bearer ${props.route.params.token}`,
+                      },
+                    },
+                  )
+                  .then((res) => {
+                    props.getCustAdd(props.route.params.token);
+                    Toast.show('Address Updated Successfully', Toast.LONG);
+                    action.resetForm();
+                    props.navigation.goBack();
+                  })
+                  .catch((e) => {
+                    console.log('error', e, e.response);
+                  });
               }}>
               {(formikProps) => (
                 <View style={styles.mainDiv}>
@@ -104,8 +134,8 @@ function EditAddress(props) {
                             size={18}
                             style={{
                               position: 'relative',
-                              left: 13,
-                              top: 35,
+                              left: 17,
+                              top: 36,
                               opacity: 0.5,
                             }}
                             onPress={() => {}}
@@ -349,4 +379,10 @@ const styles = StyleSheet.create({
   },
 });
 
-export default EditAddress;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getCustAdd: (token) => dispatch(getCustomerAddress(token)),
+  };
+};
+
+export default connect('', mapDispatchToProps)(EditAddress);

@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   ImageBackground,
   TouchableWithoutFeedback,
+  ActivityIndicator,
   Keyboard,
 } from 'react-native';
 import Swiper from 'react-native-swiper';
@@ -21,6 +22,19 @@ import {
 import {restoreLoginData} from '../redux/user/userAction';
 import {connect} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+
+let timerId;
+
+const debounce = (fn, delay) => {
+  return (...args) => {
+    if (timerId) clearTimeout(timerId);
+
+    timerId = setTimeout(() => {
+      fn.apply(null, args);
+    }, delay);
+  };
+};
 
 function Home({
   LoadingData,
@@ -35,33 +49,14 @@ function Home({
   // console.log('top', topRatedProduct);
   // console.log('isloading', LoadingData);
   const [searchInput, setSearchInput] = useState('');
-
-  const [searchResult, setSearchResult] = useState([
-    {product_name: 'Bed with nano material', id: '1'},
-    {
-      product_name: 'Bed some product of newly added into database asd',
-      id: '2',
-    },
-    {product_name: 'Bad Products with Opacity of 11', id: '3'},
-    {product_name: 'Iphone 11', id: '4'},
-    {product_name: 'Iphone 11', id: '5'},
-    {product_name: 'Iphone 11', id: '6'},
-    {product_name: 'Iphone 11', id: '7'},
-    {product_name: 'Iphone 11', id: '8'},
-    {product_name: 'Iphone 11', id: '9'},
-    {product_name: 'Iphone 11', id: '10'},
-    {product_name: 'Iphone 11', id: '14'},
-    {product_name: 'Iphone 11', id: '24'},
-    {product_name: 'Iphone 11', id: '34'},
-    {product_name: 'Iphone 11', id: '44'},
-    {product_name: 'Iphone 11', id: '54'},
-  ]);
+  const [searchResult, setSearchResult] = useState([]);
+  const [searchLoading, setSearchLoading] = useState(true);
 
   const restoreUserInfo = async () => {
     try {
       const user = await AsyncStorage.getItem('userInfo');
       const parseUserData = await JSON.parse(user);
-      console.log('user Restored data', parseUserData);
+
       if (user !== null) {
         restoreData(parseUserData);
       }
@@ -73,6 +68,31 @@ function Home({
     getAllCategories();
     getTopRatingProducts();
   }, []);
+
+  const handleChange = (val) => {
+    setSearchInput(val);
+    debounceSearch(val);
+  };
+
+  const handleSearch = (text) => {
+    setSearchLoading(true);
+    axios
+      .get(`http://180.149.241.208:3022/getProductBySearchText/${text}`)
+      .then((res) => {
+        if (res.data.product_details == 'No details are available') {
+          setSearchResult([]);
+        } else {
+          setSearchResult(res.data.product_details);
+        }
+        setSearchLoading(false);
+      })
+      .catch((e) => {
+        console.log(e);
+        setSearchLoading(false);
+      });
+  };
+
+  const debounceSearch = debounce(handleSearch, 1000);
 
   if (LoadingData) {
     return (
@@ -86,7 +106,6 @@ function Home({
           source={require('../assets/json/loader2.json')}
           autoPlay
           style={{
-            // backgroundColor: 'red',
             width: 200,
             height: 200,
           }}
@@ -127,7 +146,8 @@ function Home({
                 style={styles.input}
                 placeholder="Email"
                 value={searchInput}
-                onChangeText={(val) => setSearchInput(val)}
+                onChangeText={(val) => handleChange(val)}
+                // onChange={handleChange}
               />
             </View>
           </View>
@@ -180,7 +200,7 @@ function Home({
                         navigation.navigate('ProductDetail', {
                           product_name:
                             product.DashboardProducts[0].product_name,
-                          product: product,
+                          product_id: product.DashboardProducts[0].product_id,
                         });
                       }}>
                       <View style={styles.productCardContent}>
@@ -251,6 +271,16 @@ function Home({
                 </View>
               </View>
             </View>
+          ) : searchLoading ? (
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+                paddingTop: 50,
+              }}>
+              <ActivityIndicator size={'large'} color={'blue'} />
+            </View>
           ) : (
             <View
               style={{
@@ -266,8 +296,14 @@ function Home({
                     <TouchableWithoutFeedback
                       key={ind}
                       onPress={() => {
-                        console.log(`Clicked on ${res.product_name}`);
+                        // console.log('click  ', res.product_id);
+                        // console.log(`Clicked on ${res.product_name}`);
+                        setSearchInput('');
                         Keyboard.dismiss();
+                        navigation.navigate('ProductDetail', {
+                          product_name: res.product_name,
+                          product_id: res.product_id,
+                        });
                       }}>
                       <View
                         style={{
@@ -312,6 +348,7 @@ function Home({
                             }}
                             onPress={() => {
                               setSearchInput(res.product_name);
+                              handleChange(res.product_name);
                             }}
                           />
                         </View>

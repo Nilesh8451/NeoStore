@@ -7,11 +7,14 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   ScrollView,
+  Alert,
 } from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {Formik} from 'formik';
 import * as yup from 'yup';
 import FlatButton from '../shared/button';
+import axios from 'axios';
+import {baseUrl, forgotPassword} from '../baseUrl';
 
 const mySchema = yup.object({
   email: yup.string().required().min(4).email(),
@@ -30,8 +33,21 @@ function ForgotPassword({navigation}) {
               validationSchema={mySchema}
               onSubmit={(values, action) => {
                 console.log(values);
-                navigation.navigate('SetPassword');
-                action.resetForm();
+
+                axios
+                  .post(`${baseUrl}/${forgotPassword}`, values)
+                  .then((res) => {
+                    console.log(res);
+                    Alert.alert('Hooray!', res.data.message);
+                    action.resetForm();
+                    navigation.navigate('SetPassword', {
+                      token: res.data.token,
+                    });
+                  })
+                  .catch((e) => {
+                    console.log('Error', e, e.response);
+                    Alert.alert('OOPS!', e.response.data.message);
+                  });
               }}>
               {(formikProps) => (
                 <View style={styles.mainDiv}>

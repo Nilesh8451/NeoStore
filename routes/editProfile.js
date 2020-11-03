@@ -7,6 +7,7 @@ import {
   TextInput,
   StyleSheet,
   Image,
+  ActivityIndicator,
 } from 'react-native';
 import {Avatar} from 'react-native-elements';
 import FlatButton from '../shared/button';
@@ -15,6 +16,10 @@ import Toast from 'react-native-simple-toast';
 import * as yup from 'yup';
 import ImagePicker from 'react-native-image-picker';
 import RadioForm from 'react-native-simple-radio-button';
+import {connect} from 'react-redux';
+import {updateUserInformation} from '../redux/user/userAction';
+import axios from 'axios';
+import {baseUrl, updateProfile} from '../baseUrl';
 
 const profileSchema = yup.object({
   firstname: yup
@@ -48,14 +53,19 @@ var radio_props = [
 ];
 
 function EditProfile(props) {
-  const [imageUri, setImageUri] = useState('');
+  const [imgData, setImgData] = useState({});
+  const [loadingAPI, setLoadingAPI] = useState(false);
+
+  console.log('User ', props.user);
+
+  const userDetail = props.user.customer_details;
 
   const handleChooseFile = () => {
     const options = {};
     ImagePicker.launchImageLibrary(options, (response) => {
-      // console.log('Response ', response);
+      console.log('Response ', response);
       if (response?.didCancel !== true) {
-        setImageUri(response.uri);
+        setImgData(response);
       }
     });
   };
@@ -68,35 +78,35 @@ function EditProfile(props) {
         // backgroundColor: 'yellow',
       }}>
       <ScrollView>
-        <View
-          style={{
-            width: '100%',
-            // backgroundColor: 'pink',
-            paddingTop: 30,
-            paddingBottom: 10,
-            alignItems: 'center',
-          }}>
-          {imageUri ? (
-            <Avatar
-              rounded
-              size={90}
-              source={{
-                uri: imageUri,
-              }}
-            />
-          ) : (
-            <Image
-              style={{width: 80, height: 80, borderRadius: 40}}
-              source={require('../assets/images/userDefaultImage.png')}
-            />
-          )}
+        {loadingAPI == false && (
+          <View
+            style={{
+              width: '100%',
+              // backgroundColor: 'pink',
+              paddingTop: 30,
+              paddingBottom: 10,
+              alignItems: 'center',
+            }}>
+            {imgData.uri ? (
+              <Image
+                style={{width: 80, height: 80, borderRadius: 40}}
+                source={{uri: imgData.uri}}
+              />
+            ) : (
+              <Image
+                style={{width: 80, height: 80, borderRadius: 40}}
+                source={require('../assets/images/userDefaultImage.png')}
+              />
+            )}
 
-          <TouchableOpacity onPress={handleChooseFile}>
-            <Text style={{fontSize: 18, marginTop: 10, color: 'blue'}}>
-              Change Photo
-            </Text>
-          </TouchableOpacity>
-        </View>
+            <TouchableOpacity onPress={handleChooseFile}>
+              <Text style={{fontSize: 18, marginTop: 10, color: 'blue'}}>
+                Change Photo
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
+
         <View
           style={{
             // backgroundColor: 'pink',
@@ -107,116 +117,163 @@ function EditProfile(props) {
           }}>
           <Formik
             initialValues={{
-              firstname: 'Nilesh',
-              lastname: 'Chavan',
-              email: 'nileshchavan@neosoftmail.com',
-              phoneno: '9867256653',
-              gender: 'Male',
+              firstname: userDetail?.first_name,
+              lastname: userDetail?.last_name,
+              email: userDetail?.email,
+              phoneno: userDetail.phone_no,
+              gender: userDetail.gender,
+              dob: '12/01/1999',
             }}
             validationSchema={profileSchema}
             onSubmit={(values, action) => {
               console.log(values);
-              Toast.show('Detail Updated Successfully', Toast.LONG);
-              // navigation.navigate('HomeDrawer');
-              props.navigation.goBack();
-              action.resetForm();
+              console.log(props.user.token);
+
+              const data = new FormData();
+              data.append('first_name', values.firstname);
+              data.append('last_name', values.lastname);
+              data.append('email', values.email);
+              data.append('dob', values.dob);
+              data.append('phone_no', values.phoneno);
+              data.append('gender', values.gender);
+
+              if (imgData.fileName) {
+                console.log('Adding', imgData.fileName);
+                data.append('profile_img', imgData.fileName);
+              }
+
+              setLoadingAPI(true);
+
+              axios
+                .put(`${baseUrl}/${updateProfile}`, data, {
+                  headers: {
+                    Authorization: `bearer ${props.user.token}`,
+                  },
+                })
+                .then((res) => {
+                  console.log('This is update res', res);
+                  props.updateInfo(res.data.customer_details);
+                  setLoadingAPI(false);
+                  Toast.show('Detail Updated Successfully', Toast.LONG);
+                  props.navigation.goBack();
+                  action.resetForm();
+                })
+                .catch((e) => {
+                  setLoadingAPI(false);
+                  console.log('Update Error', e);
+                });
             }}>
-            {(formikProps) => (
-              <View style={{width: '77%', marginBottom: 25, maxWidth: 450}}>
-                <TextInput
-                  style={styles.input}
-                  value={formikProps.values.firstname}
-                  onChangeText={formikProps.handleChange('firstname')}
-                  onBlur={formikProps.handleBlur('firstname')}
-                />
-                {formikProps.touched.firstname &&
-                  formikProps.errors.firstname && (
+            {(formikProps) =>
+              loadingAPI ? (
+                <View style={{flex: 1, marginTop: 100}}>
+                  <ActivityIndicator size={'large'} color={'blue'} />
+                </View>
+              ) : (
+                <View style={{width: '77%', marginBottom: 25, maxWidth: 450}}>
+                  <TextInput
+                    style={styles.input}
+                    value={formikProps.values.firstname}
+                    onChangeText={formikProps.handleChange('firstname')}
+                    onBlur={formikProps.handleBlur('firstname')}
+                  />
+                  {formikProps.touched.firstname &&
+                    formikProps.errors.firstname && (
+                      <Text style={styles.errorText}>
+                        {formikProps.touched.firstname &&
+                          formikProps.errors.firstname}
+                      </Text>
+                    )}
+                  <TextInput
+                    style={styles.input}
+                    value={formikProps.values.lastname}
+                    onChangeText={formikProps.handleChange('lastname')}
+                    onBlur={formikProps.handleBlur('lastname')}
+                  />
+                  {formikProps.touched.lastname &&
+                    formikProps.errors.lastname && (
+                      <Text style={styles.errorText}>
+                        {formikProps.touched.lastname &&
+                          formikProps.errors.lastname}
+                      </Text>
+                    )}
+                  <TextInput
+                    editable={false}
+                    style={styles.input}
+                    value={formikProps.values.email}
+                    onChangeText={formikProps.handleChange('email')}
+                    onBlur={formikProps.handleBlur('email')}
+                  />
+                  {formikProps.touched.email && formikProps.errors.email && (
                     <Text style={styles.errorText}>
-                      {formikProps.touched.firstname &&
-                        formikProps.errors.firstname}
+                      {formikProps.touched.email && formikProps.errors.email}
                     </Text>
                   )}
-                <TextInput
-                  style={styles.input}
-                  value={formikProps.values.lastname}
-                  onChangeText={formikProps.handleChange('lastname')}
-                  onBlur={formikProps.handleBlur('lastname')}
-                />
-                {formikProps.touched.lastname &&
-                  formikProps.errors.lastname && (
-                    <Text style={styles.errorText}>
-                      {formikProps.touched.lastname &&
-                        formikProps.errors.lastname}
-                    </Text>
-                  )}
-                <TextInput
-                  style={styles.input}
-                  value={formikProps.values.email}
-                  onChangeText={formikProps.handleChange('email')}
-                  onBlur={formikProps.handleBlur('email')}
-                />
-                {formikProps.touched.email && formikProps.errors.email && (
-                  <Text style={styles.errorText}>
-                    {formikProps.touched.email && formikProps.errors.email}
-                  </Text>
-                )}
 
-                <TextInput
-                  style={styles.input}
-                  value={formikProps.values.phoneno}
-                  onChangeText={formikProps.handleChange('phoneno')}
-                  onBlur={formikProps.handleBlur('phoneno')}
-                />
-                {formikProps.touched.phoneno && formikProps.errors.phoneno && (
-                  <Text style={styles.errorText}>
-                    {formikProps.touched.phoneno && formikProps.errors.phoneno}
-                  </Text>
-                )}
+                  <TextInput
+                    style={styles.input}
+                    value={formikProps.values.phoneno}
+                    onChangeText={formikProps.handleChange('phoneno')}
+                    onBlur={formikProps.handleBlur('phoneno')}
+                  />
+                  {formikProps.touched.phoneno &&
+                    formikProps.errors.phoneno && (
+                      <Text style={styles.errorText}>
+                        {formikProps.touched.phoneno &&
+                          formikProps.errors.phoneno}
+                      </Text>
+                    )}
 
-                <View style={{alignItems: 'flex-start'}}>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      marginTop: 25,
-                      marginLeft: 6,
-                    }}>
-                    <RadioForm
+                  <View style={{alignItems: 'flex-start'}}>
+                    <View
                       style={{
                         flexDirection: 'row',
-                      }}
-                      labelStyle={{marginRight: 10}}
-                      buttonSize={15}
-                      radio_props={radio_props}
-                      initial={formikProps.values.gender === 'Male' ? 0 : 1}
-                      onPress={(value) => {
-                        // console.log(value);
-                        if (value === 0) {
-                          formikProps.setFieldValue('gender', 'Male');
-                        } else {
-                          formikProps.setFieldValue('gender', 'Female');
+                        marginTop: 25,
+                        marginLeft: 6,
+                      }}>
+                      <RadioForm
+                        style={{
+                          flexDirection: 'row',
+                        }}
+                        labelStyle={{marginRight: 10}}
+                        buttonSize={15}
+                        radio_props={radio_props}
+                        initial={
+                          formikProps.values.gender.toLowerCase() === 'male'
+                            ? 0
+                            : 1
                         }
+                        onPress={(value) => {
+                          // console.log(value);
+                          if (value === 0) {
+                            formikProps.setFieldValue('gender', 'Male');
+                          } else {
+                            formikProps.setFieldValue('gender', 'Female');
+                          }
+                        }}
+                      />
+                    </View>
+                    {formikProps.touched.gender &&
+                      formikProps.errors.gender && (
+                        <Text style={styles.errorText}>
+                          {formikProps.touched.gender &&
+                            formikProps.errors.gender}
+                        </Text>
+                      )}
+                  </View>
+
+                  <View style={{marginTop: 25}}>
+                    <FlatButton
+                      title="Update"
+                      disabled={!formikProps.isValid}
+                      color={!formikProps.isValid ? 'gray' : '#2874F0'}
+                      onPress={() => {
+                        formikProps.handleSubmit();
                       }}
                     />
                   </View>
-                  {formikProps.touched.gender && formikProps.errors.gender && (
-                    <Text style={styles.errorText}>
-                      {formikProps.touched.gender && formikProps.errors.gender}
-                    </Text>
-                  )}
                 </View>
-
-                <View style={{marginTop: 25}}>
-                  <FlatButton
-                    title="Update"
-                    disabled={!formikProps.isValid}
-                    color={!formikProps.isValid ? 'gray' : '#2874F0'}
-                    onPress={() => {
-                      formikProps.handleSubmit();
-                    }}
-                  />
-                </View>
-              </View>
-            )}
+              )
+            }
           </Formik>
         </View>
       </ScrollView>
@@ -246,4 +303,17 @@ const styles = StyleSheet.create({
     textTransform: 'capitalize',
   },
 });
-export default EditProfile;
+
+const mapStateToProps = (state) => {
+  return {
+    user: state.userReducer.user,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    updateInfo: (cus_detail) => dispatch(updateUserInformation(cus_detail)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(EditProfile);

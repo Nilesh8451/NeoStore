@@ -8,8 +8,12 @@ import {
   Image,
 } from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import {connect} from 'react-redux';
 
 function Profile(props) {
+  console.log(props.user);
+  const userInfo = props.user;
+
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
       <ScrollView>
@@ -24,7 +28,10 @@ function Profile(props) {
               source={require('../assets/images/userDefaultImage.png')}
             />
 
-            <Text style={{marginLeft: 25, fontSize: 19}}>Nilesh Chavan</Text>
+            <Text style={{marginLeft: 25, fontSize: 19}}>
+              {userInfo?.customer_details?.first_name}{' '}
+              {userInfo?.customer_details?.last_name}
+            </Text>
           </View>
           <View
             style={{
@@ -42,7 +49,9 @@ function Profile(props) {
               style={{opacity: 0.6}}
               onPress={() => {}}
             />
-            <Text style={{marginLeft: 18, fontSize: 16}}>8451834334</Text>
+            <Text style={{marginLeft: 18, fontSize: 16}}>
+              {userInfo?.customer_details?.phone_no}
+            </Text>
           </View>
           <View
             style={{
@@ -61,7 +70,7 @@ function Profile(props) {
               onPress={() => {}}
             />
             <Text style={{marginLeft: 18, fontSize: 16}}>
-              nileshchavan@neosoftmail.com
+              {userInfo?.customer_details?.email}
             </Text>
           </View>
         </View>
@@ -99,7 +108,9 @@ function Profile(props) {
               height: '100%',
               width: '50%',
             }}>
-            <Text style={{fontWeight: 'bold', fontSize: 17}}>0</Text>
+            <Text style={{fontWeight: 'bold', fontSize: 17}}>
+              {userInfo?.orders_onTheWay + userInfo?.orders_shipped}
+            </Text>
             <Text style={{fontSize: 17}}>Orders</Text>
           </View>
         </View>
@@ -141,7 +152,11 @@ function Profile(props) {
             </View>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => props.navigation.navigate('ChangePassword')}>
+            onPress={() =>
+              props.navigation.navigate('ChangePassword', {
+                token: userInfo.token,
+              })
+            }>
             <View
               style={{
                 flexDirection: 'row',
@@ -221,7 +236,11 @@ function Profile(props) {
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => props.navigation.navigate('UpdateAddress')}>
+            onPress={() =>
+              props.navigation.navigate('UpdateAddress', {
+                token: userInfo.token,
+              })
+            }>
             <View
               style={{
                 flexDirection: 'row',
@@ -272,4 +291,10 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Profile;
+const mapStateToProps = (state) => {
+  return {
+    user: state.userReducer.user,
+  };
+};
+
+export default connect(mapStateToProps)(Profile);

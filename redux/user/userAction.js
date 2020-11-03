@@ -1,12 +1,16 @@
 import axios from 'axios';
 import {
+  GET_USERADDRESS_FAI,
+  GET_USERADDRESS_REQ,
+  GET_USERADDRESS_SUC,
   LOGIN_FAILURE,
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
   RESTORE_LOGINDATA,
   SIGNOUT,
+  UPDATE_USERINFO,
 } from './types';
-import {baseUrl, loginEndPoint} from '../../baseUrl';
+import {baseUrl, loginEndPoint, getUserAddress} from '../../baseUrl';
 import {Alert} from 'react-native';
 import Toast from 'react-native-simple-toast';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -58,5 +62,42 @@ export const signOut = () => {
   removeData();
   return {
     type: SIGNOUT,
+  };
+};
+
+export const updateUserInformation = (cus_detail) => {
+  return async (dispatch) => {
+    const user = await AsyncStorage.getItem('userInfo');
+    let parseUserData = await JSON.parse(user);
+    parseUserData.customer_details = cus_detail;
+
+    storeData(parseUserData);
+
+    dispatch({
+      type: UPDATE_USERINFO,
+      data: parseUserData,
+    });
+  };
+};
+
+export const getCustomerAddress = (token) => {
+  return (dispatch) => {
+    dispatch({type: GET_USERADDRESS_REQ});
+
+    axios
+      .get(`${baseUrl}/${getUserAddress}`, {
+        headers: {
+          Authorization: `bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        // console.log('Inside Action', res.data);
+        dispatch({type: GET_USERADDRESS_SUC, data: res.data.customer_address});
+        //
+      })
+      .catch((e) => {
+        // console.log(e, e.response);
+        dispatch({type: GET_USERADDRESS_FAI});
+      });
   };
 };
