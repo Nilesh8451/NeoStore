@@ -196,7 +196,11 @@ function Profile(props) {
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => props.navigation.navigate('AddAddress')}>
+            onPress={() =>
+              props.navigation.navigate('AddAddress', {
+                token: userInfo.token,
+              })
+            }>
             <View
               style={{
                 flexDirection: 'row',

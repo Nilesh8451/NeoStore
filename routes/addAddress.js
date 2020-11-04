@@ -7,13 +7,16 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   ScrollView,
+  Alert,
+  ActivityIndicator,
 } from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {Formik} from 'formik';
 import * as yup from 'yup';
 import FlatButton from '../shared/button';
-
 import Toast from 'react-native-simple-toast';
+import axios from 'axios';
+import {addNewAddress, baseUrl} from '../baseUrl';
 
 const placeSchema = yup.object({
   address: yup.string().required(),
@@ -37,7 +40,11 @@ const placeSchema = yup.object({
     .matches(/^[a-zA-Z]+$/, 'Must contain only alphabets'),
 });
 
-function AddAddress({navigation}) {
+function AddAddress(props) {
+  const token = props.route.params.token;
+
+  const [loading, setLoading] = useState(false);
+
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -54,49 +61,40 @@ function AddAddress({navigation}) {
               validationSchema={placeSchema}
               onSubmit={(values, action) => {
                 console.log(values);
-                Toast.show('Address Added Successfully', Toast.LONG);
-                navigation.popToTop();
-                action.resetForm();
+
+                setLoading(true);
+
+                axios
+                  .post(`${baseUrl}/${addNewAddress}`, values, {
+                    headers: {
+                      Authorization: `bearer ${token}`,
+                    },
+                  })
+                  .then((res) => {
+                    console.log('Added ', res.data);
+                    Toast.show(res.data.message, Toast.LONG);
+                    action.resetForm();
+                    setLoading(false);
+                    props.navigation.popToTop();
+                  })
+                  .catch((e) => {
+                    console.log('error', e, e.response);
+                    setLoading(false);
+                    Alert.alert('OOPS!', e.response.data.message);
+                  });
               }}>
               {(formikProps) => (
                 <View style={styles.mainDiv}>
-                  <View style={styles.card}>
-                    <View style={styles.cardContent}>
-                      <View style={{justifyContent: 'center'}}>
-                        <FontAwesome5
-                          name={'address-card'}
-                          color={'black'}
-                          solid
-                          size={18}
-                          style={{
-                            position: 'relative',
-                            left: 13,
-                            top: 35,
-                            opacity: 0.5,
-                          }}
-                          onPress={() => {}}
-                        />
-                        <TextInput
-                          style={styles.input}
-                          placeholder="Enter Your Address"
-                          multiline
-                          value={formikProps.values.address}
-                          onChangeText={formikProps.handleChange('address')}
-                          onBlur={formikProps.handleBlur('address')}
-                        />
-
-                        {formikProps.touched.address &&
-                          formikProps.errors.address && (
-                            <Text style={styles.errorText}>
-                              {formikProps.touched.address &&
-                                formikProps.errors.address}
-                            </Text>
-                          )}
-                      </View>
-                      <View>
+                  {loading ? (
+                    <View style={{marginTop: 100}}>
+                      <ActivityIndicator size={'large'} color={'blue'} />
+                    </View>
+                  ) : (
+                    <View style={styles.card}>
+                      <View style={styles.cardContent}>
                         <View style={{justifyContent: 'center'}}>
                           <FontAwesome5
-                            name={'map-pin'}
+                            name={'address-card'}
                             color={'black'}
                             solid
                             size={18}
@@ -110,135 +108,168 @@ function AddAddress({navigation}) {
                           />
                           <TextInput
                             style={styles.input}
-                            keyboardType="number-pad"
-                            placeholder="Enter Your Pin Code"
-                            value={formikProps.values.pincode}
-                            onChangeText={formikProps.handleChange('pincode')}
-                            onBlur={formikProps.handleBlur('pincode')}
+                            placeholder="Enter Your Address"
+                            multiline
+                            value={formikProps.values.address}
+                            onChangeText={formikProps.handleChange('address')}
+                            onBlur={formikProps.handleBlur('address')}
                           />
+
+                          {formikProps.touched.address &&
+                            formikProps.errors.address && (
+                              <Text style={styles.errorText}>
+                                {formikProps.touched.address &&
+                                  formikProps.errors.address}
+                              </Text>
+                            )}
+                        </View>
+                        <View>
+                          <View style={{justifyContent: 'center'}}>
+                            <FontAwesome5
+                              name={'map-pin'}
+                              color={'black'}
+                              solid
+                              size={18}
+                              style={{
+                                position: 'relative',
+                                left: 13,
+                                top: 35,
+                                opacity: 0.5,
+                              }}
+                              onPress={() => {}}
+                            />
+                            <TextInput
+                              style={styles.input}
+                              keyboardType="number-pad"
+                              placeholder="Enter Your Pin Code"
+                              value={formikProps.values.pincode}
+                              onChangeText={formikProps.handleChange('pincode')}
+                              onBlur={formikProps.handleBlur('pincode')}
+                            />
+                          </View>
+
+                          {formikProps.touched.pincode &&
+                            formikProps.errors.pincode && (
+                              <Text style={styles.errorText}>
+                                {formikProps.touched.pincode &&
+                                  formikProps.errors.pincode}
+                              </Text>
+                            )}
                         </View>
 
-                        {formikProps.touched.pincode &&
-                          formikProps.errors.pincode && (
-                            <Text style={styles.errorText}>
-                              {formikProps.touched.pincode &&
-                                formikProps.errors.pincode}
-                            </Text>
-                          )}
-                      </View>
+                        <View>
+                          <View style={{justifyContent: 'center'}}>
+                            <FontAwesome5
+                              name={'city'}
+                              color={'black'}
+                              solid
+                              size={18}
+                              style={{
+                                position: 'relative',
+                                left: 13,
+                                top: 35,
+                                opacity: 0.5,
+                              }}
+                              onPress={() => {}}
+                            />
+                            <TextInput
+                              style={styles.input}
+                              placeholder="Enter Your City Name"
+                              value={formikProps.values.city}
+                              onChangeText={formikProps.handleChange('city')}
+                              onBlur={formikProps.handleBlur('city')}
+                            />
+                          </View>
 
-                      <View>
-                        <View style={{justifyContent: 'center'}}>
-                          <FontAwesome5
-                            name={'city'}
-                            color={'black'}
-                            solid
-                            size={18}
-                            style={{
-                              position: 'relative',
-                              left: 13,
-                              top: 35,
-                              opacity: 0.5,
-                            }}
-                            onPress={() => {}}
-                          />
-                          <TextInput
-                            style={styles.input}
-                            placeholder="Enter Your City Name"
-                            value={formikProps.values.city}
-                            onChangeText={formikProps.handleChange('city')}
-                            onBlur={formikProps.handleBlur('city')}
-                          />
+                          {formikProps.touched.city &&
+                            formikProps.errors.city && (
+                              <Text style={styles.errorText}>
+                                {formikProps.touched.city &&
+                                  formikProps.errors.city}
+                              </Text>
+                            )}
                         </View>
 
-                        {formikProps.touched.city &&
-                          formikProps.errors.city && (
-                            <Text style={styles.errorText}>
-                              {formikProps.touched.city &&
-                                formikProps.errors.city}
-                            </Text>
-                          )}
-                      </View>
+                        <View>
+                          <View style={{justifyContent: 'center'}}>
+                            <FontAwesome5
+                              name={'playstation'}
+                              color={'black'}
+                              solid
+                              size={18}
+                              style={{
+                                position: 'relative',
+                                left: 13,
+                                top: 35,
+                                opacity: 0.5,
+                              }}
+                              onPress={() => {}}
+                            />
+                            <TextInput
+                              style={styles.input}
+                              placeholder="Enter Your State Name"
+                              value={formikProps.values.state}
+                              onChangeText={formikProps.handleChange('state')}
+                              onBlur={formikProps.handleBlur('state')}
+                            />
+                          </View>
 
-                      <View>
-                        <View style={{justifyContent: 'center'}}>
-                          <FontAwesome5
-                            name={'playstation'}
-                            color={'black'}
-                            solid
-                            size={18}
-                            style={{
-                              position: 'relative',
-                              left: 13,
-                              top: 35,
-                              opacity: 0.5,
-                            }}
-                            onPress={() => {}}
-                          />
-                          <TextInput
-                            style={styles.input}
-                            placeholder="Enter Your State Name"
-                            value={formikProps.values.state}
-                            onChangeText={formikProps.handleChange('state')}
-                            onBlur={formikProps.handleBlur('state')}
-                          />
+                          {formikProps.touched.state &&
+                            formikProps.errors.state && (
+                              <Text style={styles.errorText}>
+                                {formikProps.touched.state &&
+                                  formikProps.errors.state}
+                              </Text>
+                            )}
                         </View>
 
-                        {formikProps.touched.state &&
-                          formikProps.errors.state && (
-                            <Text style={styles.errorText}>
-                              {formikProps.touched.state &&
-                                formikProps.errors.state}
-                            </Text>
-                          )}
-                      </View>
+                        <View>
+                          <View style={{justifyContent: 'center'}}>
+                            <FontAwesome5
+                              name={'flag'}
+                              color={'black'}
+                              solid
+                              size={18}
+                              style={{
+                                position: 'relative',
+                                left: 13,
+                                top: 35,
+                                opacity: 0.5,
+                              }}
+                              onPress={() => {}}
+                            />
+                            <TextInput
+                              style={styles.input}
+                              placeholder="Enter Your Country Name"
+                              value={formikProps.values.country}
+                              onChangeText={formikProps.handleChange('country')}
+                              onBlur={formikProps.handleBlur('country')}
+                            />
+                          </View>
 
-                      <View>
-                        <View style={{justifyContent: 'center'}}>
-                          <FontAwesome5
-                            name={'flag'}
-                            color={'black'}
-                            solid
-                            size={18}
-                            style={{
-                              position: 'relative',
-                              left: 13,
-                              top: 35,
-                              opacity: 0.5,
-                            }}
-                            onPress={() => {}}
-                          />
-                          <TextInput
-                            style={styles.input}
-                            placeholder="Enter Your Country Name"
-                            value={formikProps.values.country}
-                            onChangeText={formikProps.handleChange('country')}
-                            onBlur={formikProps.handleBlur('country')}
-                          />
+                          {formikProps.touched.country &&
+                            formikProps.errors.country && (
+                              <Text style={styles.errorText}>
+                                {formikProps.touched.country &&
+                                  formikProps.errors.country}
+                              </Text>
+                            )}
                         </View>
 
-                        {formikProps.touched.country &&
-                          formikProps.errors.country && (
-                            <Text style={styles.errorText}>
-                              {formikProps.touched.country &&
-                                formikProps.errors.country}
-                            </Text>
-                          )}
-                      </View>
-
-                      <View style={styles.buttonDiv}>
-                        <View style={styles.button}>
-                          <FlatButton
-                            title="Submit"
-                            // color="#f01d71"
-                            disabled={!formikProps.isValid}
-                            color={!formikProps.isValid ? 'gray' : '#2874F0'}
-                            onPress={formikProps.handleSubmit}
-                          />
+                        <View style={styles.buttonDiv}>
+                          <View style={styles.button}>
+                            <FlatButton
+                              title="Submit"
+                              // color="#f01d71"
+                              disabled={!formikProps.isValid}
+                              color={!formikProps.isValid ? 'gray' : '#2874F0'}
+                              onPress={formikProps.handleSubmit}
+                            />
+                          </View>
                         </View>
                       </View>
                     </View>
-                  </View>
+                  )}
                 </View>
               )}
             </Formik>

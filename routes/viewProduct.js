@@ -14,148 +14,21 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import LottieView from 'lottie-react-native';
 import CustomModal from '../shared/modal';
 import FlatButton from '../shared/button';
-import {Rating, AirbnbRating} from 'react-native-ratings';
+import {Rating} from 'react-native-ratings';
 import Toast from 'react-native-simple-toast';
+import axios from 'axios';
+import {
+  baseUrl,
+  commonProducts,
+  getAllCategories,
+  getAllColors,
+} from '../baseUrl';
+import CustomChip from '../shared/chip';
 
-function ViewProduct({navigation}) {
-  const [allProducts, setAllProducts] = useState([
-    {
-      id: 1,
-      rating: 3,
-      product_name: 'Nokia Lumia 400',
-      product_price: 40000,
-    },
-    {
-      id: 2,
-      rating: 5,
-      product_name: 'Mou Bed With Mattress',
-      product_price: 20000,
-    },
-    {
-      id: 3,
-      rating: 4.5,
-      product_name: 'IPhone 12',
-      product_price: 80000,
-    },
-    {
-      id: 4,
-      rating: 3,
-      product_name: 'Freedom 251',
-      product_price: 251,
-    },
-    {
-      id: 5,
-      rating: 4,
-      product_name: 'Macbock Pro',
-      product_price: 70000,
-    },
-    {
-      id: 6,
-      rating: 1.5,
-      product_name: 'Macbock Pro2',
-      product_price: 70000,
-    },
-    {
-      id: 7,
-      rating: 3.5,
-      product_name: 'Macbock Pro3',
-      product_price: 70000,
-    },
-    {
-      id: 8,
-      rating: 3,
-      product_name: 'Macbock Pro4',
-      product_price: 70000,
-    },
-
-    {
-      id: 9,
-      rating: 4,
-      product_name: 'Macbock Pro5',
-      product_price: 70000,
-    },
-
-    {
-      id: 10,
-      rating: 5,
-      product_name: 'Macbock Pr6',
-      product_price: 70000,
-    },
-    {
-      id: 11,
-      rating: 3,
-      product_name: 'Macbock Pro7',
-      product_price: 70000,
-    },
-    {
-      id: 12,
-      rating: 3,
-      product_name: 'Macbock Pro8',
-      product_price: 70000,
-    },
-    {
-      id: 13,
-      rating: 4,
-      product_name: 'Macbock Pro9',
-      product_price: 70000,
-    },
-
-    {
-      rating: 2,
-      id: 14,
-      product_name: 'Macbock Pr10',
-      product_price: 70000,
-    },
-    {
-      id: 15,
-      rating: 2,
-      product_name: 'Macbock Pro11',
-      product_price: 70000,
-    },
-    {
-      id: 16,
-      rating: 1,
-      product_name: 'Macbock Pro12',
-      product_price: 70000,
-    },
-    {
-      id: 17,
-      rating: 3,
-      product_name: 'Macbock Pro13',
-      product_price: 70000,
-    },
-
-    {
-      id: 18,
-      rating: 4,
-      product_name: 'Macbock Pr14',
-      product_price: 70000,
-    },
-    {
-      id: 19,
-      rating: 2.5,
-      product_name: 'Macbock Pro15',
-      product_price: 70000,
-    },
-    {
-      id: 20,
-      rating: 3,
-      product_name: 'Macbock Pro16',
-      product_price: 70000,
-    },
-    {
-      id: 21,
-      rating: 5,
-      product_name: 'Macbock Pro17',
-      product_price: 70000,
-    },
-  ]);
-
-  const [displayProducts, setDisplayProducts] = useState([
-    ...allProducts.slice(0, 5),
-  ]);
+function ViewProduct({navigation, route}) {
+  const [commonPro, setCommonPro] = useState({});
+  const [displayProducts, setDisplayProducts] = useState([]);
   const [batch, setBatch] = useState(1);
-
   const [isLoading, setIsLoading] = useState(true);
   const [recentClicked, setRecentClicked] = useState('');
   const [openCategoryModal, setOpenCategoryModal] = useState(false);
@@ -164,34 +37,12 @@ function ViewProduct({navigation}) {
   const [colorVal, setColorVal] = useState('');
   const [categoryVal, setCategoryVal] = useState('');
   const [costVal, setCostVal] = useState('');
-  const [colors] = useState([
-    '#f44336',
-    '#e91e63',
-    '#9c27b0',
-    '#673ab7',
-    '#3f51b5',
-    '#2196f3',
-    '#03a9f4',
-    '#00bcd4',
-    '#009688',
-    '#4caf50',
-    '#8bc34a',
-    '#cddc39',
-    '#ffeb3b',
-    '#ffc107',
-    '#ff9800',
-    '#ff5722',
-    '#795548',
-    '#607d8b',
-  ]);
+  const [colors, setColors] = useState([]);
+  const [colorCode, setColorCode] = useState('');
+  const [colorName, setColorName] = useState('');
+  const [categoryCode, setCategoryCode] = useState('');
 
-  const [categories, setCategories] = useState([
-    'Sofa',
-    'Bed',
-    'Chair',
-    'Table',
-    'Almirah',
-  ]);
+  const [categories, setCategories] = useState([]);
 
   const [costType, setCostType] = useState([
     'Price: Low To High',
@@ -199,38 +50,133 @@ function ViewProduct({navigation}) {
   ]);
 
   useEffect(() => {
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
+    setIsLoading(true);
+    console.log(route.params);
+    if (route.params?.category_id) {
+      setCategoryVal(route.params.category_name);
+      setCategoryCode(route.params.category_id);
+    }
+
+    axios
+      .get(`${baseUrl}/${commonProducts}`, {
+        params: {
+          category_id: route.params ? route.params.category_id : '',
+        },
+      })
+      .then((res) => {
+        console.log('Res On Common Pro', res.data);
+        setCommonPro(res.data);
+        setDisplayProducts(res.data.product_details.slice(0, 5));
+        setIsLoading(false);
+      })
+      .catch((e) => {
+        console.log('Error on Common Products', e, e.response);
+        setIsLoading(false);
+      });
+
+    axios
+      .get(`${baseUrl}/${getAllCategories}`)
+      .then((res) => {
+        console.log('Category', res);
+        setCategories(res.data.category_details);
+      })
+      .catch((e) => {
+        console.log('Error Cate', e, e.response);
+      });
+
+    axios
+      .get(`${baseUrl}/${getAllColors}`)
+      .then((res) => {
+        console.log('Color', res);
+        setColors(res.data.color_details);
+      })
+      .catch((e) => {
+        console.log('Error Col', e, e.response);
+      });
   }, []);
 
   const loadMore = () => {
     let start = batch * 5;
     let end = (batch + 1) * 5;
 
-    if (end > allProducts.length) {
-      end = allProducts.length;
+    if (end > commonPro.product_details.length) {
+      end = commonPro.product_details.length;
     }
-    const newData = allProducts.slice(start, end);
+    const newData = commonPro.product_details.slice(start, end);
     setDisplayProducts((prevState) => {
       return [...prevState, ...newData];
     });
-    Toast.show(`${end} OF ${allProducts.length}`, Toast.LONG);
+    Toast.show(`${end} OF ${commonPro.product_details.length}`, Toast.LONG);
     setBatch((preState) => preState + 1);
   };
 
+  const handleSelectedCategoryClose = () => {
+    axios
+      .get(`${baseUrl}/${commonProducts}`, {
+        params: {
+          color_id: colorCode,
+        },
+      })
+      .then((res) => {
+        if (res.data.message != 'No Product is available') {
+          setCommonPro(res.data);
+          setDisplayProducts(res.data.product_details.slice(0, 5));
+          setBatch(1);
+        } else {
+          setCommonPro({});
+          setDisplayProducts([]);
+        }
+      })
+      .catch((e) => {
+        console.log('Cate Filter Error', e, e.response);
+        setCommonPro({});
+        setDisplayProducts([]);
+      });
+    setCategoryCode('');
+    setCategoryVal('');
+  };
+
+  const handleSelectedColorClose = () => {
+    setColorName('');
+    setColorVal('');
+    setColorCode('');
+    axios
+      .get(`${baseUrl}/${commonProducts}`, {
+        params: {
+          category_id: categoryCode,
+          color_id: '',
+          sortBy: costVal ? 'product_cost' : '',
+          sortIn: costVal
+            ? costVal == 'Price: Low To High'
+              ? false
+              : true
+            : '',
+        },
+      })
+      .then((res) => {
+        if (res.data.message != 'No Product is available') {
+          setCommonPro(res.data);
+          setDisplayProducts(res.data.product_details.slice(0, 5));
+          setBatch(1);
+        } else {
+          setCommonPro({});
+          setDisplayProducts([]);
+        }
+      })
+      .catch((e) => {
+        console.log('Cate Filter Error', e, e.response);
+        setCommonPro({});
+        setDisplayProducts([]);
+      });
+  };
+
   const renderFlatlistFooter = () => {
-    return !(displayProducts.length === allProducts.length) ? (
+    return !(displayProducts.length === commonPro?.product_details?.length) ? (
       <View>
         <ActivityIndicator animating size="large" color={'blue'} />
       </View>
     ) : (
-      <View>
-        {/* {Toast.show(
-          `${allProducts.length} OF ${allProducts.length}`,
-          Toast.LONG,
-        )} */}
-      </View>
+      <View></View>
     );
   };
 
@@ -246,7 +192,6 @@ function ViewProduct({navigation}) {
           source={require('../assets/json/loader2.json')}
           autoPlay
           style={{
-            // backgroundColor: 'red',
             width: 200,
             height: 200,
           }}
@@ -264,85 +209,148 @@ function ViewProduct({navigation}) {
             marginHorizontal: 10,
             marginVertical: 10,
           }}>
-          <FlatList
-            data={displayProducts}
-            keyExtractor={(item) => item.id.toString()}
-            onEndReached={loadMore}
-            ListFooterComponent={renderFlatlistFooter}
-            onEndReachedThreshold={1}
-            renderItem={({item, index}) => {
-              return (
-                <TouchableWithoutFeedback
-                  key={item.id}
-                  onPress={() => {
-                    console.log('Clicked on Card');
-                    navigation.navigate('ProductDetail', {
-                      product_name: item.product_name,
-                      product: item,
-                    });
-                  }}>
-                  <View style={styles.productCardContent}>
-                    <View style={styles.productCard}>
-                      <ImageBackground
-                        source={require('../assets/images/food-banner1.jpg')}
-                        style={{
-                          width: '100%',
-                          height: '100%',
-                        }}
-                        resizeMode={'cover'}
-                        borderRadius={6}
-                        imageStyle={{}}>
-                        <View
+          <View
+            style={{
+              // backgroundColor: 'yellow',
+              alignItems: 'center',
+            }}>
+            <View
+              style={{
+                width: '100%',
+                // backgroundColor: 'pink',
+                flexDirection: 'row',
+                justifyContent: 'center',
+                flexWrap: 'wrap',
+              }}>
+              {categoryVal ? (
+                <CustomChip
+                  text={categoryVal}
+                  onClick={() => {
+                    handleSelectedCategoryClose();
+                  }}
+                />
+              ) : null}
+              {colorVal ? (
+                <CustomChip
+                  text={colorName}
+                  color={colorVal}
+                  onClick={() => {
+                    handleSelectedColorClose();
+                  }}
+                />
+              ) : null}
+            </View>
+          </View>
+          {displayProducts.length > 0 ? (
+            <FlatList
+              data={displayProducts}
+              keyExtractor={(item) => item._id}
+              onEndReached={loadMore}
+              ListFooterComponent={renderFlatlistFooter}
+              onEndReachedThreshold={1}
+              renderItem={({item, index}) => {
+                return (
+                  <TouchableWithoutFeedback
+                    onPress={() => {
+                      console.log('Clicked on Card');
+                      navigation.navigate('ProductDetail', {
+                        product_name: item.product_name,
+                        product_id: item.product_id,
+                      });
+                    }}>
+                    <View style={styles.productCardContent}>
+                      <View style={styles.productCard}>
+                        <ImageBackground
+                          source={{
+                            uri: `${baseUrl}/${item.product_image}`,
+                          }}
                           style={{
-                            flex: 1,
-                            borderRadius: 6,
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            justifyContent:
-                              index % 2 ? 'flex-start' : 'flex-end',
-                            backgroundColor: 'rgba( 0, 0, 0, 0.5 )',
-                            shadowColor: '#000',
-                            shadowOffset: {
-                              width: 0,
-                              height: 3,
-                            },
-                            shadowOpacity: 0.27,
-                            shadowRadius: 4.65,
-
-                            elevation: 3,
-                          }}>
+                            width: '100%',
+                            height: '100%',
+                          }}
+                          resizeMode={'cover'}
+                          borderRadius={6}
+                          imageStyle={{}}>
                           <View
                             style={{
-                              marginLeft: index % 2 && 30,
-                              marginRight: index % 2 ? 0 : 30,
-                              alignItems: index % 2 ? 'flex-start' : 'flex-end',
-                              maxWidth: 200,
+                              flex: 1,
+                              borderRadius: 6,
+                              flexDirection: 'row',
+                              alignItems: 'center',
+                              justifyContent:
+                                index % 2 ? 'flex-start' : 'flex-end',
+                              backgroundColor: 'rgba( 0, 0, 0, 0.5 )',
+                              shadowColor: '#000',
+                              shadowOffset: {
+                                width: 0,
+                                height: 3,
+                              },
+                              shadowOpacity: 0.27,
+                              shadowRadius: 4.65,
+
+                              elevation: 3,
                             }}>
-                            <Text
-                              style={{fontSize: 21, color: 'white'}}
-                              numberOfLines={1}>
-                              {item.product_name}
-                            </Text>
-                            <Rating
-                              ratingCount={5}
-                              startingValue={item.rating}
-                              imageSize={20}
-                              type={'custom'}
-                              readonly={true}
-                              tintColor="rgba( 0, 0, 0, 0.5 )"
-                            />
-                            <Text style={{fontSize: 15, color: 'white'}}>
-                              {item.product_price}
-                            </Text>
+                            <View
+                              style={{
+                                marginLeft: index % 2 && 30,
+                                marginRight: index % 2 ? 0 : 30,
+                                alignItems:
+                                  index % 2 ? 'flex-start' : 'flex-end',
+                                maxWidth: 200,
+                              }}>
+                              <Text
+                                style={{fontSize: 21, color: 'white'}}
+                                numberOfLines={1}>
+                                {item.product_name}
+                              </Text>
+                              <Rating
+                                ratingCount={5}
+                                startingValue={parseFloat(item.product_rating)}
+                                imageSize={20}
+                                type={'custom'}
+                                readonly={true}
+                                tintColor="rgba( 0, 0, 0, 0.5 )"
+                              />
+                              <Text style={{fontSize: 15, color: 'white'}}>
+                                {item.product_cost}
+                              </Text>
+                            </View>
                           </View>
-                        </View>
-                      </ImageBackground>
+                        </ImageBackground>
+                      </View>
                     </View>
-                  </View>
-                </TouchableWithoutFeedback>
-              );
-            }}
-          />
+                  </TouchableWithoutFeedback>
+                );
+              }}
+            />
+          ) : (
+            <View
+              style={{
+                flex: 1,
+                // backgroundColor: 'yellow',
+                alignItems: 'center',
+                paddingTop: 80,
+              }}>
+              <FontAwesome5
+                name={'exclamation-circle'}
+                color={'red'}
+                solid
+                size={90}
+                style={{opacity: 0.5}}
+                onPress={() => {}}
+              />
+              <Text
+                style={{
+                  fontSize: 20,
+                  marginTop: 20,
+                  textTransform: 'uppercase',
+                  fontWeight: 'bold',
+                  opacity: 0.9,
+                }}>
+                No Product Found
+              </Text>
+            </View>
+          )}
         </View>
 
         {/****************  Category Modal And Action Button **********************/}
@@ -351,7 +359,7 @@ function ViewProduct({navigation}) {
           open={openCategoryModal}
           setOpen={setOpenCategoryModal}
           title="Select Category"
-          setClickedVal={setCategoryVal}>
+          setClickedVal={handleSelectedCategoryClose}>
           <View
             style={{
               height: 130,
@@ -369,24 +377,28 @@ function ViewProduct({navigation}) {
                   alignItems: 'center',
                   marginTop: 10,
                 }}>
-                {categories.map((category) => (
+                {categories.map((category, index) => (
                   <TouchableOpacity
-                    key={category}
+                    key={index}
                     style={{
                       width: '100%',
                       flexDirection: 'row',
                       justifyContent: 'center',
                     }}
                     onPress={() => {
-                      console.log('Setting a color with id', category);
-                      setCategoryVal(category);
+                      console.log(
+                        'Setting a color with id',
+                        category.category_id,
+                      );
+                      setCategoryVal(category.category_name);
+                      setCategoryCode(category.category_id);
                     }}>
                     <View
                       style={{
                         width: '90%',
 
                         backgroundColor:
-                          categoryVal === category
+                          categoryVal === category.category_name
                             ? '#2874F0'
                             : 'rgba(0,0,0,0.1)',
                         marginBottom: 10,
@@ -398,9 +410,12 @@ function ViewProduct({navigation}) {
                           marginLeft: 10,
                           paddingVertical: 8,
                           fontSize: 15,
-                          color: categoryVal === category ? 'white' : 'black',
+                          color:
+                            categoryVal === category.category_name
+                              ? 'white'
+                              : 'black',
                         }}>
-                        {category}
+                        {category.category_name}
                       </Text>
                     </View>
                   </TouchableOpacity>
@@ -416,11 +431,29 @@ function ViewProduct({navigation}) {
               onPress={() => {
                 console.log('CLicked with category id of', categoryVal);
                 setColorVal('');
+                setColorCode('');
+                setCostVal('');
                 setOpenCategoryModal(false);
-                Toast.show(
-                  `Filtered List With ${categoryVal} category`,
-                  Toast.LONG,
-                );
+
+                axios
+                  .get(`${baseUrl}/${commonProducts}`, {
+                    params: {
+                      category_id: categoryCode,
+                    },
+                  })
+                  .then((res) => {
+                    // console.log('AAAAAAAAAAAAAAAA', res);
+                    setCommonPro(res.data);
+                    setDisplayProducts(res.data.product_details.slice(0, 5));
+                    setBatch(1);
+                    Toast.show(
+                      `Filtered List With ${categoryVal} category`,
+                      Toast.LONG,
+                    );
+                  })
+                  .catch((e) => {
+                    console.log('Cate Filter Error', e, e.response);
+                  });
               }}
             />
           </View>
@@ -457,7 +490,7 @@ function ViewProduct({navigation}) {
               open={openColorModal}
               setOpen={setOpenColorModal}
               title="Select Color"
-              setClickedVal={setColorVal}>
+              setClickedVal={handleSelectedColorClose}>
               <View
                 style={{
                   height: 130,
@@ -476,23 +509,32 @@ function ViewProduct({navigation}) {
                       alignItems: 'center',
                       marginTop: 10,
                     }}>
-                    {colors.map((color) => (
+                    {colors.map((color, index) => (
                       <TouchableOpacity
-                        key={color}
+                        key={index}
                         onPress={() => {
-                          console.log('Setting a color with colorCode', color);
-                          setColorVal(color);
+                          console.log(
+                            'Setting a color with colorCode',
+                            color.color_code,
+                            color,
+                          );
+                          setCostVal('');
+                          setColorVal(color.color_code);
+                          setColorCode(color.color_id);
+                          setColorName(color.color_name);
                         }}>
                         <View
                           style={{
-                            width: !(colorVal === color) ? 45 : 50,
-                            height: !(colorVal === color) ? 25 : 30,
+                            width: !(colorVal === color.color_code) ? 45 : 50,
+                            height: !(colorVal === color.color_code) ? 25 : 30,
                             // backgroundColor: 'rgba(0,0,0,0.1)',
-                            backgroundColor: color,
+                            backgroundColor: color.color_code,
                             marginRight: 10,
                             marginBottom: 10,
                             borderWidth: 1.5,
-                            borderWidth: !(colorVal === color) ? 1 : 3,
+                            borderWidth: !(colorVal === color.color_code)
+                              ? 1
+                              : 3,
                           }}></View>
                       </TouchableOpacity>
                     ))}
@@ -506,11 +548,40 @@ function ViewProduct({navigation}) {
                   color={!colorVal ? 'gray' : '#2874F0'}
                   onPress={() => {
                     console.log('CLicked with color id of', colorVal);
+
                     setOpenColorModal(false);
-                    Toast.show(
-                      `Filtered List With ${colorVal} color`,
-                      Toast.LONG,
-                    );
+
+                    axios
+                      .get(`${baseUrl}/${commonProducts}`, {
+                        params: {
+                          category_id: categoryCode,
+                          color_id: colorCode,
+                        },
+                      })
+                      .then((res) => {
+                        // console.log('Color res with ', res);
+                        if (res.data.message != 'No Product is available') {
+                          setCommonPro(res.data);
+                          setDisplayProducts(
+                            res.data.product_details.slice(0, 5),
+                          );
+                          setBatch(1);
+                          Toast.show(
+                            `Filtered List With ${colorVal} color`,
+                            Toast.LONG,
+                          );
+                        } else {
+                          setCommonPro({});
+                          setDisplayProducts([]);
+                          setBatch(1);
+                        }
+                      })
+                      .catch((e) => {
+                        console.log('Cate Filter Error', e, e.response);
+                        setCommonPro({});
+                        setDisplayProducts([]);
+                        setBatch(1);
+                      });
                   }}
                 />
               </View>
@@ -518,7 +589,6 @@ function ViewProduct({navigation}) {
 
             <TouchableWithoutFeedback
               onPress={() => {
-                console.log('clicked on Palette');
                 setOpenColorModal(true);
                 setRecentClicked('Palette');
               }}>
@@ -545,7 +615,8 @@ function ViewProduct({navigation}) {
               open={openCostModal}
               setOpen={setOpenCostModal}
               title="Select Cost Type"
-              setClickedVal={setColorVal}>
+              setClickedVal={setCostVal}
+              setClickedCode={() => {}}>
               <View
                 style={{
                   height: 130,
@@ -608,7 +679,42 @@ function ViewProduct({navigation}) {
                   onPress={() => {
                     console.log('Clicked on Cost of Type', costVal);
                     setOpenCostModal(false);
-                    Toast.show(`Filtered List With ${costVal}`, Toast.LONG);
+                    axios
+                      .get(`${baseUrl}/${commonProducts}`, {
+                        params: {
+                          category_id: categoryCode,
+                          color_id: colorCode,
+                          sortBy: 'product_cost',
+                          sortIn:
+                            costVal == 'Price: Low To High' ? false : true,
+                        },
+                      })
+                      .then((res) => {
+                        console.log('Cost res with ', res);
+                        if (res.data.message != 'No Product is available') {
+                          setCommonPro(res.data);
+                          setDisplayProducts(
+                            res.data.product_details.slice(0, 5),
+                          );
+                          setBatch(1);
+                          Toast.show(
+                            `Filtered List With ${colorVal} color`,
+                            Toast.LONG,
+                          );
+                        } else {
+                          setCommonPro({});
+                          setDisplayProducts([]);
+                          console.log('Successfully Cleared');
+                          setBatch(1);
+                        }
+                      })
+                      .catch((e) => {
+                        console.log('Cate Filter Error', e, e.response);
+                        setCommonPro({});
+                        setDisplayProducts([]);
+                        console.log('Successfully Cleared');
+                        setBatch(1);
+                      });
                   }}
                 />
               </View>
@@ -646,10 +752,39 @@ function ViewProduct({navigation}) {
               onPress={() => {
                 console.log('clicked on Rating');
                 setRecentClicked('Rating');
-                Toast.show(
-                  `Filtered List With High Rated Product At The Top`,
-                  Toast.LONG,
-                );
+
+                axios
+                  .get(`${baseUrl}/${commonProducts}`, {
+                    params: {
+                      category_id: categoryCode,
+                      color_id: colorCode,
+                      sortBy: 'product_rating',
+                      sortIn: true,
+                    },
+                  })
+                  .then((res) => {
+                    // console.log('Rate res with ', res);
+                    if (res.data.message != 'No Product is available') {
+                      setCommonPro(res.data);
+                      setDisplayProducts(res.data.product_details.slice(0, 5));
+                      setBatch(1);
+                      Toast.show(
+                        `Filtered List With High Rated Product At The Top`,
+                        Toast.LONG,
+                      );
+                    } else {
+                      setCommonPro({});
+                      setDisplayProducts([]);
+
+                      setBatch(1);
+                    }
+                  })
+                  .catch((e) => {
+                    console.log('Rate Filter Error', e, e.response);
+                    setCommonPro({});
+                    setDisplayProducts([]);
+                    setBatch(1);
+                  });
               }}>
               <View style={styles.bottomActionContentBox}>
                 <View style={{flexDirection: 'row'}}>

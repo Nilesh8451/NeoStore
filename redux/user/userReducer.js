@@ -70,7 +70,7 @@ const userReducer = (state = initialState, action) => {
       };
 
     case GET_USERADDRESS_FAI:
-      return {...state, isLoading: false};
+      return {...state, isLoading: false, userAddress: []};
 
     case SIGNOUT:
       Toast.show('Successfully Logout', Toast.LONG);

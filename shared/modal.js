@@ -38,7 +38,10 @@ function CustomModal(props) {
               solid
               size={25}
               style={{}}
-              onPress={() => props.setOpen(false)}
+              onPress={() => {
+                props.setClickedVal('');
+                props.setOpen(false);
+              }}
             />
           </View>
           <View

@@ -10,3 +10,7 @@ export const forgotPassword = 'forgotPassword';
 export const recoverPassword = 'recoverPassword';
 export const getUserAddress = 'getCustAddress';
 export const updateUserAddress = 'updateAddress';
+export const addNewAddress = 'address';
+export const deleteUserAddress = 'deladdress';
+export const getAllColors = 'getAllColors';
+export const commonProducts = 'commonProducts';

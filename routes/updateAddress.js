@@ -12,13 +12,14 @@ import FlatButton from '../shared/button';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Toast from 'react-native-simple-toast';
 import axios from 'axios';
-import {baseUrl, getUserAddress} from '../baseUrl';
+import {baseUrl, deleteUserAddress, getUserAddress} from '../baseUrl';
 import LottieView from 'lottie-react-native';
 import {getCustomerAddress} from '../redux/user/userAction';
 import {connect} from 'react-redux';
 
 function UpdateAddress(props) {
-  const handleDelete = () => {
+  const [custAdd, setCustAdd] = useState([]);
+  const handleDelete = (id) => {
     Alert.alert('Warning!', `Are you sure you want to delete this address`, [
       {
         text: 'NO',
@@ -27,7 +28,21 @@ function UpdateAddress(props) {
         text: 'YES',
         onPress: () => {
           console.log('Deleted');
-          Toast.show(`Address Deleted Successfully`, Toast.LONG);
+          axios
+            .delete(`${baseUrl}/${deleteUserAddress}/${id}`, {
+              headers: {
+                Authorization: `bearer ${props.route.params.token}`,
+              },
+            })
+            .then((res) => {
+              console.log('Success', res.data);
+              Toast.show(`Address Deleted Successfully`, Toast.LONG);
+              const userAdd = custAdd.filter((add) => add.address_id != id);
+              setCustAdd(userAdd);
+            })
+            .catch((e) => {
+              console.log('error', e, e.response);
+            });
         },
       },
     ]);
@@ -36,6 +51,10 @@ function UpdateAddress(props) {
   useEffect(() => {
     props.getCustAdd(props.route.params.token);
   }, []);
+
+  useEffect(() => {
+    if (props.isLoading === false) setCustAdd(props.userAdd);
+  }, [props.isLoading]);
 
   return props.isLoading ? (
     <View
@@ -54,7 +73,7 @@ function UpdateAddress(props) {
         loop
       />
     </View>
-  ) : props.userAdd.length > 0 ? (
+  ) : custAdd.length > 0 ? (
     <View
       style={{
         flex: 1,
@@ -62,7 +81,7 @@ function UpdateAddress(props) {
       }}>
       <ScrollView>
         <View style={styles.container}>
-          {props.userAdd.map((add, index) => (
+          {custAdd.map((add, index) => (
             <View style={styles.addressCard} key={index}>
               <View style={styles.cardContent}>
                 <Text style={{width: '70%', fontSize: 17}}>{add.address}</Text>
@@ -90,7 +109,7 @@ function UpdateAddress(props) {
               <TouchableWithoutFeedback
                 onPress={() => {
                   console.log('clicked');
-                  handleDelete();
+                  handleDelete(add.address_id);
                 }}>
                 <View
                   style={{

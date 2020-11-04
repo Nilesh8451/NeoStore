@@ -140,11 +140,11 @@ function Home({
                   opacity: 0.5,
                   zIndex: 1,
                 }}
-                onPress={() => handleEyeClick()}
+                onPress={() => {}}
               />
               <TextInput
                 style={styles.input}
-                placeholder="Email"
+                placeholder="Search Product By Name...."
                 value={searchInput}
                 onChangeText={(val) => handleChange(val)}
                 // onChange={handleChange}
@@ -157,13 +157,21 @@ function Home({
                 <View style={styles.sliderContainer}>
                   <Swiper
                     autoplay
+                    loop
                     horizontal={true}
                     height={200}
                     activeDotColor="#FF6347">
                     {categories.map((category, index) => {
                       return (
                         <View style={styles.slide} key={index}>
-                          <TouchableOpacity>
+                          <TouchableOpacity
+                            onPress={() => {
+                              console.log('CLiced', category);
+                              navigation.navigate('ViewProduct', {
+                                category_name: category.category_name,
+                                category_id: category.category_id,
+                              });
+                            }}>
                             <Image
                               source={{
                                 uri: `http://180.149.241.208:3022/${category.product_image}`,
@@ -366,13 +374,12 @@ function Home({
                       alignItems: 'center',
                     }}>
                     <FontAwesome5
-                      name={'frown'}
-                      color={'black'}
-                      // backgroundColor="black"
+                      name={'exclamation-circle'}
+                      color={'red'}
                       solid
-                      size={80}
-                      style={{opacity: 0.3}}
-                      onPress={() => handleEyeClick()}
+                      size={90}
+                      style={{opacity: 0.5}}
+                      onPress={() => {}}
                     />
                     <Text style={{marginTop: 15, fontSize: 20}}>
                       No Such Product Available
