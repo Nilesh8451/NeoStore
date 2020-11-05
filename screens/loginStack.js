@@ -6,6 +6,13 @@ import ForgotPassword from '../routes/forgotPassword';
 import SetPassword from '../routes/setPassword';
 const Stack = createStackNavigator();
 
+/**
+ * @author Nilesh Ganpat Chavan
+ * @param {navigation}: navigation object is used to navigate between different available screen.
+ * @description This function is used to create stack and different screens so that we can place that one over the other which is use while navigation.
+ * @returns jsx which contains Stack Navigation Of login Screen
+ */
+
 function LoginStack({navigation}) {
   return (
     <Stack.Navigator initialRouteName="Login">
@@ -15,9 +22,6 @@ function LoginStack({navigation}) {
         options={{
           title: 'Login',
           headerStyle: {backgroundColor: '#2874F0'},
-          // FF0000
-          // 2874F0
-          // headerTitleAlign: 'center',
           headerTintColor: 'white',
           headerLeft: () => (
             <FontAwesome5

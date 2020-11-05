@@ -9,9 +9,10 @@ import {
 } from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {connect} from 'react-redux';
+import {baseUrl} from '../baseUrl';
 
 function Profile(props) {
-  console.log(props.user);
+  console.log('User Information', props.user, props);
   const userInfo = props.user;
 
   return (
@@ -25,7 +26,13 @@ function Profile(props) {
                 height: 80,
                 borderRadius: 40,
               }}
-              source={require('../assets/images/userDefaultImage.png')}
+              source={
+                props?.user.customer_details?.profile_img
+                  ? {
+                      uri: `${baseUrl}/${props.user.customer_details.profile_img}`,
+                    }
+                  : require('../assets/images/userDefaultImage.png')
+              }
             />
 
             <Text style={{marginLeft: 25, fontSize: 19}}>
@@ -116,7 +123,11 @@ function Profile(props) {
         </View>
         <View style={{marginTop: 18, marginBottom: 30}}>
           <TouchableOpacity
-            onPress={() => props.navigation.navigate('MyOrders')}>
+            onPress={() =>
+              props.navigation.navigate('MyOrders', {
+                token: userInfo.token,
+              })
+            }>
             <View
               style={{
                 flexDirection: 'row',

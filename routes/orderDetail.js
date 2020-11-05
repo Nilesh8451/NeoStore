@@ -9,6 +9,7 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 function OrderDetail(props) {
   const order = props.route.params.order;
+  console.log(order);
   const [openModal, setOpenModal] = useState(false);
   const [ratingValue, setRatingValue] = useState('');
 

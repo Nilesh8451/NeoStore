@@ -13,6 +13,13 @@ import OrderDetail from '../routes/orderDetail';
 
 const Stack = createStackNavigator();
 
+/**
+ * @author Nilesh Ganpat Chavan
+ * @param {navigation}: navigation object is used to navigate between different available screen.
+ * @description This function is used to create stack and different screens so that we can place that one over the other which is use while navigation.
+ * @returns jsx which contains Stack Navigation of Home screen.
+ */
+
 function ProfileStack({navigation}) {
   return (
     <Stack.Navigator initialRouteName="Profile">
@@ -22,9 +29,6 @@ function ProfileStack({navigation}) {
         options={{
           title: 'My Account',
           headerStyle: {backgroundColor: '#2874F0'},
-          // FF0000
-          // 2874F0
-          // headerTitleAlign: 'center',
           headerTintColor: 'white',
           headerLeft: () => (
             <FontAwesome5

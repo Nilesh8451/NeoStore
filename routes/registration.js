@@ -473,6 +473,7 @@ const styles = StyleSheet.create({
   mainDiv: {
     flex: 1,
     height: '100%',
+    width: '90%',
     maxWidth: 600,
     justifyContent: 'center',
     marginTop: 15,

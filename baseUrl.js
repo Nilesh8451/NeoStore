@@ -14,3 +14,5 @@ export const addNewAddress = 'address';
 export const deleteUserAddress = 'deladdress';
 export const getAllColors = 'getAllColors';
 export const commonProducts = 'commonProducts';
+export const rateProductByCustomer = 'updateProductRatingByCustomer';
+export const getCustOrderDetails = 'getOrderDetails';

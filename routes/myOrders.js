@@ -11,90 +11,29 @@ import {Formik} from 'formik';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Toast from 'react-native-simple-toast';
 import FlatButton from '../shared/button';
+import axios from 'axios';
+import {baseUrl, getCustOrderDetails} from '../baseUrl';
 
 function MyOrders(props) {
-  const [myOrder, setMyOrder] = useState([
-    {
-      _id: 'ORDERNO_376',
-      product_details: [
-        {
-          _id: '5e09ccbb58b863edc9e81984',
-          total_cartCost: '8400',
-          isDelivered: false,
-          customer_id: 199,
-          order_id: 'ORDERNO_376',
-          product_id: '5d0b1f354594d26e47774b5e',
-          quantity: 1,
-          delivery_address:
-            'At neosoft technology, mumbai, maharastra-443322, india',
-          total_productCost: '80000',
-          createdAt: '2019-12-30T10:08:59.106Z',
-          __v: 0,
-          product_details: [
-            {
-              _id: '5d0b1f354594d26e47774b5e',
-              subImages_id: '5d0b1e0e4594d26e47774b5d',
-              category_id: '5cfe3c65ea821930af69281f',
-              color_id: '5cfe247ade89f8148fbd0146',
-              product_id: '5d0b1f354594d26e47774b5e',
-              product_name: 'Iphone 11',
-              product_image: '2019-06-20T05-52-53.191Zam2.jpg',
-              product_desc:
-                'This Bed Is Ergonomically Sound, Stylish And Offers Superb Value For Money. The product requires carpenter assembly and will be provided by the seller',
-              product_rating: 'NaN',
-              product_producer: 'Apple India',
-              product_cost: 80000,
-              product_stock: 490,
-              product_dimension: '900*1900',
-              product_material: 'Metal',
-              createdAt: '2019-06-20T05:52:53.219Z',
-              __v: 0,
-            },
-          ],
+  const [myOrder, setMyOrder] = useState([]);
+
+  useEffect(() => {
+    console.log('Hello', props.route.params.token);
+
+    axios
+      .get(`${baseUrl}/${getCustOrderDetails}`, {
+        headers: {
+          Authorization: `bearer ${props.route.params.token}`,
         },
-      ],
-    },
-    {
-      _id: 'ORDERNO_379',
-      product_details: [
-        {
-          _id: '5e09ccbb58b863edc9e81980',
-          total_cartCost: '8000',
-          isDelivered: false,
-          customer_id: 199,
-          order_id: 'ORDERNO_379',
-          product_id: '5d0b1f354594d26e47774b21',
-          quantity: 1,
-          delivery_address:
-            'At neosoft technology, mumbai, maharastra-443322, india',
-          total_productCost: '8000',
-          createdAt: '2019-12-30T10:08:59.106Z',
-          __v: 0,
-          product_details: [
-            {
-              _id: '5d0b1f354594d26e47774b86',
-              subImages_id: '5d0b1e0e4594d26e47774b5d',
-              category_id: '5cfe3c65ea821930af69281f',
-              color_id: '5cfe247ade89f8148fbd0146',
-              product_id: '5d0b1f354594d26e47774b5e',
-              product_name: 'FurnitureKraft Kansas Metal Bed',
-              product_image: '2019-06-20T05-52-53.191Zam2.jpg',
-              product_desc:
-                'This Bed Is Ergonomically Sound, Stylish And Offers Superb Value For Money. The product requires carpenter assembly and will be provided by the seller',
-              product_rating: 'NaN',
-              product_producer: 'Engineering Wood',
-              product_cost: 8000,
-              product_stock: 490,
-              product_dimension: '500*900',
-              product_material: 'Metal, Plastic',
-              createdAt: '2019-06-20T05:52:53.219Z',
-              __v: 0,
-            },
-          ],
-        },
-      ],
-    },
-  ]);
+      })
+      .then((res) => {
+        console.log('This is i want', res.data.product_details);
+        setMyOrder(res.data.product_details);
+      })
+      .catch((e) => {
+        console.log('This is error', e, e.response);
+      });
+  }, []);
 
   return myOrder.length > 0 ? (
     <View style={{flex: 1}}>

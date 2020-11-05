@@ -115,7 +115,7 @@ function ViewProduct({navigation, route}) {
           setCommonPro(res.data);
           setDisplayProducts(res.data.product_details.slice(0, 5));
           setBatch(1);
-          Toast.show(`Filtered List With ${filteredOn}`, Toast.LONG);
+          Toast.show(`Filtered List With ${filteredOn}`, Toast.SHORT);
         } else {
           setCommonPro({});
           setDisplayProducts([]);
@@ -156,7 +156,7 @@ function ViewProduct({navigation, route}) {
     setDisplayProducts((prevState) => {
       return [...prevState, ...newData];
     });
-    Toast.show(`${end} OF ${commonPro.product_details.length}`, Toast.LONG);
+    Toast.show(`${end} OF ${commonPro.product_details.length}`, Toast.SHORT);
     setBatch((preState) => preState + 1);
   };
 
@@ -675,7 +675,7 @@ function ViewProduct({navigation, route}) {
                           setBatch(1);
                           Toast.show(
                             `Filtered List With ${colorVal} color`,
-                            Toast.LONG,
+                            Toast.SHORT,
                           );
                         } else {
                           setCommonPro({});
@@ -744,7 +744,7 @@ function ViewProduct({navigation, route}) {
                       setBatch(1);
                       Toast.show(
                         `Filtered List With High Rated Product At The Top`,
-                        Toast.LONG,
+                        Toast.SHORT,
                       );
                     } else {
                       setCommonPro({});

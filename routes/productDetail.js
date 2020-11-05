@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet, ScrollView, Image} from 'react-native';
+import {View, Text, StyleSheet, ScrollView, Image, Alert} from 'react-native';
 import Swiper from 'react-native-swiper';
 import {Rating, AirbnbRating} from 'react-native-ratings';
 import FlatButton from '../shared/button';
@@ -9,7 +9,8 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 import axios from 'axios';
 import LottieView from 'lottie-react-native';
-import {baseUrl, getProductById} from '../baseUrl';
+import {baseUrl, getProductById, rateProductByCustomer} from '../baseUrl';
+import {connect} from 'react-redux';
 
 /**
  * @author Nilesh Ganpat Chavan
@@ -18,7 +19,7 @@ import {baseUrl, getProductById} from '../baseUrl';
  * @return jsx which is used to display information about product and also some buttons to perform add to cart, buy product and rate product.
  */
 
-function ProductDetail({navigation, route}) {
+function ProductDetail({user, navigation, route}) {
   const product_id = route.params.product_id;
   const productArray = [];
   const [openModal, setOpenModal] = useState(false);
@@ -232,6 +233,26 @@ function ProductDetail({navigation, route}) {
               onPress={() => {
                 // console.log('Submit Rating With Rating Of', ratingValue);
                 setOpenModal(false);
+
+                axios
+                  .put(
+                    `${baseUrl}/${rateProductByCustomer}`,
+                    {
+                      product_id: route.params.product_id,
+                      product_rating: parseFloat(ratingValue),
+                    },
+                    {
+                      headers: {
+                        Authorization: `bearer ${user?.token}`,
+                      },
+                    },
+                  )
+                  .then((res) => {
+                    Toast.show(`${res.data.message}`, Toast.LONG);
+                  })
+                  .catch((e) => {
+                    Toast.show(`Something Went Wrong`, Toast.LONG);
+                  });
               }}
             />
           </View>
@@ -243,7 +264,11 @@ function ProductDetail({navigation, route}) {
             disabled={!true}
             color={!true ? 'gray' : '#EE5233'}
             onPress={() => {
-              setOpenModal(true);
+              if (user?.token) {
+                setOpenModal(true);
+              } else {
+                Alert.alert('OOPS!', 'Please Login First To Rate The Product');
+              }
             }}
           />
         </View>
@@ -301,4 +326,10 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ProductDetail;
+const mapStateToProps = (state) => {
+  return {
+    user: state.userReducer.user,
+  };
+};
+
+export default connect(mapStateToProps)(ProductDetail);

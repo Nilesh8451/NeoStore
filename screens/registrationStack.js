@@ -5,6 +5,13 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Registration from '../routes/registration';
 const Stack = createStackNavigator();
 
+/**
+ * @author Nilesh Ganpat Chavan
+ * @param {navigation}: navigation object is used to navigate between different available screen.
+ * @description This function is used to create stack and different screens so that we can place that one over the other which is use while navigation.
+ * @returns jsx which contains Stack Navigation Of Registration Screen
+ */
+
 function RegisterStack({navigation}) {
   return (
     <Stack.Navigator>
@@ -14,9 +21,6 @@ function RegisterStack({navigation}) {
         options={{
           title: 'Register',
           headerStyle: {backgroundColor: '#2874F0'},
-          // FF0000
-          // 2874F0
-          // headerTitleAlign: 'center',
           headerTintColor: 'white',
           headerLeft: () => (
             <FontAwesome5

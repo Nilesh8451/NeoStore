@@ -156,7 +156,6 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-
     borderColor: 'gray',
     padding: 12,
     fontSize: 16,

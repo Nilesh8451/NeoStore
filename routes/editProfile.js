@@ -59,6 +59,7 @@ function EditProfile(props) {
   console.log('User ', props.user);
 
   const userDetail = props.user.customer_details;
+  console.log('SSSSSSSSSSS ', userDetail);
 
   const handleChooseFile = () => {
     const options = {};
@@ -95,7 +96,13 @@ function EditProfile(props) {
             ) : (
               <Image
                 style={{width: 80, height: 80, borderRadius: 40}}
-                source={require('../assets/images/userDefaultImage.png')}
+                source={
+                  props?.user.customer_details?.profile_img
+                    ? {
+                        uri: `${baseUrl}/${props.user.customer_details.profile_img}`,
+                      }
+                    : require('../assets/images/userDefaultImage.png')
+                }
               />
             )}
 
@@ -137,9 +144,10 @@ function EditProfile(props) {
               data.append('phone_no', values.phoneno);
               data.append('gender', values.gender);
 
-              if (imgData.fileName) {
-                console.log('Adding', imgData.fileName);
-                data.append('profile_img', imgData.fileName);
+              if (imgData.data) {
+                console.log('Adding', imgData.data);
+                const imageData = 'data:image/jpeg;base64,' + imgData.data;
+                data.append('profile_img', imageData);
               }
 
               setLoadingAPI(true);
