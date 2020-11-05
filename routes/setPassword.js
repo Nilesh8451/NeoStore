@@ -35,6 +35,13 @@ const mySchema = yup.object({
     .oneOf([yup.ref('password')], 'Must be same as password'),
 });
 
+/**
+ * @author Nilesh Ganpat Chavan
+ * @param {props}: props is a object which contain token, navigation as a property in it. token is passed from forgot password screen to track session of user who is recovering password. navigation is a object which is use to navigate between different screens
+ * @description setPassword screen which contains three input field which is opt that user received on registered email, newPassword and confirm password to set new password.
+ * @return jsx which is used to display content to recover user account.
+ */
+
 function SetPassword(props) {
   const [securePassword, setSecurePassword] = useState(true);
   const [secureCPassword, setSecureCPassword] = useState(true);
@@ -73,7 +80,6 @@ function SetPassword(props) {
               }}
               validationSchema={mySchema}
               onSubmit={(values, action) => {
-                console.log(values);
                 setLoading(true);
                 axios
                   .post(
@@ -90,14 +96,12 @@ function SetPassword(props) {
                     },
                   )
                   .then((res) => {
-                    console.log('Set Password Success', res);
                     setLoading(false);
                     Toast.show(res.data.message, Toast.LONG);
                     props.navigation.popToTop();
                     action.resetForm();
                   })
                   .catch((e) => {
-                    console.log('Set Pass Error', e, e.response);
                     Alert.alert('OPPS!', e.response.data.message);
                     setLoading(false);
                   });
@@ -253,7 +257,6 @@ function SetPassword(props) {
                           <View style={styles.button}>
                             <FlatButton
                               title="SUBMIT"
-                              // color="#f01d71"
                               disabled={!formikProps.isValid}
                               color={!formikProps.isValid ? 'gray' : '#2874F0'}
                               onPress={formikProps.handleSubmit}
@@ -286,25 +289,19 @@ const styles = StyleSheet.create({
     width: '90%',
     maxWidth: 600,
     justifyContent: 'center',
-    // alignItems: 'center',
     marginTop: 35,
     marginBottom: 50,
-    // backgroundColor: 'red',
   },
   companyName: {
     textAlign: 'center',
     fontSize: 40,
     color: 'black',
-    // backgroundColor: 'pink',
     fontWeight: 'bold',
     marginTop: 10,
   },
 
   card: {
-    // marginTop: 20,
     marginTop: -10,
-    // backgroundColor: 'blue',
-    // marginHorizontal: 20,
   },
   cardContent: {
     marginHorizontal: 15,
@@ -315,7 +312,6 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    // marginTop: 10,
     borderColor: 'gray',
     padding: 12,
     fontSize: 16,
@@ -343,13 +339,10 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     marginTop: 25,
   },
-  button: {
-    // marginRight: 20,
-  },
+  button: {},
   oppositeBut: {},
   errorText: {
     color: 'red',
-    // marginBottom: 10,
     marginTop: 5,
     marginLeft: 5,
     textTransform: 'capitalize',
@@ -358,13 +351,11 @@ const styles = StyleSheet.create({
   goToAccountView: {
     width: '100%',
     marginTop: 15,
-    // backgroundColor: 'yellow',
     flexDirection: 'row',
     justifyContent: 'center',
   },
   goToAccountInnerView: {
     width: '85%',
-    // backgroundColor: 'red',
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',

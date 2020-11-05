@@ -17,6 +17,7 @@ import RadioForm from 'react-native-simple-radio-button';
 import Toast from 'react-native-simple-toast';
 import axios from 'axios';
 import {baseUrl, register} from '../baseUrl';
+import LottieView from 'lottie-react-native';
 
 const loginSchema = yup.object({
   firstname: yup
@@ -60,11 +61,19 @@ var radio_props = [
   {label: 'Female', value: 1},
 ];
 
+/**
+ * @author Nilesh Ganpat Chavan
+ * @param {navigation}:navigation is a object which is use to navigate between different screens.
+ * @description registration screen is use to take input from user to make him/her a new user of application.
+ * @return jsx which is used to display content which helps to register as a user of application.
+ */
+
 function Registration({navigation}) {
   const [securePassword, setSecurePassword] = useState(true);
   const [secureCPassword, setSecureCPassword] = useState(true);
   const [PEyeStyle, setPEyeStyle] = useState('eye-slash');
   const [CPEyeStyle, setCPEyeStyle] = useState('eye-slash');
+  const [loading, setLoading] = useState(false);
 
   handlePasswordEyeClick = () => {
     setSecurePassword(!securePassword);
@@ -88,8 +97,7 @@ function Registration({navigation}) {
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <ScrollView
         contentContainerStyle={{
-          // paddingVertical: 60,
-          backgroundColor: 'white',
+          backgroundColor: loading ? 'transparent' : 'white',
         }}>
         <View style={styles.container}>
           <Formik
@@ -104,7 +112,7 @@ function Registration({navigation}) {
             }}
             validationSchema={loginSchema}
             onSubmit={(values, action) => {
-              console.log(values);
+              setLoading(true);
               axios
                 .post(`${baseUrl}/${register}`, {
                   first_name: values.firstname,
@@ -119,117 +127,28 @@ function Registration({navigation}) {
                   Toast.show(res.data.message, Toast.LONG);
                   action.resetForm();
                   navigation.navigate('LoginDrawer');
+                  setLoading(false);
                 })
                 .catch((e) => {
                   Alert.alert('OOPS!', e.response.data.message);
+                  setLoading(false);
                 });
-
-              // action.resetForm();
             }}>
-            {(formikProps) => (
-              <View style={styles.mainDiv}>
-                <Text style={styles.companyName}>
-                  Neo<Text style={{color: '#2874F0'}}>STORE</Text>
-                </Text>
-                <View style={styles.card}>
-                  <View style={styles.cardContent}>
-                    <View>
-                      <FontAwesome5
-                        name={'user'}
-                        color={'black'}
-                        solid
-                        size={18}
-                        style={{
-                          position: 'relative',
-                          left: 13,
-                          top: 35,
-                          opacity: 0.5,
-                        }}
-                        onPress={() => {}}
-                      />
-                      <TextInput
-                        style={styles.input}
-                        placeholder="First Name"
-                        value={formikProps.values.firstname}
-                        onChangeText={formikProps.handleChange('firstname')}
-                        onBlur={formikProps.handleBlur('firstname')}
-                      />
-
-                      {formikProps.touched.firstname &&
-                        formikProps.errors.firstname && (
-                          <Text style={styles.errorText}>
-                            {formikProps.touched.firstname &&
-                              formikProps.errors.firstname}
-                          </Text>
-                        )}
-                    </View>
-
-                    <View>
-                      <FontAwesome5
-                        name={'user'}
-                        color={'black'}
-                        solid
-                        size={18}
-                        style={{
-                          position: 'relative',
-                          left: 13,
-                          top: 35,
-                          opacity: 0.5,
-                        }}
-                        onPress={() => {}}
-                      />
-                      <TextInput
-                        style={styles.input}
-                        placeholder="Last Name"
-                        value={formikProps.values.lastname}
-                        onChangeText={formikProps.handleChange('lastname')}
-                        onBlur={formikProps.handleBlur('lastname')}
-                      />
-
-                      {formikProps.touched.lastname &&
-                        formikProps.errors.lastname && (
-                          <Text style={styles.errorText}>
-                            {formikProps.touched.lastname &&
-                              formikProps.errors.lastname}
-                          </Text>
-                        )}
-                    </View>
-
-                    <View>
-                      <FontAwesome5
-                        name={'envelope'}
-                        color={'black'}
-                        solid
-                        size={18}
-                        style={{
-                          position: 'relative',
-                          left: 13,
-                          top: 35,
-                          opacity: 0.5,
-                        }}
-                        onPress={() => {}}
-                      />
-                      <TextInput
-                        style={styles.input}
-                        placeholder="Email"
-                        value={formikProps.values.email}
-                        onChangeText={formikProps.handleChange('email')}
-                        onBlur={formikProps.handleBlur('email')}
-                      />
-
-                      {formikProps.touched.email &&
-                        formikProps.errors.email && (
-                          <Text style={styles.errorText}>
-                            {formikProps.touched.email &&
-                              formikProps.errors.email}
-                          </Text>
-                        )}
-                    </View>
-
-                    <View>
-                      <View style={{justifyContent: 'center'}}>
+            {(formikProps) =>
+              loading === false ? (
+                <View
+                  style={{
+                    ...styles.mainDiv,
+                    backgroundColor: loading ? '' : 'white',
+                  }}>
+                  <Text style={styles.companyName}>
+                    Neo<Text style={{color: '#2874F0'}}>STORE</Text>
+                  </Text>
+                  <View style={styles.card}>
+                    <View style={styles.cardContent}>
+                      <View>
                         <FontAwesome5
-                          name={'lock'}
+                          name={'user'}
                           color={'black'}
                           solid
                           size={18}
@@ -243,190 +162,300 @@ function Registration({navigation}) {
                         />
                         <TextInput
                           style={styles.input}
-                          placeholder="Password"
-                          secureTextEntry={securePassword}
-                          value={formikProps.values.password}
-                          onChangeText={formikProps.handleChange('password')}
-                          onBlur={formikProps.handleBlur('password')}
+                          placeholder="First Name"
+                          value={formikProps.values.firstname}
+                          onChangeText={formikProps.handleChange('firstname')}
+                          onBlur={formikProps.handleBlur('firstname')}
                         />
-                        <FontAwesome5
-                          name={PEyeStyle}
-                          color={'black'}
-                          solid
-                          size={18}
-                          style={{
-                            position: 'absolute',
-                            right: 13,
-                            paddingTop: 18,
-                            opacity: 0.6,
-                          }}
-                          onPress={() => handlePasswordEyeClick()}
-                        />
-                      </View>
 
-                      {formikProps.touched.password &&
-                        formikProps.errors.password && (
-                          <Text style={styles.errorText}>
-                            {formikProps.touched.password &&
-                              formikProps.errors.password}
-                          </Text>
-                        )}
-                    </View>
-
-                    <View>
-                      <View style={{justifyContent: 'center'}}>
-                        <FontAwesome5
-                          name={'lock'}
-                          color={'black'}
-                          solid
-                          size={18}
-                          style={{
-                            position: 'relative',
-                            left: 13,
-                            top: 35,
-                            opacity: 0.5,
-                          }}
-                          onPress={() => {}}
-                        />
-                        <TextInput
-                          style={styles.input}
-                          placeholder="Confirm Password"
-                          secureTextEntry={secureCPassword}
-                          value={formikProps.values.confirmPassowrd}
-                          onChangeText={formikProps.handleChange(
-                            'confirmPassowrd',
+                        {formikProps.touched.firstname &&
+                          formikProps.errors.firstname && (
+                            <Text style={styles.errorText}>
+                              {formikProps.touched.firstname &&
+                                formikProps.errors.firstname}
+                            </Text>
                           )}
-                          onBlur={formikProps.handleBlur('confirmPassowrd')}
-                        />
+                      </View>
+
+                      <View>
                         <FontAwesome5
-                          name={CPEyeStyle}
+                          name={'user'}
                           color={'black'}
                           solid
                           size={18}
                           style={{
-                            position: 'absolute',
-                            right: 13,
-                            paddingTop: 18,
-                            opacity: 0.6,
+                            position: 'relative',
+                            left: 13,
+                            top: 35,
+                            opacity: 0.5,
                           }}
-                          onPress={() => handleCPasswordEyeClick()}
+                          onPress={() => {}}
                         />
+                        <TextInput
+                          style={styles.input}
+                          placeholder="Last Name"
+                          value={formikProps.values.lastname}
+                          onChangeText={formikProps.handleChange('lastname')}
+                          onBlur={formikProps.handleBlur('lastname')}
+                        />
+
+                        {formikProps.touched.lastname &&
+                          formikProps.errors.lastname && (
+                            <Text style={styles.errorText}>
+                              {formikProps.touched.lastname &&
+                                formikProps.errors.lastname}
+                            </Text>
+                          )}
                       </View>
 
-                      {formikProps.touched.confirmPassowrd &&
-                        formikProps.errors.confirmPassowrd && (
-                          <Text style={styles.errorText}>
-                            {formikProps.touched.confirmPassowrd &&
-                              formikProps.errors.confirmPassowrd}
-                          </Text>
-                        )}
-                    </View>
+                      <View>
+                        <FontAwesome5
+                          name={'envelope'}
+                          color={'black'}
+                          solid
+                          size={18}
+                          style={{
+                            position: 'relative',
+                            left: 13,
+                            top: 35,
+                            opacity: 0.5,
+                          }}
+                          onPress={() => {}}
+                        />
+                        <TextInput
+                          style={styles.input}
+                          placeholder="Email"
+                          value={formikProps.values.email}
+                          onChangeText={formikProps.handleChange('email')}
+                          onBlur={formikProps.handleBlur('email')}
+                        />
 
-                    <View>
-                      <FontAwesome5
-                        name={'phone-alt'}
-                        color={'black'}
-                        solid
-                        size={18}
-                        style={{
-                          position: 'relative',
-                          left: 13,
-                          top: 35,
-                          opacity: 0.5,
-                        }}
-                        onPress={() => {}}
-                      />
-                      <TextInput
-                        style={styles.input}
-                        keyboardType="number-pad"
-                        placeholder="Phone Number"
-                        value={formikProps.values.phoneno}
-                        onChangeText={formikProps.handleChange('phoneno')}
-                        onBlur={formikProps.handleBlur('phoneno')}
-                      />
+                        {formikProps.touched.email &&
+                          formikProps.errors.email && (
+                            <Text style={styles.errorText}>
+                              {formikProps.touched.email &&
+                                formikProps.errors.email}
+                            </Text>
+                          )}
+                      </View>
 
-                      {formikProps.touched.phoneno &&
-                        formikProps.errors.phoneno && (
-                          <Text style={styles.errorText}>
-                            {formikProps.touched.phoneno &&
-                              formikProps.errors.phoneno}
-                          </Text>
-                        )}
-                    </View>
+                      <View>
+                        <View style={{justifyContent: 'center'}}>
+                          <FontAwesome5
+                            name={'lock'}
+                            color={'black'}
+                            solid
+                            size={18}
+                            style={{
+                              position: 'relative',
+                              left: 13,
+                              top: 35,
+                              opacity: 0.5,
+                            }}
+                            onPress={() => {}}
+                          />
+                          <TextInput
+                            style={styles.input}
+                            placeholder="Password"
+                            secureTextEntry={securePassword}
+                            value={formikProps.values.password}
+                            onChangeText={formikProps.handleChange('password')}
+                            onBlur={formikProps.handleBlur('password')}
+                          />
+                          <FontAwesome5
+                            name={PEyeStyle}
+                            color={'black'}
+                            solid
+                            size={18}
+                            style={{
+                              position: 'absolute',
+                              right: 13,
+                              paddingTop: 18,
+                              opacity: 0.6,
+                            }}
+                            onPress={() => handlePasswordEyeClick()}
+                          />
+                        </View>
 
-                    <View style={{alignItems: 'center'}}>
-                      <View
-                        style={{
-                          flexDirection: 'row',
-                          marginTop: 20,
-                          justifyContent: 'center',
-                        }}>
-                        <Text style={{marginRight: 20, fontSize: 17}}>
-                          Gender:
-                        </Text>
-                        <RadioForm
+                        {formikProps.touched.password &&
+                          formikProps.errors.password && (
+                            <Text style={styles.errorText}>
+                              {formikProps.touched.password &&
+                                formikProps.errors.password}
+                            </Text>
+                          )}
+                      </View>
+
+                      <View>
+                        <View style={{justifyContent: 'center'}}>
+                          <FontAwesome5
+                            name={'lock'}
+                            color={'black'}
+                            solid
+                            size={18}
+                            style={{
+                              position: 'relative',
+                              left: 13,
+                              top: 35,
+                              opacity: 0.5,
+                            }}
+                            onPress={() => {}}
+                          />
+                          <TextInput
+                            style={styles.input}
+                            placeholder="Confirm Password"
+                            secureTextEntry={secureCPassword}
+                            value={formikProps.values.confirmPassowrd}
+                            onChangeText={formikProps.handleChange(
+                              'confirmPassowrd',
+                            )}
+                            onBlur={formikProps.handleBlur('confirmPassowrd')}
+                          />
+                          <FontAwesome5
+                            name={CPEyeStyle}
+                            color={'black'}
+                            solid
+                            size={18}
+                            style={{
+                              position: 'absolute',
+                              right: 13,
+                              paddingTop: 18,
+                              opacity: 0.6,
+                            }}
+                            onPress={() => handleCPasswordEyeClick()}
+                          />
+                        </View>
+
+                        {formikProps.touched.confirmPassowrd &&
+                          formikProps.errors.confirmPassowrd && (
+                            <Text style={styles.errorText}>
+                              {formikProps.touched.confirmPassowrd &&
+                                formikProps.errors.confirmPassowrd}
+                            </Text>
+                          )}
+                      </View>
+
+                      <View>
+                        <FontAwesome5
+                          name={'phone-alt'}
+                          color={'black'}
+                          solid
+                          size={18}
+                          style={{
+                            position: 'relative',
+                            left: 13,
+                            top: 35,
+                            opacity: 0.5,
+                          }}
+                          onPress={() => {}}
+                        />
+                        <TextInput
+                          style={styles.input}
+                          keyboardType="number-pad"
+                          placeholder="Phone Number"
+                          value={formikProps.values.phoneno}
+                          onChangeText={formikProps.handleChange('phoneno')}
+                          onBlur={formikProps.handleBlur('phoneno')}
+                        />
+
+                        {formikProps.touched.phoneno &&
+                          formikProps.errors.phoneno && (
+                            <Text style={styles.errorText}>
+                              {formikProps.touched.phoneno &&
+                                formikProps.errors.phoneno}
+                            </Text>
+                          )}
+                      </View>
+
+                      <View style={{alignItems: 'center'}}>
+                        <View
                           style={{
                             flexDirection: 'row',
-                          }}
-                          labelStyle={{marginRight: 10}}
-                          buttonSize={15}
-                          radio_props={radio_props}
-                          initial={-1}
-                          onPress={(value) => {
-                            // console.log(value);
-                            if (value === 0) {
-                              formikProps.setFieldValue('gender', 'Male');
-                            } else {
-                              formikProps.setFieldValue('gender', 'Female');
-                            }
-                          }}
-                        />
-                      </View>
-                      {formikProps.touched.gender &&
-                        formikProps.errors.gender && (
-                          <Text style={styles.errorText}>
-                            {formikProps.touched.gender &&
-                              formikProps.errors.gender}
-                          </Text>
-                        )}
-                    </View>
-
-                    <View style={styles.buttonDiv}>
-                      <View style={styles.button}>
-                        <FlatButton
-                          title="Register"
-                          // color="#f01d71"
-                          disabled={!formikProps.isValid}
-                          color={!formikProps.isValid ? 'gray' : '#2874F0'}
-                          onPress={formikProps.handleSubmit}
-                        />
-                      </View>
-                    </View>
-                  </View>
-                </View>
-                <View style={styles.goToAccountView}>
-                  <View style={styles.goToAccountInnerView}>
-                    <Text style={{fontSize: 18, marginRight: 15}}>
-                      Have An Account?
-                      <TouchableWithoutFeedback
-                        onPress={() => {
-                          navigation.navigate('LoginDrawer');
-                          console.log('Navigation to sign in');
-                        }}>
-                        <Text
-                          style={{
-                            textDecorationLine: 'underline',
-                            color: 'blue',
+                            marginTop: 20,
+                            justifyContent: 'center',
                           }}>
-                          {' '}
-                          Sign In
-                        </Text>
-                      </TouchableWithoutFeedback>
-                    </Text>
+                          <Text style={{marginRight: 20, fontSize: 17}}>
+                            Gender:
+                          </Text>
+                          <RadioForm
+                            style={{
+                              flexDirection: 'row',
+                            }}
+                            labelStyle={{marginRight: 10}}
+                            buttonSize={15}
+                            radio_props={radio_props}
+                            initial={-1}
+                            onPress={(value) => {
+                              if (value === 0) {
+                                formikProps.setFieldValue('gender', 'Male');
+                              } else {
+                                formikProps.setFieldValue('gender', 'Female');
+                              }
+                            }}
+                          />
+                        </View>
+                        {formikProps.touched.gender &&
+                          formikProps.errors.gender && (
+                            <Text style={styles.errorText}>
+                              {formikProps.touched.gender &&
+                                formikProps.errors.gender}
+                            </Text>
+                          )}
+                      </View>
+
+                      <View style={styles.buttonDiv}>
+                        <View style={styles.button}>
+                          <FlatButton
+                            title="Register"
+                            disabled={!formikProps.isValid}
+                            color={!formikProps.isValid ? 'gray' : '#2874F0'}
+                            onPress={formikProps.handleSubmit}
+                          />
+                        </View>
+                      </View>
+                    </View>
+                  </View>
+                  <View style={styles.goToAccountView}>
+                    <View style={styles.goToAccountInnerView}>
+                      <Text style={{fontSize: 18, marginRight: 15}}>
+                        Have An Account?
+                        <TouchableWithoutFeedback
+                          onPress={() => {
+                            navigation.navigate('LoginDrawer');
+                          }}>
+                          <Text
+                            style={{
+                              textDecorationLine: 'underline',
+                              color: 'blue',
+                            }}>
+                            {' '}
+                            Sign In
+                          </Text>
+                        </TouchableWithoutFeedback>
+                      </Text>
+                    </View>
                   </View>
                 </View>
-              </View>
-            )}
+              ) : (
+                <View
+                  style={{
+                    ...styles.container,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    paddingTop: 100,
+                  }}>
+                  <LottieView
+                    source={require('../assets/json/loader2.json')}
+                    autoPlay
+                    style={{
+                      width: 200,
+                      height: 200,
+                    }}
+                    loop
+                  />
+                </View>
+              )
+            }
           </Formik>
         </View>
       </ScrollView>
@@ -446,25 +475,20 @@ const styles = StyleSheet.create({
     height: '100%',
     maxWidth: 600,
     justifyContent: 'center',
-    // alignItems: 'center',
     marginTop: 15,
     marginBottom: 30,
     paddingVertical: 20,
-    backgroundColor: 'white',
   },
   companyName: {
     textAlign: 'center',
     fontSize: 35,
     color: 'black',
-    // backgroundColor: 'pink',
     fontWeight: 'bold',
     marginTop: 10,
   },
 
   card: {
-    // marginTop: 20,
     marginTop: -10,
-    // backgroundColor: 'blue',
     marginHorizontal: 20,
   },
   cardContent: {
@@ -476,7 +500,6 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    // marginTop: 10,
     borderColor: 'gray',
     padding: 12,
     fontSize: 16,
@@ -504,13 +527,10 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     marginTop: 25,
   },
-  button: {
-    // marginRight: 20,
-  },
+  button: {},
   oppositeBut: {},
   errorText: {
     color: 'red',
-    // marginBottom: 10,
     marginTop: 5,
     marginLeft: 5,
     textTransform: 'capitalize',
@@ -519,13 +539,11 @@ const styles = StyleSheet.create({
   goToAccountView: {
     width: '100%',
     marginTop: 15,
-    // backgroundColor: 'yellow',
     flexDirection: 'row',
     justifyContent: 'center',
   },
   goToAccountInnerView: {
     width: '85%',
-    // backgroundColor: 'red',
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',

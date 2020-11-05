@@ -25,6 +25,13 @@ import {
 } from '../baseUrl';
 import CustomChip from '../shared/chip';
 
+/**
+ * @author Nilesh Ganpat Chavan
+ * @param {navigation,route}:  navigation is a object which is use to navigate between different screens. route is an object which contains category information if provided from home screen.
+ * @description viewProduct screen shows all product which is availble in application. Also this screen contains various filtering options to filter products based on category,color, price, rating.
+ * @return jsx which is used to display cards which contains product image, name, price, rating and some buttons to perform action.
+ */
+
 function ViewProduct({navigation, route}) {
   const [commonPro, setCommonPro] = useState({});
   const [displayProducts, setDisplayProducts] = useState([]);
@@ -49,14 +56,7 @@ function ViewProduct({navigation, route}) {
     'Price: High To Low',
   ]);
 
-  useEffect(() => {
-    setIsLoading(true);
-    console.log(route.params);
-    if (route.params?.category_id) {
-      setCategoryVal(route.params.category_name);
-      setCategoryCode(route.params.category_id);
-    }
-
+  const getCommonProduct = () => {
     axios
       .get(`${baseUrl}/${commonProducts}`, {
         params: {
@@ -64,35 +64,85 @@ function ViewProduct({navigation, route}) {
         },
       })
       .then((res) => {
-        console.log('Res On Common Pro', res.data);
         setCommonPro(res.data);
         setDisplayProducts(res.data.product_details.slice(0, 5));
         setIsLoading(false);
       })
       .catch((e) => {
-        console.log('Error on Common Products', e, e.response);
+        // console.log('Error on Common Products', e, e.response);
         setIsLoading(false);
       });
+  };
 
+  const getCategory = () => {
     axios
       .get(`${baseUrl}/${getAllCategories}`)
       .then((res) => {
-        console.log('Category', res);
         setCategories(res.data.category_details);
       })
       .catch((e) => {
-        console.log('Error Cate', e, e.response);
+        // console.log('Error Cate', e, e.response);
       });
+  };
 
+  const getColor = () => {
     axios
       .get(`${baseUrl}/${getAllColors}`)
       .then((res) => {
-        console.log('Color', res);
         setColors(res.data.color_details);
       })
       .catch((e) => {
-        console.log('Error Col', e, e.response);
+        // console.log('Error Col', e, e.response);
       });
+  };
+
+  const getFilteredProducts = (filteredOn, cateCode, colCode) => {
+    let categoryId = '';
+    let colorId = '';
+
+    categoryId = cateCode;
+    colorId = colCode;
+
+    axios
+      .get(`${baseUrl}/${commonProducts}`, {
+        params: {
+          category_id: categoryId,
+          color_id: colorId,
+        },
+      })
+      .then((res) => {
+        if (res.data.message != 'No Product is available') {
+          setCommonPro(res.data);
+          setDisplayProducts(res.data.product_details.slice(0, 5));
+          setBatch(1);
+          Toast.show(`Filtered List With ${filteredOn}`, Toast.LONG);
+        } else {
+          setCommonPro({});
+          setDisplayProducts([]);
+          setBatch(1);
+        }
+      })
+      .catch((e) => {
+        // console.log('Filter Error', e, e.response);
+        setCommonPro({});
+        setDisplayProducts([]);
+        setBatch(1);
+      });
+  };
+
+  useEffect(() => {
+    setIsLoading(true);
+
+    if (route.params?.category_id) {
+      setCategoryVal(route.params.category_name);
+      setCategoryCode(route.params.category_id);
+    }
+
+    getCommonProduct();
+
+    getCategory();
+
+    getColor();
   }, []);
 
   const loadMore = () => {
@@ -110,47 +160,22 @@ function ViewProduct({navigation, route}) {
     setBatch((preState) => preState + 1);
   };
 
-  const handleSelectedCategoryClose = () => {
-    axios
-      .get(`${baseUrl}/${commonProducts}`, {
-        params: {
-          color_id: colorCode,
-        },
-      })
-      .then((res) => {
-        if (res.data.message != 'No Product is available') {
-          setCommonPro(res.data);
-          setDisplayProducts(res.data.product_details.slice(0, 5));
-          setBatch(1);
-        } else {
-          setCommonPro({});
-          setDisplayProducts([]);
-        }
-      })
-      .catch((e) => {
-        console.log('Cate Filter Error', e, e.response);
-        setCommonPro({});
-        setDisplayProducts([]);
-      });
-    setCategoryCode('');
-    setCategoryVal('');
-  };
+  const handleChipClose = (closedOn, cateCode, colCode) => {
+    if (closedOn == 'Color') {
+      setColorName('');
+      setColorVal('');
+      setColorCode('');
+      setCostVal('');
+    } else {
+      setCategoryCode('');
+      setCategoryVal('');
+    }
 
-  const handleSelectedColorClose = () => {
-    setColorName('');
-    setColorVal('');
-    setColorCode('');
     axios
       .get(`${baseUrl}/${commonProducts}`, {
         params: {
-          category_id: categoryCode,
-          color_id: '',
-          sortBy: costVal ? 'product_cost' : '',
-          sortIn: costVal
-            ? costVal == 'Price: Low To High'
-              ? false
-              : true
-            : '',
+          category_id: cateCode,
+          color_id: colCode,
         },
       })
       .then((res) => {
@@ -164,7 +189,7 @@ function ViewProduct({navigation, route}) {
         }
       })
       .catch((e) => {
-        console.log('Cate Filter Error', e, e.response);
+        // console.log('Cate Filter Error', e, e.response);
         setCommonPro({});
         setDisplayProducts([]);
       });
@@ -226,7 +251,8 @@ function ViewProduct({navigation, route}) {
                 <CustomChip
                   text={categoryVal}
                   onClick={() => {
-                    handleSelectedCategoryClose();
+                    handleChipClose('Category', '', colorCode);
+                    // handleSelectedCategoryClose();
                   }}
                 />
               ) : null}
@@ -235,7 +261,8 @@ function ViewProduct({navigation, route}) {
                   text={colorName}
                   color={colorVal}
                   onClick={() => {
-                    handleSelectedColorClose();
+                    handleChipClose('Color', categoryCode, '');
+                    // handleSelectedColorClose();
                   }}
                 />
               ) : null}
@@ -249,10 +276,18 @@ function ViewProduct({navigation, route}) {
               ListFooterComponent={renderFlatlistFooter}
               onEndReachedThreshold={1}
               renderItem={({item, index}) => {
+                var x = item.product_cost;
+                x = x.toString();
+                var lastThree = x.substring(x.length - 3);
+                var otherNumbers = x.substring(0, x.length - 3);
+                if (otherNumbers != '') lastThree = ',' + lastThree;
+                var res =
+                  otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ',') +
+                  lastThree;
+
                 return (
                   <TouchableWithoutFeedback
                     onPress={() => {
-                      console.log('Clicked on Card');
                       navigation.navigate('ProductDetail', {
                         product_name: item.product_name,
                         product_id: item.product_id,
@@ -311,8 +346,13 @@ function ViewProduct({navigation, route}) {
                                 readonly={true}
                                 tintColor="rgba( 0, 0, 0, 0.5 )"
                               />
-                              <Text style={{fontSize: 15, color: 'white'}}>
-                                {item.product_cost}
+                              <Text
+                                style={{
+                                  fontSize: 16,
+                                  color: 'white',
+                                  fontWeight: 'bold',
+                                }}>
+                                {/* {item.product_cost} */}₹ {res}
                               </Text>
                             </View>
                           </View>
@@ -359,7 +399,7 @@ function ViewProduct({navigation, route}) {
           open={openCategoryModal}
           setOpen={setOpenCategoryModal}
           title="Select Category"
-          setClickedVal={handleSelectedCategoryClose}>
+          setClickedVal={() => handleChipClose('Category', '', colorCode)}>
           <View
             style={{
               height: 130,
@@ -386,10 +426,6 @@ function ViewProduct({navigation, route}) {
                       justifyContent: 'center',
                     }}
                     onPress={() => {
-                      console.log(
-                        'Setting a color with id',
-                        category.category_id,
-                      );
                       setCategoryVal(category.category_name);
                       setCategoryCode(category.category_id);
                     }}>
@@ -429,31 +465,12 @@ function ViewProduct({navigation, route}) {
               disabled={!categoryVal}
               color={!categoryVal ? 'gray' : '#2874F0'}
               onPress={() => {
-                console.log('CLicked with category id of', categoryVal);
                 setColorVal('');
                 setColorCode('');
                 setCostVal('');
                 setOpenCategoryModal(false);
 
-                axios
-                  .get(`${baseUrl}/${commonProducts}`, {
-                    params: {
-                      category_id: categoryCode,
-                    },
-                  })
-                  .then((res) => {
-                    // console.log('AAAAAAAAAAAAAAAA', res);
-                    setCommonPro(res.data);
-                    setDisplayProducts(res.data.product_details.slice(0, 5));
-                    setBatch(1);
-                    Toast.show(
-                      `Filtered List With ${categoryVal} category`,
-                      Toast.LONG,
-                    );
-                  })
-                  .catch((e) => {
-                    console.log('Cate Filter Error', e, e.response);
-                  });
+                getFilteredProducts('Category', categoryCode, '');
               }}
             />
           </View>
@@ -463,7 +480,6 @@ function ViewProduct({navigation, route}) {
           <View style={styles.bottomActionContent}>
             <TouchableWithoutFeedback
               onPress={() => {
-                console.log('clicked on Category');
                 setOpenCategoryModal(true);
                 setRecentClicked('Category');
               }}>
@@ -490,7 +506,7 @@ function ViewProduct({navigation, route}) {
               open={openColorModal}
               setOpen={setOpenColorModal}
               title="Select Color"
-              setClickedVal={handleSelectedColorClose}>
+              setClickedVal={() => handleChipClose('Color', categoryCode, '')}>
               <View
                 style={{
                   height: 130,
@@ -513,11 +529,6 @@ function ViewProduct({navigation, route}) {
                       <TouchableOpacity
                         key={index}
                         onPress={() => {
-                          console.log(
-                            'Setting a color with colorCode',
-                            color.color_code,
-                            color,
-                          );
                           setCostVal('');
                           setColorVal(color.color_code);
                           setColorCode(color.color_id);
@@ -547,41 +558,9 @@ function ViewProduct({navigation, route}) {
                   disabled={!colorVal}
                   color={!colorVal ? 'gray' : '#2874F0'}
                   onPress={() => {
-                    console.log('CLicked with color id of', colorVal);
-
                     setOpenColorModal(false);
 
-                    axios
-                      .get(`${baseUrl}/${commonProducts}`, {
-                        params: {
-                          category_id: categoryCode,
-                          color_id: colorCode,
-                        },
-                      })
-                      .then((res) => {
-                        // console.log('Color res with ', res);
-                        if (res.data.message != 'No Product is available') {
-                          setCommonPro(res.data);
-                          setDisplayProducts(
-                            res.data.product_details.slice(0, 5),
-                          );
-                          setBatch(1);
-                          Toast.show(
-                            `Filtered List With ${colorVal} color`,
-                            Toast.LONG,
-                          );
-                        } else {
-                          setCommonPro({});
-                          setDisplayProducts([]);
-                          setBatch(1);
-                        }
-                      })
-                      .catch((e) => {
-                        console.log('Cate Filter Error', e, e.response);
-                        setCommonPro({});
-                        setDisplayProducts([]);
-                        setBatch(1);
-                      });
+                    getFilteredProducts('Color', categoryCode, colorCode);
                   }}
                 />
               </View>
@@ -643,7 +622,6 @@ function ViewProduct({navigation, route}) {
                           justifyContent: 'center',
                         }}
                         onPress={() => {
-                          console.log('Setting a color with id', type);
                           setCostVal(type);
                         }}>
                         <View
@@ -677,7 +655,6 @@ function ViewProduct({navigation, route}) {
                   disabled={!costVal}
                   color={!costVal ? 'gray' : '#2874F0'}
                   onPress={() => {
-                    console.log('Clicked on Cost of Type', costVal);
                     setOpenCostModal(false);
                     axios
                       .get(`${baseUrl}/${commonProducts}`, {
@@ -690,7 +667,6 @@ function ViewProduct({navigation, route}) {
                         },
                       })
                       .then((res) => {
-                        console.log('Cost res with ', res);
                         if (res.data.message != 'No Product is available') {
                           setCommonPro(res.data);
                           setDisplayProducts(
@@ -704,15 +680,15 @@ function ViewProduct({navigation, route}) {
                         } else {
                           setCommonPro({});
                           setDisplayProducts([]);
-                          console.log('Successfully Cleared');
+
                           setBatch(1);
                         }
                       })
                       .catch((e) => {
-                        console.log('Cate Filter Error', e, e.response);
+                        // console.log('Cate Filter Error', e, e.response);
                         setCommonPro({});
                         setDisplayProducts([]);
-                        console.log('Successfully Cleared');
+
                         setBatch(1);
                       });
                   }}
@@ -722,7 +698,6 @@ function ViewProduct({navigation, route}) {
 
             <TouchableWithoutFeedback
               onPress={() => {
-                console.log('clicked on Cost');
                 setOpenCostModal(true);
                 setRecentClicked('Cost');
               }}>
@@ -750,7 +725,6 @@ function ViewProduct({navigation, route}) {
 
             <TouchableWithoutFeedback
               onPress={() => {
-                console.log('clicked on Rating');
                 setRecentClicked('Rating');
 
                 axios
@@ -780,7 +754,7 @@ function ViewProduct({navigation, route}) {
                     }
                   })
                   .catch((e) => {
-                    console.log('Rate Filter Error', e, e.response);
+                    // console.log('Rate Filter Error', e, e.response);
                     setCommonPro({});
                     setDisplayProducts([]);
                     setBatch(1);
@@ -814,18 +788,12 @@ function ViewProduct({navigation, route}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: 'orange',
   },
   productCardContent: {
-    // backgroundColor: 'white',
-    // backgroundColor: 'red',
     paddingHorizontal: 16,
     marginVertical: 10,
   },
   productCard: {
-    // paddingVertical: 15,
-    // backgroundColor: 'pink',
-    // borderRadius: 20,
     flexDirection: 'row',
     height: 120,
   },
@@ -839,8 +807,6 @@ const styles = StyleSheet.create({
   },
   bottomActionContent: {
     width: '95%',
-    // backgroundColor: 'pink',
-
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -848,7 +814,7 @@ const styles = StyleSheet.create({
   bottomActionContentBox: {
     width: '24%',
     height: '100%',
-    // backgroundColor: 'yellow',
+
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',

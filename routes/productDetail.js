@@ -11,6 +11,13 @@ import axios from 'axios';
 import LottieView from 'lottie-react-native';
 import {baseUrl, getProductById} from '../baseUrl';
 
+/**
+ * @author Nilesh Ganpat Chavan
+ * @param {navigation,route}:navigation is a object which is use to navigate between different screens, route is a object contains product_id property.
+ * @description productDetail screen is used to display full details of product which is selected by user.
+ * @return jsx which is used to display information about product and also some buttons to perform add to cart, buy product and rate product.
+ */
+
 function ProductDetail({navigation, route}) {
   const product_id = route.params.product_id;
   const productArray = [];
@@ -18,12 +25,12 @@ function ProductDetail({navigation, route}) {
   const [ratingValue, setRatingValue] = useState('');
   const [subImages, setSubImages] = useState([]);
   const [myProduct, setMYProduct] = useState({});
+  const [productCost, setProductCost] = useState('');
 
   useEffect(() => {
     axios
       .get(`${baseUrl}/${getProductById}/${product_id}`)
       .then((res) => {
-        console.log('This is res', res.data.product_details[0]);
         productArray.push(res.data.product_details[0]);
         setMYProduct(res.data.product_details[0]);
         setSubImages([res.data.product_details[0].product_image]);
@@ -35,13 +42,20 @@ function ProductDetail({navigation, route}) {
             });
           },
         );
+
+        var x = res.data.product_details[0].product_cost;
+        x = x.toString();
+        var lastThree = x.substring(x.length - 3);
+        var otherNumbers = x.substring(0, x.length - 3);
+        if (otherNumbers != '') lastThree = ',' + lastThree;
+        var res =
+          otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + lastThree;
+        setProductCost(res);
       })
       .catch((e) => {
-        console.log(e);
+        // console.log(e);
       });
   }, []);
-
-  console.log('Sube images', subImages);
 
   return myProduct._id ? (
     <View style={styles.container}>
@@ -49,15 +63,12 @@ function ProductDetail({navigation, route}) {
         <View
           style={{
             flex: 1,
-            // backgroundColor: 'yellow',
             alignItems: 'center',
           }}>
           <View
             style={{
               flex: 1,
               width: '90%',
-              // backgroundColor: 'white',
-              // backgroundColor: 'orange',
               marginBottom: 20,
             }}>
             <View style={styles.sliderContainer}>
@@ -94,12 +105,11 @@ function ProductDetail({navigation, route}) {
                   marginTop: 10,
                   color: '#EF5B3E',
                 }}>
-                {myProduct?.product_cost}
+                {/* {myProduct?.product_cost} */}₹ {productCost}
               </Text>
 
               <View
                 style={{
-                  // backgroundColor: 'pink',
                   flexDirection: 'row',
                   justifyContent: 'flex-start',
                   marginTop: 13,
@@ -140,7 +150,6 @@ function ProductDetail({navigation, route}) {
         containerStyle={{
           position: 'absolute',
           backgroundColor: '#2874F0',
-          // width: '100%',
           width: 60,
           height: 60,
           right: 15,
@@ -163,17 +172,12 @@ function ProductDetail({navigation, route}) {
           color="white"
           solid
           size={28}
-          style={
-            {
-              // marginRight: 25,
-            }
-          }
+          style={{}}
         />
       </TouchableWithoutFeedback>
 
       <View
         style={{
-          // height: 65,
           paddingVertical: 8,
           backgroundColor: 'white',
           borderTopColor: 'gray',
@@ -190,8 +194,6 @@ function ProductDetail({navigation, route}) {
               navigation.navigate('OrderSummary', {
                 product: productArray,
               });
-              // Toast.show('Item Added To Cart Successfully', Toast.LONG);
-              // navigation.pop();
             }}
           />
         </View>
@@ -216,7 +218,6 @@ function ProductDetail({navigation, route}) {
               reviews={['Bad', 'OK', 'Good', 'Very Good', 'Amazing']}
               showRating={true}
               onFinishRating={(rate) => {
-                console.log(rate);
                 setRatingValue(rate);
               }}
               defaultRating={3}
@@ -229,8 +230,7 @@ function ProductDetail({navigation, route}) {
               disabled={!true}
               color={!true ? 'gray' : '#2874F0'}
               onPress={() => {
-                console.log('Submit Rating With Rating Of', ratingValue);
-
+                // console.log('Submit Rating With Rating Of', ratingValue);
                 setOpenModal(false);
               }}
             />
@@ -242,8 +242,6 @@ function ProductDetail({navigation, route}) {
             title="RATE"
             disabled={!true}
             color={!true ? 'gray' : '#EE5233'}
-            // 2874F0
-            // FF0000
             onPress={() => {
               setOpenModal(true);
             }}
@@ -262,7 +260,6 @@ function ProductDetail({navigation, route}) {
         source={require('../assets/json/loader2.json')}
         autoPlay
         style={{
-          // backgroundColor: 'red',
           width: 200,
           height: 200,
         }}
@@ -301,7 +298,6 @@ const styles = StyleSheet.create({
   },
   productContent: {
     marginTop: 15,
-    // backgroundColor: 'red',
   },
 });
 

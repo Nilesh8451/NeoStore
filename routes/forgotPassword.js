@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -20,6 +20,13 @@ const mySchema = yup.object({
   email: yup.string().required().min(4).email(),
 });
 
+/**
+ * @author Nilesh Ganpat Chavan
+ * @param {navigation}: navigation is a object which is use to navigate between different screens
+ * @description forgotPassword screen is used if user of a application forgot his/her password, Using this screen user can enter  registered email so that app can send verification code to change password.
+ * @return jsx which is used to get registered email as a input from user.
+ */
+
 function ForgotPassword({navigation}) {
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
@@ -32,12 +39,9 @@ function ForgotPassword({navigation}) {
               }}
               validationSchema={mySchema}
               onSubmit={(values, action) => {
-                console.log(values);
-
                 axios
                   .post(`${baseUrl}/${forgotPassword}`, values)
                   .then((res) => {
-                    console.log(res);
                     Alert.alert('Hooray!', res.data.message);
                     action.resetForm();
                     navigation.navigate('SetPassword', {
@@ -45,7 +49,6 @@ function ForgotPassword({navigation}) {
                     });
                   })
                   .catch((e) => {
-                    console.log('Error', e, e.response);
                     Alert.alert('OOPS!', e.response.data.message);
                   });
               }}>
@@ -98,7 +101,6 @@ function ForgotPassword({navigation}) {
                         <View style={styles.button}>
                           <FlatButton
                             title="SUBMIT"
-                            // color="#f01d71"
                             disabled={!formikProps.isValid}
                             color={!formikProps.isValid ? 'gray' : '#2874F0'}
                             onPress={formikProps.handleSubmit}
@@ -130,26 +132,20 @@ const styles = StyleSheet.create({
     width: '90%',
     maxWidth: 600,
     justifyContent: 'center',
-    // alignItems: 'center',
     marginTop: 35,
     marginBottom: 50,
-    // backgroundColor: 'red',
   },
   companyName: {
     textAlign: 'center',
     fontSize: 40,
     color: 'black',
-    // backgroundColor: 'pink',
     fontWeight: 'bold',
     marginTop: 0,
     marginBottom: 25,
   },
 
   card: {
-    // marginTop: 20,
     marginTop: -10,
-    // backgroundColor: 'blue',
-    // marginHorizontal: 20,
   },
   cardContent: {
     marginHorizontal: 15,
@@ -160,7 +156,7 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    // marginTop: 10,
+
     borderColor: 'gray',
     padding: 12,
     fontSize: 16,
@@ -188,13 +184,11 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     marginTop: 25,
   },
-  button: {
-    // marginRight: 20,
-  },
+  button: {},
   oppositeBut: {},
   errorText: {
     color: 'red',
-    // marginBottom: 10,
+
     marginTop: 5,
     marginLeft: 5,
     textTransform: 'capitalize',
@@ -203,13 +197,13 @@ const styles = StyleSheet.create({
   goToAccountView: {
     width: '100%',
     marginTop: 15,
-    // backgroundColor: 'yellow',
+
     flexDirection: 'row',
     justifyContent: 'center',
   },
   goToAccountInnerView: {
     width: '85%',
-    // backgroundColor: 'red',
+
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',

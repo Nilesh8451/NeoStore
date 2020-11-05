@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -13,7 +13,6 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {Formik} from 'formik';
 import * as yup from 'yup';
 import FlatButton from '../shared/button';
-import Toast from 'react-native-simple-toast';
 import {connect} from 'react-redux';
 import {login} from '../redux/user/userAction';
 import LottieView from 'lottie-react-native';
@@ -27,6 +26,13 @@ const loginSchema = yup.object({
     .max(12)
     .matches(/^[a-zA-Z0-9_]*$/, 'Must Be Alphanumeric Characters'),
 });
+
+/**
+ * @author Nilesh Ganpat Chavan
+ * @param {user, isLoading,error,login,navigation}: user is a object coming from redux contains user information if user has logged in successfully. isLoading is a boolean value coming from redux which may be true if app is making api call and false if no api call is running for login operation. error is an object coming from redux contains status code and message if any error happens while performing signin. navigation is a object which is use to navigate between different screens.
+ * @description login screen is use to take inputs to perform login into application for registered users.
+ * @return jsx which is used to display content to perform authentication.
+ */
 
 function Login({user, isLoading, error, loginFn, navigation}) {
   const [securePassword, setSecurePassword] = useState(true);
@@ -55,11 +61,7 @@ function Login({user, isLoading, error, loginFn, navigation}) {
               initialValues={{email: '', password: ''}}
               validationSchema={loginSchema}
               onSubmit={(values, action) => {
-                console.log(values);
                 loginFn(values);
-                // Toast.show('Login Successfully', Toast.LONG);
-                // navigation.navigate('HomeDrawer');
-                // action.resetForm();
               }}>
               {(formikProps) => (
                 <View style={styles.mainDiv}>
@@ -155,8 +157,6 @@ function Login({user, isLoading, error, loginFn, navigation}) {
                             title="Login"
                             disabled={!formikProps.isValid}
                             color={!formikProps.isValid ? 'gray' : '#2874F0'}
-                            // 2874F0
-                            // FF0000
                             onPress={formikProps.handleSubmit}
                           />
                         </View>
@@ -170,7 +170,6 @@ function Login({user, isLoading, error, loginFn, navigation}) {
                         <TouchableOpacity
                           onPress={() => {
                             navigation.navigate('ForgotPassword');
-                            console.log('Forget Password');
                           }}>
                           <Text style={{fontSize: 19, fontWeight: 'bold'}}>
                             Forget Password?
@@ -195,7 +194,6 @@ function Login({user, isLoading, error, loginFn, navigation}) {
                         }}
                         onPress={() => {
                           navigation.navigate('RegisterDrawer');
-                          console.log('Registration Navigation');
                         }}
                       />
                     </View>
@@ -218,7 +216,6 @@ function Login({user, isLoading, error, loginFn, navigation}) {
         source={require('../assets/json/loader2.json')}
         autoPlay
         style={{
-          // backgroundColor: 'red',
           width: 200,
           height: 200,
         }}
@@ -230,11 +227,9 @@ function Login({user, isLoading, error, loginFn, navigation}) {
 
 const styles = StyleSheet.create({
   container: {
-    // height: '100%',
     flex: 1,
     flexDirection: 'column',
     alignItems: 'center',
-    // backgroundColor: 'yellow',
     justifyContent: 'flex-end',
   },
   mainDiv: {
@@ -242,7 +237,6 @@ const styles = StyleSheet.create({
     height: '93%',
     maxWidth: 600,
     justifyContent: 'center',
-    // alignItems: 'center',
     marginTop: 0,
     backgroundColor: 'white',
     paddingVertical: 20,
@@ -255,8 +249,6 @@ const styles = StyleSheet.create({
   },
 
   card: {
-    // marginTop: 20,
-    // backgroundColor: 'red',
     marginHorizontal: 10,
   },
   cardContent: {
@@ -268,7 +260,6 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    // marginTop: 10,
     borderColor: 'gray',
     padding: 12,
     fontSize: 16,
@@ -296,9 +287,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     marginTop: 25,
   },
-  button: {
-    // marginRight: 20,
-  },
+  button: {},
   oppositeBut: {},
   errorText: {
     color: 'red',
@@ -309,17 +298,13 @@ const styles = StyleSheet.create({
   },
 
   createAccountView: {
-    // position: 'relative',
-    // bottom: 0,
     width: '100%',
     marginTop: 20,
-    // backgroundColor: 'yellow',
     flexDirection: 'row',
     justifyContent: 'center',
   },
   createAccountInnerView: {
     width: '85%',
-    // backgroundColor: 'red',
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',

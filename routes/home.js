@@ -36,6 +36,13 @@ const debounce = (fn, delay) => {
   };
 };
 
+/**
+ * @author Nilesh Ganpat Chavan
+ * @param {LoadingData,categories,topRatedProduct,getAllCategories,getTopRatingProducts,restoreData,navigation}:  LoadingData is a boolean value which is true if application is making asynchronous call and false otherwise,categories is array contains all categories available in app, topRatedProduct which is array of object which contains top product of each category, getAllCategories and getTopRatingProducts is a function to make call to api to fetch data and store in redux store, restore data is a function which grab user information from async storage if user havan't perform signout last time he/she visited app. navigation is a object which is use to navigate between different screens.
+ * @description home screen contains carousel of each category available in app and top rated products of each category.
+ * @return jsx which is used to display content of products and some buttons to perform action.
+ */
+
 function Home({
   LoadingData,
   categories,
@@ -45,9 +52,6 @@ function Home({
   restoreData,
   navigation,
 }) {
-  // console.log('Cate', categories);
-  // console.log('top', topRatedProduct);
-  // console.log('isloading', LoadingData);
   const [searchInput, setSearchInput] = useState('');
   const [searchResult, setSearchResult] = useState([]);
   const [searchLoading, setSearchLoading] = useState(true);
@@ -87,7 +91,7 @@ function Home({
         setSearchLoading(false);
       })
       .catch((e) => {
-        console.log(e);
+        // console.log(e);
         setSearchLoading(false);
       });
   };
@@ -147,7 +151,6 @@ function Home({
                 placeholder="Search Product By Name...."
                 value={searchInput}
                 onChangeText={(val) => handleChange(val)}
-                // onChange={handleChange}
               />
             </View>
           </View>
@@ -166,7 +169,6 @@ function Home({
                         <View style={styles.slide} key={index}>
                           <TouchableOpacity
                             onPress={() => {
-                              console.log('CLiced', category);
                               navigation.navigate('ViewProduct', {
                                 category_name: category.category_name,
                                 category_id: category.category_id,
@@ -193,89 +195,98 @@ function Home({
                   <TouchableWithoutFeedback
                     onPress={() => {
                       navigation.navigate('ViewProduct');
-                      console.log('clicked on view all');
                     }}>
                     <Text style={{fontSize: 17, marginTop: 10}}>View All</Text>
                   </TouchableWithoutFeedback>
                 </View>
 
                 <View style={styles.productCardContainer}>
-                  {topRatedProduct.map((product, index) => (
-                    <TouchableWithoutFeedback
-                      key={index}
-                      onPress={() => {
-                        console.log('Clicked on Card');
-                        navigation.navigate('ProductDetail', {
-                          product_name:
-                            product.DashboardProducts[0].product_name,
-                          product_id: product.DashboardProducts[0].product_id,
-                        });
-                      }}>
-                      <View style={styles.productCardContent}>
-                        <View style={styles.productCard}>
-                          <ImageBackground
-                            source={{
-                              uri: `http://180.149.241.208:3022/${product.DashboardProducts[0].product_image}`,
-                            }}
-                            style={{
-                              width: '100%',
-                              height: '100%',
-                              // borderRadius: 20,
-                            }}
-                            resizeMode={'cover'}
-                            borderRadius={6}
-                            imageStyle={{}}>
-                            <View
-                              style={{
-                                flex: 1,
-                                borderRadius: 6,
-                                flexDirection: 'row',
-                                alignItems: 'center',
-                                justifyContent:
-                                  index % 2 ? 'flex-start' : 'flex-end',
-                                backgroundColor: 'rgba( 0, 0, 0, 0.5 )',
-                                shadowColor: '#000',
-                                shadowOffset: {
-                                  width: 0,
-                                  height: 3,
-                                },
-                                shadowOpacity: 0.27,
-                                shadowRadius: 4.65,
+                  {topRatedProduct.map((product, index) => {
+                    var x = product.DashboardProducts[0].product_cost;
+                    x = x.toString();
+                    var lastThree = x.substring(x.length - 3);
+                    var otherNumbers = x.substring(0, x.length - 3);
+                    if (otherNumbers != '') lastThree = ',' + lastThree;
+                    var res =
+                      otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ',') +
+                      lastThree;
 
-                                elevation: 3,
-                              }}>
+                    return (
+                      <TouchableWithoutFeedback
+                        key={index}
+                        onPress={() => {
+                          navigation.navigate('ProductDetail', {
+                            product_name:
+                              product.DashboardProducts[0].product_name,
+                            product_id: product.DashboardProducts[0].product_id,
+                          });
+                        }}>
+                        <View style={styles.productCardContent}>
+                          <View style={styles.productCard}>
+                            <ImageBackground
+                              source={{
+                                uri: `http://180.149.241.208:3022/${product.DashboardProducts[0].product_image}`,
+                              }}
+                              style={{
+                                width: '100%',
+                                height: '100%',
+                              }}
+                              resizeMode={'cover'}
+                              borderRadius={6}
+                              imageStyle={{}}>
                               <View
                                 style={{
-                                  marginLeft: index % 2 && 30,
-                                  marginRight: index % 2 ? 0 : 30,
-                                  alignItems:
+                                  flex: 1,
+                                  borderRadius: 6,
+                                  flexDirection: 'row',
+                                  alignItems: 'center',
+                                  justifyContent:
                                     index % 2 ? 'flex-start' : 'flex-end',
-                                  maxWidth: 200,
+                                  backgroundColor: 'rgba( 0, 0, 0, 0.5 )',
+                                  shadowColor: '#000',
+                                  shadowOffset: {
+                                    width: 0,
+                                    height: 3,
+                                  },
+                                  shadowOpacity: 0.27,
+                                  shadowRadius: 4.65,
+
+                                  elevation: 3,
                                 }}>
-                                <Text
+                                <View
                                   style={{
-                                    fontSize: 20,
-                                    color: 'white',
-                                    fontWeight: 'bold',
-                                  }}
-                                  numberOfLines={1}>
-                                  {product.DashboardProducts[0].product_name}
-                                </Text>
-                                <Text
-                                  style={{
-                                    fontSize: 17,
-                                    color: 'white',
-                                    fontWeight: 'bold',
+                                    marginLeft: index % 2 && 30,
+                                    marginRight: index % 2 ? 0 : 30,
+                                    alignItems:
+                                      index % 2 ? 'flex-start' : 'flex-end',
+                                    maxWidth: 200,
                                   }}>
-                                  {product.DashboardProducts[0].product_cost}
-                                </Text>
+                                  <Text
+                                    style={{
+                                      fontSize: 20,
+                                      color: 'white',
+                                      fontWeight: 'bold',
+                                    }}
+                                    numberOfLines={1}>
+                                    {product.DashboardProducts[0].product_name}
+                                  </Text>
+                                  <Text
+                                    style={{
+                                      fontSize: 17,
+                                      color: 'white',
+                                      fontWeight: 'bold',
+                                    }}>
+                                    {/* {product.DashboardProducts[0].product_cost} */}
+                                    ₹ {res}
+                                  </Text>
+                                </View>
                               </View>
-                            </View>
-                          </ImageBackground>
+                            </ImageBackground>
+                          </View>
                         </View>
-                      </View>
-                    </TouchableWithoutFeedback>
-                  ))}
+                      </TouchableWithoutFeedback>
+                    );
+                  })}
                 </View>
               </View>
             </View>
@@ -293,7 +304,6 @@ function Home({
             <View
               style={{
                 flex: 1,
-                // backgroundColor: 'yellow',
                 marginTop: 10,
               }}>
               {searchResult.length > 0 ? (
@@ -304,8 +314,6 @@ function Home({
                     <TouchableWithoutFeedback
                       key={ind}
                       onPress={() => {
-                        // console.log('click  ', res.product_id);
-                        // console.log(`Clicked on ${res.product_name}`);
                         setSearchInput('');
                         Keyboard.dismiss();
                         navigation.navigate('ProductDetail', {
@@ -327,7 +335,6 @@ function Home({
                         <View
                           style={{
                             width: '80%',
-                            // backgroundColor: 'pink',
                           }}>
                           <Text
                             style={{
@@ -340,14 +347,12 @@ function Home({
                         </View>
                         <View
                           style={{
-                            // backgroundColor: 'red',
                             padding: 4,
                             paddingHorizontal: 6,
                           }}>
                           <FontAwesome5
                             name={'long-arrow-alt-left'}
                             color={'black'}
-                            // backgroundColor="black"
                             solid
                             size={21}
                             style={{
@@ -369,7 +374,6 @@ function Home({
                   <View
                     style={{
                       width: '100%',
-                      // backgroundColor: 'red',
                       paddingVertical: 40,
                       alignItems: 'center',
                     }}>
@@ -402,7 +406,6 @@ const styles = StyleSheet.create({
   },
   searchBox: {
     backgroundColor: '#2874F0',
-    // backgroundColor: 'red',
   },
   input: {
     borderWidth: 1,
@@ -420,7 +423,6 @@ const styles = StyleSheet.create({
   sliderContainer: {
     height: 200,
     width: '98%',
-    // paddingTop: 10,
     marginBottom: 5,
     justifyContent: 'center',
     alignSelf: 'center',
@@ -441,9 +443,7 @@ const styles = StyleSheet.create({
   },
 
   popularProducts: {
-    // flex: 1,
     backgroundColor: '#F1F3F6',
-    // backgroundColor: 'red',
   },
   popularProductsHeader: {
     height: 80,
@@ -453,29 +453,21 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   productCardContainer: {
-    // backgroundColor: 'white',
     marginBottom: 20,
   },
   productCardContent: {
-    // backgroundColor: 'white',
-    // backgroundColor: 'red',
     paddingHorizontal: 16,
     marginVertical: 10,
   },
   productCard: {
-    // paddingVertical: 15,
-    // backgroundColor: 'pink',
-    // borderRadius: 20,
     flexDirection: 'row',
     height: 120,
   },
   cardImage: {
     width: '100%',
     height: '100%',
-    // marginLeft: 10,
   },
   cardDetail: {
-    // backgroundColor: 'red',
     width: '68%',
     marginLeft: 20,
   },
