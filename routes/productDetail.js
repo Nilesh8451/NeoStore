@@ -11,6 +11,7 @@ import axios from 'axios';
 import LottieView from 'lottie-react-native';
 import {baseUrl, getProductById, rateProductByCustomer} from '../baseUrl';
 import {connect} from 'react-redux';
+import {addProductToCart} from '../redux/user/userAction';
 
 /**
  * @author Nilesh Ganpat Chavan
@@ -19,7 +20,7 @@ import {connect} from 'react-redux';
  * @return jsx which is used to display information about product and also some buttons to perform add to cart, buy product and rate product.
  */
 
-function ProductDetail({user, navigation, route}) {
+function ProductDetail({user, addToCart, navigation, route}) {
   const product_id = route.params.product_id;
   const productArray = [];
   const [openModal, setOpenModal] = useState(false);
@@ -142,10 +143,7 @@ function ProductDetail({user, navigation, route}) {
 
       <TouchableWithoutFeedback
         onPress={() => {
-          Toast.show(
-            `${myProduct?.product_name} Added To Cart Successfully`,
-            Toast.LONG,
-          );
+          addToCart(myProduct);
           navigation.pop();
         }}
         containerStyle={{
@@ -332,4 +330,10 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps)(ProductDetail);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    addToCart: (product) => dispatch(addProductToCart(product)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ProductDetail);

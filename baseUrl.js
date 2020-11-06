@@ -16,3 +16,4 @@ export const getAllColors = 'getAllColors';
 export const commonProducts = 'commonProducts';
 export const rateProductByCustomer = 'updateProductRatingByCustomer';
 export const getCustOrderDetails = 'getOrderDetails';
+export const getUserCart = 'getCartData';

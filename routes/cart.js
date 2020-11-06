@@ -12,46 +12,12 @@ import {Formik} from 'formik';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Toast from 'react-native-simple-toast';
 import FlatButton from '../shared/button';
+import {connect} from 'react-redux';
+import {baseUrl} from '../baseUrl';
 
 function Cart(props) {
-  const [allProducts, setAllProducts] = useState([
-    {
-      id: 1,
-      rating: 3,
-      product_name: 'Nokia Lumia 400',
-      product_price: 40000,
-    },
-    {
-      id: 2,
-      rating: 5,
-      product_name: 'Mou Bed With Mattress',
-      product_price: 20000,
-    },
-    {
-      id: 3,
-      rating: 4.5,
-      product_name: 'IPhone 12',
-      product_price: 80000,
-    },
-    {
-      id: 4,
-      rating: 3,
-      product_name: 'Freedom 251',
-      product_price: 251,
-    },
-    {
-      id: 5,
-      rating: 4,
-      product_name: 'Macbock Pro',
-      product_price: 70000,
-    },
-    {
-      id: 6,
-      rating: 1.5,
-      product_name: 'Macbock Pro2',
-      product_price: 70000,
-    },
-  ]);
+  const [allProducts, setAllProducts] = useState([]);
+  console.log(props?.cart);
 
   const handleDelete = (product) => {
     Alert.alert(
@@ -75,8 +41,8 @@ function Cart(props) {
     );
   };
 
-  return allProducts.length > 0 ? (
-    <View>
+  return props.cart.length > 0 ? (
+    <View style={{flex: 1}}>
       <ScrollView>
         <View style={styles.container}>
           <View
@@ -86,12 +52,12 @@ function Cart(props) {
               marginHorizontal: 10,
               marginVertical: 10,
             }}>
-            {allProducts.map((item, index) => (
+            {props.cart.map((item, index) => (
               <Formik
                 key={index}
                 initialValues={{
                   currentCount: 1,
-                  productPrice: item.product_price,
+                  productPrice: item.total.toString(),
                 }}
                 onSubmit={(values, action) => {
                   handleSubmit(item, values.feedbackInput);
@@ -103,11 +69,18 @@ function Cart(props) {
                     onPress={() => {
                       console.log('Clicked on Card');
                     }}>
-                    <View style={styles.productCardContent}>
+                    <View
+                      style={{
+                        ...styles.productCardContent,
+                        // backgroundColor: 'red',
+                        marginBottom: 15,
+                      }}>
                       <View style={styles.productCard}>
                         <View style={{width: 100, height: 100}}>
                           <Image
-                            source={require('../assets/images/food-banner2.jpg')}
+                            source={{
+                              uri: `${baseUrl}/${item.product_image}`,
+                            }}
                             style={styles.cardImage}
                           />
                         </View>
@@ -116,7 +89,7 @@ function Cart(props) {
                             // numberOfLines={1}
                             style={{
                               fontSize: 20,
-                              marginRight: 30,
+                              marginRight: 35,
                               // backgroundColor: 'red',
                             }}>
                             {item.product_name}
@@ -177,7 +150,7 @@ function Cart(props) {
                                     } else {
                                       Toast.show(
                                         `Mininum limit reached, Click on Delete icon to delete item from cart`,
-                                        Toast.LONG,
+                                        Toast.SHORT,
                                       );
                                     }
                                   }}
@@ -231,7 +204,7 @@ function Cart(props) {
                                     } else {
                                       Toast.show(
                                         `Maximum limit reached for this product.`,
-                                        Toast.LONG,
+                                        Toast.SHORT,
                                       );
                                     }
                                   }}
@@ -250,8 +223,9 @@ function Cart(props) {
                           style={{
                             position: 'absolute',
                             right: 20,
-                            top: 20,
+                            top: 23,
                             padding: 3,
+                            opacity: 0.9,
                             backgroundColor: '#EE5233',
                           }}>
                           <FontAwesome5
@@ -260,47 +234,12 @@ function Cart(props) {
                             solid
                             size={16}
                             style={{
-                              opacity: 0.9,
+                              opacity: 1,
                               color: 'white',
                             }}
                           />
                         </View>
                       </TouchableWithoutFeedback>
-                      {/* <View
-                        style={{
-                          position: 'absolute',
-                          top: 20,
-                          right: 10,
-                        }}>
-                        <FontAwesome5
-                          name={'trash-alt'}
-                          color={'black'}
-                          solid
-                          size={18}
-                          style={{opacity: 0.6}}
-                          onPress={() => {
-                            Alert.alert(
-                              'Warning!',
-                              `Are you sure you want to delete ${item.product_name} from cart`,
-                              [
-                                {
-                                  text: 'NO',
-                                },
-                                {
-                                  text: 'YES',
-                                  onPress: () => {
-                                    console.log('Deleted');
-                                    Toast.show(
-                                      `${item.product_name} deleted from cart successfully`,
-                                      Toast.LONG,
-                                    );
-                                  },
-                                },
-                              ],
-                            );
-                          }}
-                        />
-                      </View> */}
                     </View>
                   </TouchableWithoutFeedback>
                 )}
@@ -387,6 +326,7 @@ function Cart(props) {
               title="Place Order"
               disabled={false}
               color={'#2874F0'}
+              paddingVertical={8}
               onPress={() => {
                 props.navigation.navigate('OrderSummary', {
                   product: [...allProducts],
@@ -453,9 +393,8 @@ const styles = StyleSheet.create({
     marginVertical: 5,
   },
   productCard: {
-    paddingVertical: 15,
-
     // backgroundColor: 'pink',
+    paddingVertical: 20,
     flexDirection: 'row',
   },
   cardImage: {
@@ -479,4 +418,10 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Cart;
+const mapStateToProps = (state) => {
+  return {
+    cart: state.userReducer.cart,
+  };
+};
+
+export default connect(mapStateToProps)(Cart);

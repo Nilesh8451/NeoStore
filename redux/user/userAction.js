@@ -1,8 +1,10 @@
 import axios from 'axios';
 import {
+  ADD_PRODUCT_TO_CART,
   GET_USERADDRESS_FAI,
   GET_USERADDRESS_REQ,
   GET_USERADDRESS_SUC,
+  GET_USER_CART,
   LOGIN_FAILURE,
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
@@ -10,7 +12,12 @@ import {
   SIGNOUT,
   UPDATE_USERINFO,
 } from './types';
-import {baseUrl, loginEndPoint, getUserAddress} from '../../baseUrl';
+import {
+  baseUrl,
+  loginEndPoint,
+  getUserAddress,
+  getUserCart,
+} from '../../baseUrl';
 import {Alert} from 'react-native';
 import Toast from 'react-native-simple-toast';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -40,6 +47,7 @@ export const login = (user) => {
         console.log(res);
         dispatch({type: LOGIN_SUCCESS, data: res.data});
         Toast.show('Successfully Login', Toast.LONG);
+        // getUserCartData(res.data.token);
       })
       .catch((e) => {
         console.log(e.response);
@@ -100,4 +108,43 @@ export const getCustomerAddress = (token) => {
         dispatch({type: GET_USERADDRESS_FAI});
       });
   };
+};
+
+export const getUserCartData = (token) => {
+  return (dispatch) => {
+    axios
+      .get(`${baseUrl}/${getUserCart}`, {
+        headers: {
+          Authorization: `bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        console.log('Success', res.data);
+        if (
+          res.data.message !=
+          'Your cart is empty. Please, first add products on your cart'
+        ) {
+          const cartData = res.data.product_details.map((prod) => {
+            const dataobj = prod.product_id;
+            dataobj.quantity = prod.quantity;
+            dataobj.total = parseInt(prod.total_productCost);
+            return dataobj;
+          });
+
+          console.log('Change Cart Format', cartData);
+
+          dispatch({type: GET_USER_CART, data: cartData});
+        }
+      })
+      .catch((e) => {
+        console.log('Error', e, e.response);
+      });
+  };
+};
+
+export const addProductToCart = (product) => {
+  console.log('Product To Cart', product);
+  product.total = product.product_cost;
+  product.quantity = 1;
+  return {type: ADD_PRODUCT_TO_CART, data: product};
 };

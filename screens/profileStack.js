@@ -44,7 +44,7 @@ function ProfileStack({navigation}) {
           ),
           headerRight: () => (
             <FontAwesome5
-              name={'edit'}
+              name={'user-edit'}
               color="white"
               solid
               size={20}

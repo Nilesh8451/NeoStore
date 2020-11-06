@@ -14,7 +14,7 @@ import {Formik} from 'formik';
 import * as yup from 'yup';
 import FlatButton from '../shared/button';
 import {connect} from 'react-redux';
-import {login} from '../redux/user/userAction';
+import {login, getUserCartData} from '../redux/user/userAction';
 import LottieView from 'lottie-react-native';
 
 const loginSchema = yup.object({
@@ -34,7 +34,14 @@ const loginSchema = yup.object({
  * @return jsx which is used to display content to perform authentication.
  */
 
-function Login({user, isLoading, error, loginFn, navigation}) {
+function Login({
+  user,
+  isLoading,
+  error,
+  loginFn,
+  getDataOfUserCart,
+  navigation,
+}) {
   const [securePassword, setSecurePassword] = useState(true);
   const [eyeStyle, setEyeStyle] = useState('eye-slash');
 
@@ -46,6 +53,10 @@ function Login({user, isLoading, error, loginFn, navigation}) {
       setEyeStyle('eye-slash');
     }
   };
+
+  if (user?.token) {
+    getDataOfUserCart(user.token);
+  }
 
   return isLoading === false ? (
     <View style={{flex: 1, backgroundColor: 'white'}}>
@@ -323,6 +334,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     loginFn: (user) => dispatch(login(user)),
+    getDataOfUserCart: (token) => dispatch(getUserCartData(token)),
   };
 };
 

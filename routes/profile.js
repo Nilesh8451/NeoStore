@@ -12,7 +12,7 @@ import {connect} from 'react-redux';
 import {baseUrl} from '../baseUrl';
 
 function Profile(props) {
-  console.log('User Information', props.user, props);
+  console.log('User Info', props.user, props);
   const userInfo = props.user;
 
   return (

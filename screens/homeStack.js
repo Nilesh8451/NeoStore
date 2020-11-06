@@ -12,7 +12,7 @@ import {connect} from 'react-redux';
 
 const Stack = createStackNavigator();
 
-function HomeStack({user, navigation}) {
+function HomeStack({user, cart, navigation}) {
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -84,7 +84,7 @@ function HomeStack({user, navigation}) {
                     padding: 2,
                     paddingHorizontal: 4,
                   }}>
-                  {user?.cart_count === undefined ? 0 : user?.cart_count}
+                  {cart.length}
                 </Text>
               </View>
             </View>
@@ -216,6 +216,7 @@ function HomeStack({user, navigation}) {
 const mapStateToProps = (state) => {
   return {
     user: state.userReducer.user,
+    cart: state.userReducer.cart,
   };
 };
 

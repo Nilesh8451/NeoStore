@@ -8,12 +8,16 @@ import {
   GET_USERADDRESS_SUC,
   GET_USERADDRESS_REQ,
   GET_USERADDRESS_FAI,
+  ADD_PRODUCT_TO_CART,
+  GET_USER_CART,
 } from './types';
 import Toast from 'react-native-simple-toast';
+import {act} from 'react-test-renderer';
 
 const initialState = {
   user: {},
   userAddress: [],
+  cart: [],
   isLoading: false,
   error: null,
 };
@@ -78,8 +82,47 @@ const userReducer = (state = initialState, action) => {
         ...state,
         user: {},
         isLoading: false,
-        errro: null,
+        error: null,
+        cart: [],
       };
+
+    case GET_USER_CART:
+      console.log('Inside', action.data);
+
+      const addPrevToUserCart = [];
+
+      state.cart.map((prodC) => {
+        let index = action.data.findIndex((productU) => {
+          return productU.product_id == prodC.product_id;
+        });
+
+        if (index == -1) {
+          addPrevToUserCart.push(prodC);
+        }
+      });
+
+      console.log(addPrevToUserCart, action.data);
+
+      return {
+        ...state,
+        cart: [...addPrevToUserCart, ...action.data],
+      };
+
+    case ADD_PRODUCT_TO_CART:
+      let index = state.cart.findIndex((prod) => {
+        return prod.product_id == action.data.product_id;
+      });
+
+      if (index == -1) {
+        Toast.show('Added To Cart Successfully', Toast.SHORT);
+        return {
+          ...state,
+          cart: [...state.cart, action.data],
+        };
+      } else {
+        Toast.show('Already Added To Cart', Toast.LONG);
+        return state;
+      }
 
     default:
       return state;
