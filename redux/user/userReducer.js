@@ -10,6 +10,8 @@ import {
   GET_USERADDRESS_FAI,
   ADD_PRODUCT_TO_CART,
   GET_USER_CART,
+  INCREMENT_QUANTITY,
+  DECREMENT_QUANTITY,
 } from './types';
 import Toast from 'react-native-simple-toast';
 import {act} from 'react-test-renderer';
@@ -123,6 +125,47 @@ const userReducer = (state = initialState, action) => {
         Toast.show('Already Added To Cart', Toast.LONG);
         return state;
       }
+
+    case INCREMENT_QUANTITY:
+      console.log('ID Inc', action.data);
+
+      let newCart = state.cart.map((prod) => {
+        if (prod.product_id != action.data) {
+          return prod;
+        } else {
+          let prodO = prod;
+          prodO.quantity += 1;
+          prodO.total += prodO.product_cost;
+          return prodO;
+        }
+      });
+
+      console.log(newCart);
+
+      return {
+        ...state,
+        cart: newCart,
+      };
+
+    case DECREMENT_QUANTITY: {
+      console.log('ID Dec', action.data);
+
+      let newCart = state.cart.map((prod) => {
+        if (prod.product_id != action.data) {
+          return prod;
+        } else {
+          let prodO = prod;
+          prodO.quantity -= 1;
+          prodO.total -= prodO.product_cost;
+          return prodO;
+        }
+      });
+
+      return {
+        ...state,
+        cart: newCart,
+      };
+    }
 
     default:
       return state;

@@ -8,16 +8,20 @@ import {
   Alert,
   ScrollView,
 } from 'react-native';
-import {Formik} from 'formik';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Toast from 'react-native-simple-toast';
 import FlatButton from '../shared/button';
 import {connect} from 'react-redux';
+import {incrementQuantity, decrementQuantity} from '../redux/user/userAction';
 import {baseUrl} from '../baseUrl';
 
 function Cart(props) {
   const [allProducts, setAllProducts] = useState([]);
   console.log(props?.cart);
+
+  useEffect(() => {
+    setAllProducts(props.cart);
+  }, [props.cart]);
 
   const handleDelete = (product) => {
     Alert.alert(
@@ -52,199 +56,191 @@ function Cart(props) {
               marginHorizontal: 10,
               marginVertical: 10,
             }}>
-            {props.cart.map((item, index) => (
-              <Formik
-                key={index}
-                initialValues={{
-                  currentCount: 1,
-                  productPrice: item.total.toString(),
-                }}
-                onSubmit={(values, action) => {
-                  handleSubmit(item, values.feedbackInput);
-                  action.resetForm();
-                }}>
-                {(formikProps) => (
-                  <TouchableWithoutFeedback
-                    key={item.id}
-                    onPress={() => {
-                      console.log('Clicked on Card');
+            {allProducts.map((item, index) => {
+              return (
+                <TouchableWithoutFeedback
+                  key={item._id}
+                  onPress={() => {
+                    console.log('Clicked on Card');
+                  }}>
+                  <View
+                    style={{
+                      ...styles.productCardContent,
+                      // backgroundColor: 'red',
+                      marginBottom: 15,
                     }}>
-                    <View
-                      style={{
-                        ...styles.productCardContent,
-                        // backgroundColor: 'red',
-                        marginBottom: 15,
-                      }}>
-                      <View style={styles.productCard}>
-                        <View style={{width: 100, height: 100}}>
-                          <Image
-                            source={{
-                              uri: `${baseUrl}/${item.product_image}`,
-                            }}
-                            style={styles.cardImage}
-                          />
-                        </View>
-                        <View style={styles.cardDetail}>
+                    <View style={styles.productCard}>
+                      <View style={{width: 100, height: 100}}>
+                        <Image
+                          source={{
+                            uri: `${baseUrl}/${item.product_image}`,
+                          }}
+                          style={styles.cardImage}
+                        />
+                      </View>
+                      <View style={styles.cardDetail}>
+                        <Text
+                          // numberOfLines={1}
+                          style={{
+                            fontSize: 20,
+                            marginRight: 35,
+                            // backgroundColor: 'red',
+                          }}>
+                          {item.product_name}
+                        </Text>
+                        <Text
+                          numberOfLines={1}
+                          style={{fontSize: 16, marginTop: 2}}>
+                          Quantity: {item.quantity}
+                        </Text>
+                        <View
+                          style={{
+                            marginTop: 10,
+                            // backgroundColor: 'red',
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                          }}>
                           <Text
-                            // numberOfLines={1}
                             style={{
                               fontSize: 20,
-                              marginRight: 35,
-                              // backgroundColor: 'red',
+                              color: '#FE5555',
+                              // marginTop: 10,
                             }}>
-                            {item.product_name}
+                            {item.total}
                           </Text>
-                          <Text
-                            numberOfLines={1}
-                            style={{fontSize: 16, marginTop: 2}}>
-                            Quantity: {formikProps.values.currentCount}
-                          </Text>
-                          <View
-                            style={{
-                              marginTop: 10,
-                              // backgroundColor: 'red',
-                              flexDirection: 'row',
-                              justifyContent: 'space-between',
-                              alignItems: 'center',
-                            }}>
-                            <Text
+                          <View style={styles.cartItemAction}>
+                            <View
                               style={{
-                                fontSize: 20,
-                                color: '#FE5555',
-                                // marginTop: 10,
+                                // width: 30,
+                                height: '100%',
+                                padding: 4,
+                                paddingHorizontal: 9,
+                                // borderRadius: 30,
+                                justifyContent: 'center',
+                                backgroundColor: '#F0F0F0',
+                                marginRight: 2,
+                                borderRightWidth: 1,
+                                borderRightColor: 'gray',
                               }}>
-                              {formikProps.values.productPrice}
-                            </Text>
-                            <View style={styles.cartItemAction}>
-                              <View
-                                style={{
-                                  // width: 30,
-                                  height: '100%',
-                                  padding: 4,
-                                  paddingHorizontal: 9,
-                                  // borderRadius: 30,
-                                  justifyContent: 'center',
-                                  backgroundColor: '#F0F0F0',
-                                  marginRight: 2,
-                                  borderRightWidth: 1,
-                                  borderRightColor: 'gray',
-                                }}>
-                                <FontAwesome5
-                                  name={'minus'}
-                                  color={'black'}
-                                  solid
-                                  size={17}
-                                  style={{opacity: 0.6}}
-                                  onPress={() => {
-                                    if (formikProps.values.currentCount > 1) {
-                                      formikProps.setFieldValue(
-                                        'currentCount',
-                                        formikProps.values.currentCount - 1,
-                                      );
-                                      formikProps.setFieldValue(
-                                        'productPrice',
-                                        formikProps.values.productPrice -
-                                          formikProps.values.productPrice /
-                                            formikProps.values.currentCount,
-                                      );
-                                    } else {
-                                      Toast.show(
-                                        `Mininum limit reached, Click on Delete icon to delete item from cart`,
-                                        Toast.SHORT,
-                                      );
-                                    }
-                                  }}
-                                />
-                              </View>
-                              <View
-                                style={{
-                                  height: '100%',
-                                  padding: 4,
-                                  paddingHorizontal: 9,
-                                  // borderRadius: 30,
-                                  justifyContent: 'center',
-                                  backgroundColor: '#F0F0F0',
-                                  marginRight: 2,
-                                  borderRightWidth: 1,
-                                  borderRightColor: 'gray',
-                                }}>
-                                <Text
-                                  style={{fontWeight: 'bold', fontSize: 18}}>
-                                  {formikProps.values.currentCount}
-                                </Text>
-                              </View>
-                              <View
-                                style={{
-                                  // width: 30,
-                                  height: '100%',
-                                  padding: 4,
-                                  paddingHorizontal: 9,
-                                  // borderRadius: 30,
-                                  justifyContent: 'center',
-                                  backgroundColor: '#F0F0F0',
-                                }}>
-                                <FontAwesome5
-                                  name={'plus'}
-                                  color={'black'}
-                                  solid
-                                  size={17}
-                                  style={{opacity: 0.6}}
-                                  onPress={() => {
-                                    if (formikProps.values.currentCount < 10) {
-                                      formikProps.setFieldValue(
-                                        'currentCount',
-                                        formikProps.values.currentCount + 1,
-                                      );
-                                      formikProps.setFieldValue(
-                                        'productPrice',
-                                        formikProps.values.productPrice +
-                                          formikProps.values.productPrice /
-                                            formikProps.values.currentCount,
-                                      );
-                                    } else {
-                                      Toast.show(
-                                        `Maximum limit reached for this product.`,
-                                        Toast.SHORT,
-                                      );
-                                    }
-                                  }}
-                                />
-                              </View>
+                              <FontAwesome5
+                                name={'minus'}
+                                color={'black'}
+                                solid
+                                size={17}
+                                style={{opacity: 0.6}}
+                                onPress={() => {
+                                  if (item.quantity > 1) {
+                                    props.decQuantity(item.product_id);
+
+                                    // formikProps.setFieldValue(
+                                    //   'currentCount',
+                                    //   formikProps.values.currentCount - 1,
+                                    // );
+                                    // formikProps.setFieldValue(
+                                    //   'productPrice',
+                                    //   formikProps.values.productPrice -
+                                    //     formikProps.values.productPrice /
+                                    //       formikProps.values.currentCount,
+                                    // );
+                                  } else {
+                                    Toast.show(
+                                      `Mininum limit reached, Click on Delete icon to delete item from cart`,
+                                      Toast.SHORT,
+                                    );
+                                  }
+                                }}
+                              />
+                            </View>
+                            <View
+                              style={{
+                                height: '100%',
+                                padding: 4,
+                                paddingHorizontal: 9,
+                                // borderRadius: 30,
+                                justifyContent: 'center',
+                                backgroundColor: '#F0F0F0',
+                                marginRight: 2,
+                                borderRightWidth: 1,
+                                borderRightColor: 'gray',
+                              }}>
+                              <Text style={{fontWeight: 'bold', fontSize: 18}}>
+                                {item.quantity}
+                              </Text>
+                            </View>
+                            <View
+                              style={{
+                                // width: 30,
+                                height: '100%',
+                                padding: 4,
+                                paddingHorizontal: 9,
+                                // borderRadius: 30,
+                                justifyContent: 'center',
+                                backgroundColor: '#F0F0F0',
+                              }}>
+                              <FontAwesome5
+                                name={'plus'}
+                                color={'black'}
+                                solid
+                                size={17}
+                                style={{opacity: 0.6}}
+                                onPress={() => {
+                                  if (item.quantity < 10) {
+                                    props.incQuantity(item.product_id);
+
+                                    // formikProps.setFieldValue(
+                                    //   'currentCount',
+                                    //   formikProps.values.currentCount + 1,
+                                    // );
+                                    // formikProps.setFieldValue(
+                                    //   'productPrice',
+                                    //   formikProps.values.productPrice +
+                                    //     formikProps.values.productPrice /
+                                    //       formikProps.values.currentCount,
+                                    // );
+                                  } else {
+                                    Toast.show(
+                                      `Maximum limit reached for this product.`,
+                                      Toast.SHORT,
+                                    );
+                                  }
+                                }}
+                              />
                             </View>
                           </View>
                         </View>
                       </View>
-                      <TouchableWithoutFeedback
-                        onPress={() => {
-                          console.log('clicked');
-                          handleDelete(item);
-                        }}>
-                        <View
-                          style={{
-                            position: 'absolute',
-                            right: 20,
-                            top: 23,
-                            padding: 3,
-                            opacity: 0.9,
-                            backgroundColor: '#EE5233',
-                          }}>
-                          <FontAwesome5
-                            name={'times'}
-                            color={'black'}
-                            solid
-                            size={16}
-                            style={{
-                              opacity: 1,
-                              color: 'white',
-                            }}
-                          />
-                        </View>
-                      </TouchableWithoutFeedback>
                     </View>
-                  </TouchableWithoutFeedback>
-                )}
-              </Formik>
-            ))}
+                    <TouchableWithoutFeedback
+                      onPress={() => {
+                        console.log('clicked');
+                        handleDelete(item);
+                      }}>
+                      <View
+                        style={{
+                          position: 'absolute',
+                          right: 20,
+                          top: 23,
+                          padding: 3,
+                          opacity: 0.9,
+                          backgroundColor: '#EE5233',
+                        }}>
+                        <FontAwesome5
+                          name={'times'}
+                          color={'black'}
+                          solid
+                          size={16}
+                          style={{
+                            opacity: 1,
+                            color: 'white',
+                          }}
+                        />
+                      </View>
+                    </TouchableWithoutFeedback>
+                  </View>
+                </TouchableWithoutFeedback>
+              );
+            })}
           </View>
           <View
             style={{
@@ -424,4 +420,11 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps)(Cart);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    decQuantity: (id) => dispatch(decrementQuantity(id)),
+    incQuantity: (id) => dispatch(incrementQuantity(id)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Cart);

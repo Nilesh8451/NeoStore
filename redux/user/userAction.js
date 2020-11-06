@@ -1,10 +1,12 @@
 import axios from 'axios';
 import {
   ADD_PRODUCT_TO_CART,
+  DECREMENT_QUANTITY,
   GET_USERADDRESS_FAI,
   GET_USERADDRESS_REQ,
   GET_USERADDRESS_SUC,
   GET_USER_CART,
+  INCREMENT_QUANTITY,
   LOGIN_FAILURE,
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
@@ -147,4 +149,18 @@ export const addProductToCart = (product) => {
   product.total = product.product_cost;
   product.quantity = 1;
   return {type: ADD_PRODUCT_TO_CART, data: product};
+};
+
+export const incrementQuantity = (productId) => {
+  return {
+    type: INCREMENT_QUANTITY,
+    data: productId,
+  };
+};
+
+export const decrementQuantity = (productId) => {
+  return {
+    type: DECREMENT_QUANTITY,
+    data: productId,
+  };
 };
