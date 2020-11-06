@@ -12,6 +12,7 @@ import {
   GET_USER_CART,
   INCREMENT_QUANTITY,
   DECREMENT_QUANTITY,
+  DELETE_PRODUCT_FROM_CART,
 } from './types';
 import Toast from 'react-native-simple-toast';
 import {act} from 'react-test-renderer';
@@ -88,9 +89,8 @@ const userReducer = (state = initialState, action) => {
         cart: [],
       };
 
-    case GET_USER_CART:
+    case GET_USER_CART: {
       console.log('Inside', action.data);
-
       const addPrevToUserCart = [];
 
       state.cart.map((prodC) => {
@@ -104,13 +104,13 @@ const userReducer = (state = initialState, action) => {
       });
 
       console.log(addPrevToUserCart, action.data);
-
       return {
         ...state,
         cart: [...addPrevToUserCart, ...action.data],
       };
+    }
 
-    case ADD_PRODUCT_TO_CART:
+    case ADD_PRODUCT_TO_CART: {
       let index = state.cart.findIndex((prod) => {
         return prod.product_id == action.data.product_id;
       });
@@ -125,10 +125,9 @@ const userReducer = (state = initialState, action) => {
         Toast.show('Already Added To Cart', Toast.LONG);
         return state;
       }
+    }
 
-    case INCREMENT_QUANTITY:
-      console.log('ID Inc', action.data);
-
+    case INCREMENT_QUANTITY: {
       let newCart = state.cart.map((prod) => {
         if (prod.product_id != action.data) {
           return prod;
@@ -146,10 +145,9 @@ const userReducer = (state = initialState, action) => {
         ...state,
         cart: newCart,
       };
+    }
 
     case DECREMENT_QUANTITY: {
-      console.log('ID Dec', action.data);
-
       let newCart = state.cart.map((prod) => {
         if (prod.product_id != action.data) {
           return prod;
@@ -165,6 +163,14 @@ const userReducer = (state = initialState, action) => {
         ...state,
         cart: newCart,
       };
+    }
+
+    case DELETE_PRODUCT_FROM_CART: {
+      let newCart = state.cart.filter((prod) => {
+        return prod.product_id != action.data;
+      });
+
+      return {...state, cart: newCart};
     }
 
     default:

@@ -2,6 +2,7 @@ import axios from 'axios';
 import {
   ADD_PRODUCT_TO_CART,
   DECREMENT_QUANTITY,
+  DELETE_PRODUCT_FROM_CART,
   GET_USERADDRESS_FAI,
   GET_USERADDRESS_REQ,
   GET_USERADDRESS_SUC,
@@ -161,6 +162,13 @@ export const incrementQuantity = (productId) => {
 export const decrementQuantity = (productId) => {
   return {
     type: DECREMENT_QUANTITY,
+    data: productId,
+  };
+};
+
+export const deleteProductFromCart = (productId) => {
+  return {
+    type: DELETE_PRODUCT_FROM_CART,
     data: productId,
   };
 };

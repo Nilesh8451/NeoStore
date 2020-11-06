@@ -12,8 +12,16 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Toast from 'react-native-simple-toast';
 import FlatButton from '../shared/button';
 import {connect} from 'react-redux';
-import {incrementQuantity, decrementQuantity} from '../redux/user/userAction';
+import {
+  incrementQuantity,
+  decrementQuantity,
+  deleteProductFromCart,
+} from '../redux/user/userAction';
 import {baseUrl} from '../baseUrl';
+
+let totalCartCost = 0;
+let gstTax = 0;
+let totalPay = 0;
 
 function Cart(props) {
   const [allProducts, setAllProducts] = useState([]);
@@ -21,6 +29,21 @@ function Cart(props) {
 
   useEffect(() => {
     setAllProducts(props.cart);
+
+    totalCartCost = props.cart.reduce((prevVal, nextVal) => {
+      return prevVal + nextVal.total;
+    }, 0);
+
+    gstTax = parseInt(totalCartCost * 0.05);
+
+    totalPay = totalCartCost + gstTax;
+
+    var x = totalPay;
+    x = x.toString();
+    var lastThree = x.substring(x.length - 3);
+    var otherNumbers = x.substring(0, x.length - 3);
+    if (otherNumbers != '') lastThree = ',' + lastThree;
+    totalPay = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + lastThree;
   }, [props.cart]);
 
   const handleDelete = (product) => {
@@ -35,6 +58,7 @@ function Cart(props) {
           text: 'YES',
           onPress: () => {
             console.log('Deleted');
+            props.delCartProduct(product.product_id);
             Toast.show(
               `${product.product_name} removed from your cart successfully`,
               Toast.LONG,
@@ -57,6 +81,14 @@ function Cart(props) {
               marginVertical: 10,
             }}>
             {allProducts.map((item, index) => {
+              var x = item.total;
+              x = x.toString();
+              var lastThree = x.substring(x.length - 3);
+              var otherNumbers = x.substring(0, x.length - 3);
+              if (otherNumbers != '') lastThree = ',' + lastThree;
+              var productTotalCost =
+                otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + lastThree;
+
               return (
                 <TouchableWithoutFeedback
                   key={item._id}
@@ -107,7 +139,7 @@ function Cart(props) {
                               color: '#FE5555',
                               // marginTop: 10,
                             }}>
-                            {item.total}
+                            ₹ {productTotalCost}
                           </Text>
                           <View style={styles.cartItemAction}>
                             <View
@@ -132,17 +164,6 @@ function Cart(props) {
                                 onPress={() => {
                                   if (item.quantity > 1) {
                                     props.decQuantity(item.product_id);
-
-                                    // formikProps.setFieldValue(
-                                    //   'currentCount',
-                                    //   formikProps.values.currentCount - 1,
-                                    // );
-                                    // formikProps.setFieldValue(
-                                    //   'productPrice',
-                                    //   formikProps.values.productPrice -
-                                    //     formikProps.values.productPrice /
-                                    //       formikProps.values.currentCount,
-                                    // );
                                   } else {
                                     Toast.show(
                                       `Mininum limit reached, Click on Delete icon to delete item from cart`,
@@ -187,17 +208,6 @@ function Cart(props) {
                                 onPress={() => {
                                   if (item.quantity < 10) {
                                     props.incQuantity(item.product_id);
-
-                                    // formikProps.setFieldValue(
-                                    //   'currentCount',
-                                    //   formikProps.values.currentCount + 1,
-                                    // );
-                                    // formikProps.setFieldValue(
-                                    //   'productPrice',
-                                    //   formikProps.values.productPrice +
-                                    //     formikProps.values.productPrice /
-                                    //       formikProps.values.currentCount,
-                                    // );
                                   } else {
                                     Toast.show(
                                       `Maximum limit reached for this product.`,
@@ -213,7 +223,7 @@ function Cart(props) {
                     </View>
                     <TouchableWithoutFeedback
                       onPress={() => {
-                        console.log('clicked');
+                        // console.log('clicked');
                         handleDelete(item);
                       }}>
                       <View
@@ -264,32 +274,27 @@ function Cart(props) {
                   marginBottom: 3,
                 }}>
                 <Text style={{fontSize: 18}}>Sub Total</Text>
-                <Text style={{fontSize: 16}}>₹20,000</Text>
+                <Text style={{fontSize: 16}}>₹ {totalCartCost}</Text>
               </View>
+
               <View
                 style={{
                   flexDirection: 'row',
                   justifyContent: 'space-between',
-                  marginBottom: 3,
+                  marginBottom: 15,
+                  marginTop: 10,
                 }}>
-                <Text style={{fontSize: 18}}>Delivery Charges</Text>
-                <Text style={{fontSize: 16}}>₹200</Text>
-              </View>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  marginBottom: 8,
-                }}>
-                <Text style={{fontSize: 18}}>GST(10%)</Text>
-                <Text style={{fontSize: 16}}>₹20</Text>
+                <Text style={{fontSize: 18}}>GST(5%)</Text>
+                <Text style={{fontSize: 16}}>₹ {gstTax}</Text>
               </View>
               <View
                 style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                 <Text style={{fontSize: 18, fontWeight: 'bold'}}>
                   Total Amount
                 </Text>
-                <Text style={{fontSize: 16, fontWeight: 'bold'}}>₹20220</Text>
+                <Text style={{fontSize: 16, fontWeight: 'bold'}}>
+                  ₹ {totalPay}
+                </Text>
               </View>
             </View>
           </View>
@@ -316,7 +321,7 @@ function Cart(props) {
             justifyContent: 'space-between',
             alignItems: 'center',
           }}>
-          <Text style={{fontSize: 18, fontWeight: 'bold'}}>₹20,220</Text>
+          <Text style={{fontSize: 18, fontWeight: 'bold'}}>₹ {totalPay}</Text>
           <View style={{width: '50%'}}>
             <FlatButton
               title="Place Order"
@@ -424,6 +429,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     decQuantity: (id) => dispatch(decrementQuantity(id)),
     incQuantity: (id) => dispatch(incrementQuantity(id)),
+    delCartProduct: (id) => dispatch(deleteProductFromCart(id)),
   };
 };
 
