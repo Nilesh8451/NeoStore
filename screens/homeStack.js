@@ -164,7 +164,7 @@ function HomeStack({user, cart, navigation}) {
                     padding: 2,
                     paddingHorizontal: 4,
                   }}>
-                  2
+                  {cart.length}
                 </Text>
               </View>
             </View>

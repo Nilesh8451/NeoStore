@@ -17,3 +17,5 @@ export const commonProducts = 'commonProducts';
 export const rateProductByCustomer = 'updateProductRatingByCustomer';
 export const getCustOrderDetails = 'getOrderDetails';
 export const getUserCart = 'getCartData';
+export const productToCartCheckout = 'addProductToCartCheckout';
+export const deleteCustomerCart = 'deleteCustomerCart';

@@ -13,6 +13,7 @@ import {
   INCREMENT_QUANTITY,
   DECREMENT_QUANTITY,
   DELETE_PRODUCT_FROM_CART,
+  ADD_PRODUCT_TO_CART_CHECKOUT,
 } from './types';
 import Toast from 'react-native-simple-toast';
 import {act} from 'react-test-renderer';
@@ -171,6 +172,10 @@ const userReducer = (state = initialState, action) => {
       });
 
       return {...state, cart: newCart};
+    }
+
+    case ADD_PRODUCT_TO_CART_CHECKOUT: {
+      return state;
     }
 
     default:

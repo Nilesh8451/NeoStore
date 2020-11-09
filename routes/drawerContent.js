@@ -3,7 +3,7 @@ import {DrawerContentScrollView, DrawerItem} from '@react-navigation/drawer';
 import {View, Text, StyleSheet, SafeAreaView, Alert, Image} from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {connect} from 'react-redux';
-import {signOut} from '../redux/user/userAction';
+import {signOut, addProductToCartCheckout} from '../redux/user/userAction';
 import {baseUrl} from '../baseUrl';
 
 function DrawerContent({...props}) {
@@ -12,7 +12,13 @@ function DrawerContent({...props}) {
       {
         text: 'NO',
       },
-      {text: 'YES', onPress: () => props.signOutFn()},
+      {
+        text: 'YES',
+        onPress: () => {
+          props.addProductToUserCartCheckout(props.cart, props.user?.token);
+          props.signOutFn();
+        },
+      },
     ]);
 
     props.navigation.closeDrawer();
@@ -216,6 +222,7 @@ const styles = StyleSheet.create({
 const mapStateToProps = (state) => {
   return {
     user: state.userReducer.user,
+    cart: state.userReducer.cart,
     isLoading: state.userReducer.isLoading,
     error: state.userReducer.error,
   };
@@ -224,6 +231,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     signOutFn: () => dispatch(signOut()),
+    addProductToUserCartCheckout: (cartData, token) =>
+      dispatch(addProductToCartCheckout(cartData, token)),
   };
 };
 

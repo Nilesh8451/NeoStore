@@ -1,6 +1,7 @@
 import axios from 'axios';
 import {
   ADD_PRODUCT_TO_CART,
+  ADD_PRODUCT_TO_CART_CHECKOUT,
   DECREMENT_QUANTITY,
   DELETE_PRODUCT_FROM_CART,
   GET_USERADDRESS_FAI,
@@ -20,6 +21,8 @@ import {
   loginEndPoint,
   getUserAddress,
   getUserCart,
+  productToCartCheckout,
+  deleteCustomerCart,
 } from '../../baseUrl';
 import {Alert} from 'react-native';
 import Toast from 'react-native-simple-toast';
@@ -166,9 +169,54 @@ export const decrementQuantity = (productId) => {
   };
 };
 
-export const deleteProductFromCart = (productId) => {
-  return {
-    type: DELETE_PRODUCT_FROM_CART,
-    data: productId,
+export const deleteProductFromCart = (productId, token) => {
+  return (dispatch) => {
+    axios
+      .delete(`${baseUrl}/${deleteCustomerCart}/${productId}`, {
+        headers: {
+          Authorization: `bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        console.log('Delete Success Res ', res);
+        dispatch({
+          type: DELETE_PRODUCT_FROM_CART,
+          data: productId,
+        });
+      })
+      .catch((e) => {
+        console.log('Delete Error ', e, e.response);
+        dispatch({
+          type: DELETE_PRODUCT_FROM_CART,
+          data: productId,
+        });
+      });
+  };
+};
+
+export const addProductToCartCheckout = (cartData, token) => {
+  console.log('Cart Data ', cartData, token);
+
+  const cart = [...cartData];
+
+  cart.push({flag: 'logout'});
+
+  return (dispatch) => {
+    axios
+      .post(`${baseUrl}/${productToCartCheckout}`, cart, {
+        headers: {
+          Authorization: `bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        console.log('Inside Cart Action', res);
+        dispatch({
+          type: ADD_PRODUCT_TO_CART_CHECKOUT,
+          data: res,
+        });
+      })
+      .catch((e) => {
+        console.log('cart Error', e, e.response);
+      });
   };
 };

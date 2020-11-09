@@ -19,7 +19,7 @@ import {
   getAllCategoriesData,
   getDefaultTopRatingProducts,
 } from '../redux/dashboard/dashboardAction';
-import {restoreLoginData} from '../redux/user/userAction';
+import {restoreLoginData, getUserCartData} from '../redux/user/userAction';
 import {connect} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
@@ -50,6 +50,7 @@ function Home({
   getAllCategories,
   getTopRatingProducts,
   restoreData,
+  getDataOfUserCart,
   navigation,
 }) {
   const [searchInput, setSearchInput] = useState('');
@@ -63,6 +64,7 @@ function Home({
 
       if (user !== null) {
         restoreData(parseUserData);
+        getDataOfUserCart(parseUserData.token);
       }
     } catch (error) {}
   };
@@ -486,6 +488,7 @@ const mapDispatchToProps = (dispatch) => {
     getAllCategories: () => dispatch(getAllCategoriesData()),
     getTopRatingProducts: () => dispatch(getDefaultTopRatingProducts()),
     restoreData: (user) => dispatch(restoreLoginData(user)),
+    getDataOfUserCart: (token) => dispatch(getUserCartData(token)),
   };
 };
 

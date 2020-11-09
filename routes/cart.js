@@ -58,7 +58,7 @@ function Cart(props) {
           text: 'YES',
           onPress: () => {
             console.log('Deleted');
-            props.delCartProduct(product.product_id);
+            props.delCartProduct(product.product_id, props.user?.token);
             Toast.show(
               `${product.product_name} removed from your cart successfully`,
               Toast.LONG,
@@ -421,6 +421,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state) => {
   return {
+    user: state.userReducer.user,
     cart: state.userReducer.cart,
   };
 };
@@ -429,7 +430,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     decQuantity: (id) => dispatch(decrementQuantity(id)),
     incQuantity: (id) => dispatch(incrementQuantity(id)),
-    delCartProduct: (id) => dispatch(deleteProductFromCart(id)),
+    delCartProduct: (id, token) => dispatch(deleteProductFromCart(id, token)),
   };
 };
 
