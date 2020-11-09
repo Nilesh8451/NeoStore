@@ -9,6 +9,7 @@ import {
   GET_USERADDRESS_REQ,
   GET_USERADDRESS_SUC,
   GET_USER_CART,
+  GET_USER_ORDER_DETAILS,
   INCREMENT_QUANTITY,
   LOGIN_FAILURE,
   LOGIN_REQUEST,
@@ -24,6 +25,7 @@ import {
   getUserCart,
   productToCartCheckout,
   deleteCustomerCart,
+  getCustOrderDetails,
 } from '../../baseUrl';
 import {Alert} from 'react-native';
 import Toast from 'react-native-simple-toast';
@@ -233,4 +235,25 @@ export const buyProduct = () => {
   console.log('This is ---');
 
   return {type: BUY_PRODUCT};
+};
+
+export const getCustomerOrderDetails = (token) => {
+  return (dispatch) => {
+    axios
+      .get(`${baseUrl}/${getCustOrderDetails}`, {
+        headers: {
+          Authorization: `bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        console.log('This is i want', res.data.product_details);
+        dispatch({
+          type: GET_USER_ORDER_DETAILS,
+          data: res.data.product_details,
+        });
+      })
+      .catch((e) => {
+        console.log('This is error', e, e.response);
+      });
+  };
 };

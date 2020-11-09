@@ -15,6 +15,7 @@ import {
   DELETE_PRODUCT_FROM_CART,
   ADD_PRODUCT_TO_CART_CHECKOUT,
   BUY_PRODUCT,
+  GET_USER_ORDER_DETAILS,
 } from './types';
 import Toast from 'react-native-simple-toast';
 import {act} from 'react-test-renderer';
@@ -23,7 +24,9 @@ const initialState = {
   user: {},
   userAddress: [],
   cart: [],
+  order: [],
   isLoading: false,
+  addressLoading: false,
   error: null,
 };
 
@@ -68,18 +71,18 @@ const userReducer = (state = initialState, action) => {
     case GET_USERADDRESS_REQ:
       return {
         ...state,
-        isLoading: true,
+        addressLoading: true,
       };
 
     case GET_USERADDRESS_SUC:
       return {
         ...state,
-        isLoading: false,
+        addressLoading: false,
         userAddress: action.data,
       };
 
     case GET_USERADDRESS_FAI:
-      return {...state, isLoading: false, userAddress: []};
+      return {...state, addressLoading: false, userAddress: []};
 
     case SIGNOUT:
       Toast.show('Successfully Logout', Toast.LONG);
@@ -184,6 +187,14 @@ const userReducer = (state = initialState, action) => {
       return {
         ...state,
         cart: [],
+      };
+    }
+
+    case GET_USER_ORDER_DETAILS: {
+      console.log('User Order ', action.data);
+      return {
+        ...state,
+        order: action.data,
       };
     }
 

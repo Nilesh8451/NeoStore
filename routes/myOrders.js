@@ -10,34 +10,18 @@ import {
 import axios from 'axios';
 import {baseUrl, getCustOrderDetails} from '../baseUrl';
 import LottieView from 'lottie-react-native';
+import {connect} from 'react-redux';
 
 function MyOrders(props) {
   const [myOrder, setMyOrder] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const getOrderDetail = () => {
-    axios
-      .get(`${baseUrl}/${getCustOrderDetails}`, {
-        headers: {
-          Authorization: `bearer ${props.route.params.token}`,
-        },
-      })
-      .then((res) => {
-        console.log('This is i want', res.data.product_details);
-        setMyOrder(res.data.product_details);
-        setIsLoading(false);
-      })
-      .catch((e) => {
-        console.log('This is error', e, e.response);
-        setIsLoading(false);
-      });
-  };
-
   useEffect(() => {
-    setIsLoading(true);
-
-    getOrderDetail();
-  }, []);
+    if (props.order) {
+      setMyOrder(props.order);
+      setIsLoading(false);
+    }
+  }, [props.order]);
 
   if (isLoading) {
     return (
@@ -210,4 +194,10 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MyOrders;
+const mapStateToProps = (state) => {
+  return {
+    order: state.userReducer.order,
+  };
+};
+
+export default connect(mapStateToProps)(MyOrders);

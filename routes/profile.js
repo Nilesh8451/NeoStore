@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   View,
   Text,
@@ -10,10 +10,21 @@ import {
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {connect} from 'react-redux';
 import {baseUrl} from '../baseUrl';
+import {getCustomerOrderDetails} from '../redux/user/userAction';
 
 function Profile(props) {
   console.log('User Info', props.user, props);
   const userInfo = props.user;
+
+  if (props.user?.token === undefined) {
+    props.navigation.navigate('Home');
+  }
+
+  useEffect(() => {
+    if (props.user?.token) {
+      props.getCustOrderDetail(props.user.token);
+    }
+  }, [props.user]);
 
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
@@ -116,7 +127,7 @@ function Profile(props) {
               width: '50%',
             }}>
             <Text style={{fontWeight: 'bold', fontSize: 17}}>
-              {userInfo?.orders_onTheWay + userInfo?.orders_shipped}
+              {props.order?.length}
             </Text>
             <Text style={{fontSize: 17}}>Orders</Text>
           </View>
@@ -309,7 +320,14 @@ const styles = StyleSheet.create({
 const mapStateToProps = (state) => {
   return {
     user: state.userReducer.user,
+    order: state.userReducer.order,
   };
 };
 
-export default connect(mapStateToProps)(Profile);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getCustOrderDetail: (token) => dispatch(getCustomerOrderDetails(token)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Profile);

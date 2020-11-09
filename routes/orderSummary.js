@@ -2,7 +2,11 @@ import React, {useState, useEffect} from 'react';
 import {View, Text, ScrollView, StyleSheet, Image} from 'react-native';
 import FlatButton from '../shared/button';
 import {connect} from 'react-redux';
-import {buyProduct, getCustomerAddress} from '../redux/user/userAction';
+import {
+  buyProduct,
+  getCustomerAddress,
+  getCustomerOrderDetails,
+} from '../redux/user/userAction';
 import axios from 'axios';
 import {baseUrl, productToCartCheckout} from '../baseUrl';
 import LottieView from 'lottie-react-native';
@@ -70,6 +74,7 @@ function OrderSummary(props) {
         console.log('Inside Buy Pro Action', res);
         props.buyProd();
         setIsLoading(false);
+        props.getCustOrderDetail(props.user?.token);
         props.navigation.navigate('OrderResponse');
       })
       .catch((e) => {
@@ -316,6 +321,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     getCustAdd: (token) => dispatch(getCustomerAddress(token)),
     buyProd: () => dispatch(buyProduct()),
+    getCustOrderDetail: (token) => dispatch(getCustomerOrderDetails(token)),
   };
 };
 
