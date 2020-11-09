@@ -148,16 +148,22 @@ function UpdateAddress(props) {
         <View
           style={{
             flex: 1,
-            marginVertical: 20,
+            marginVertical: 40,
             paddingVertical: 30,
-            // justifyContent: 'center',
             alignItems: 'center',
           }}>
           <Image
             source={require('../assets/images/emptycart.png')}
-            style={{width: 70, height: 70, opacity: 0.9}}
+            style={{width: 70, height: 70, opacity: 0.7}}
           />
-          <Text style={{fontSize: 18, marginTop: 10}}>
+          <Text
+            style={{
+              fontSize: 18,
+              marginTop: 16,
+              fontWeight: 'bold',
+              textTransform: 'capitalize',
+              opacity: 0.8,
+            }}>
             YOU HAVEN'T ADDED ANY ADDRESS YET
           </Text>
         </View>

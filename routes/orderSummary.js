@@ -5,6 +5,7 @@ import {connect} from 'react-redux';
 import {buyProduct, getCustomerAddress} from '../redux/user/userAction';
 import axios from 'axios';
 import {baseUrl, productToCartCheckout} from '../baseUrl';
+import LottieView from 'lottie-react-native';
 
 let totalCartCost = 0;
 let gstTax = 0;
@@ -79,8 +80,22 @@ function OrderSummary(props) {
 
   if (isLoading) {
     return (
-      <View>
-        <Text>Loading...</Text>
+      <View
+        style={{
+          ...styles.container,
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <LottieView
+          source={require('../assets/json/loader2.json')}
+          autoPlay
+          style={{
+            width: 200,
+            height: 200,
+          }}
+          loop
+        />
       </View>
     );
   } else {

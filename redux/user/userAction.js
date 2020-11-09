@@ -171,6 +171,13 @@ export const decrementQuantity = (productId) => {
 };
 
 export const deleteProductFromCart = (productId, token) => {
+  if (token === undefined) {
+    return {
+      type: DELETE_PRODUCT_FROM_CART,
+      data: productId,
+    };
+  }
+
   return (dispatch) => {
     axios
       .delete(`${baseUrl}/${deleteCustomerCart}/${productId}`, {

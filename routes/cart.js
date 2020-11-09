@@ -329,7 +329,11 @@ function Cart(props) {
               color={'#2874F0'}
               paddingVertical={8}
               onPress={() => {
-                props.navigation.navigate('OrderSummary');
+                if (props.user?.token === undefined) {
+                  Alert.alert('OOPS!', 'Please Login In Order To Buy Products');
+                } else {
+                  props.navigation.navigate('OrderSummary');
+                }
               }}
             />
           </View>
