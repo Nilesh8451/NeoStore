@@ -14,6 +14,7 @@ import {
   DECREMENT_QUANTITY,
   DELETE_PRODUCT_FROM_CART,
   ADD_PRODUCT_TO_CART_CHECKOUT,
+  BUY_PRODUCT,
 } from './types';
 import Toast from 'react-native-simple-toast';
 import {act} from 'react-test-renderer';
@@ -176,6 +177,14 @@ const userReducer = (state = initialState, action) => {
 
     case ADD_PRODUCT_TO_CART_CHECKOUT: {
       return state;
+    }
+
+    case BUY_PRODUCT: {
+      console.log('Product BUYING');
+      return {
+        ...state,
+        cart: [],
+      };
     }
 
     default:

@@ -190,9 +190,9 @@ function ProductDetail({user, addToCart, navigation, route}) {
             disabled={!true}
             color={!true ? 'gray' : '#2874F0'}
             onPress={() => {
-              navigation.navigate('OrderSummary', {
-                product: productArray,
-              });
+              // navigation.navigate('OrderSummary', {
+              //   product: productArray,
+              // });
             }}
           />
         </View>

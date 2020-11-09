@@ -9,6 +9,7 @@ import ProductDetail from '../routes/productDetail';
 import OrderSummary from '../routes/orderSummary';
 import SelectAddress from '../routes/selectAddress';
 import {connect} from 'react-redux';
+import OrderResponse from '../routes/orderResponse';
 
 const Stack = createStackNavigator();
 
@@ -207,6 +208,38 @@ function HomeStack({user, cart, navigation}) {
             // borderBottomWidth: 0,
             elevation: 0,
           },
+        }}
+      />
+
+      <Stack.Screen
+        name="OrderResponse"
+        component={OrderResponse}
+        options={{
+          title: 'NeoSTORE',
+          headerStyle: {
+            backgroundColor: '#2874F0',
+            // borderBottomWidth: 0,
+            elevation: 0,
+          },
+          // FF0000
+          // 2874F0
+          // headerTitleAlign: 'center',
+          headerTintColor: 'white',
+          headerLeft: () => (
+            <FontAwesome5
+              name={'bars'}
+              color="white"
+              solid
+              size={20}
+              style={{
+                marginLeft: 20,
+              }}
+              onPress={() => {
+                Keyboard.dismiss();
+                navigation.openDrawer();
+              }}
+            />
+          ),
         }}
       />
     </Stack.Navigator>

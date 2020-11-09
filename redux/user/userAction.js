@@ -2,6 +2,7 @@ import axios from 'axios';
 import {
   ADD_PRODUCT_TO_CART,
   ADD_PRODUCT_TO_CART_CHECKOUT,
+  BUY_PRODUCT,
   DECREMENT_QUANTITY,
   DELETE_PRODUCT_FROM_CART,
   GET_USERADDRESS_FAI,
@@ -219,4 +220,10 @@ export const addProductToCartCheckout = (cartData, token) => {
         console.log('cart Error', e, e.response);
       });
   };
+};
+
+export const buyProduct = () => {
+  console.log('This is ---');
+
+  return {type: BUY_PRODUCT};
 };

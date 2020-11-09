@@ -1,163 +1,278 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, Text, ScrollView, StyleSheet, Image} from 'react-native';
 import FlatButton from '../shared/button';
+import {connect} from 'react-redux';
+import {buyProduct, getCustomerAddress} from '../redux/user/userAction';
+import axios from 'axios';
+import {baseUrl, productToCartCheckout} from '../baseUrl';
+
+let totalCartCost = 0;
+let gstTax = 0;
+let totalPay = 0;
 
 function OrderSummary(props) {
-  console.log(props.route.params.product);
-  const products = props.route.params.product;
+  // console.log(props.route.params.product);
+  // const products = props.route.params.product;
 
-  const [selectedAddress, setSelectedAddress] = useState(
-    '201/A, sai baba nagar, navghar road, bhayander east',
-  );
+  const [selectedAddress, setSelectedAddress] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
+  const [cartArray, setCartArray] = useState([]);
 
-  return (
-    <View style={{flex: 1, backgroundColor: 'white'}}>
-      <ScrollView contentContainerStyle={{paddingBottom: 80}}>
-        <View
-          style={{
-            flex: 1,
-            //  backgroundColor: 'pink'
-          }}>
+  useEffect(() => {
+    console.log(props.user);
+    if (props.user?.token) {
+      props.getCustAdd(props.user.token);
+    }
+  }, [props.user]);
+
+  useEffect(() => {
+    if (props.cart?.length > 0) {
+      console.log('This is', props.cart);
+      setCartArray(props.cart);
+
+      totalCartCost = props.cart.reduce((prevVal, nextVal) => {
+        return prevVal + nextVal.total;
+      }, 0);
+
+      gstTax = Math.round(totalCartCost * 0.05);
+
+      totalPay = totalCartCost + gstTax;
+
+      var x = totalPay;
+      x = x.toString();
+      var lastThree = x.substring(x.length - 3);
+      var otherNumbers = x.substring(0, x.length - 3);
+      if (otherNumbers != '') lastThree = ',' + lastThree;
+      totalPay = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + lastThree;
+
+      setIsLoading(false);
+    }
+  }, [props.cart]);
+
+  const orderProduct = () => {
+    // props.buyProd(cartArray, props.user?.token);
+
+    const userCartData = [...cartArray];
+
+    userCartData.push({flag: 'checkout'});
+
+    console.log('After', userCartData);
+
+    setIsLoading(true);
+    axios
+      .post(`${baseUrl}/${productToCartCheckout}`, userCartData, {
+        headers: {
+          Authorization: `bearer ${props.user?.token}`,
+        },
+      })
+      .then((res) => {
+        console.log('Inside Buy Pro Action', res);
+        props.buyProd();
+        setIsLoading(false);
+        props.navigation.navigate('OrderResponse');
+      })
+      .catch((e) => {
+        console.log('Buy Pro Error', e, e.response);
+        setIsLoading(false);
+      });
+  };
+
+  if (isLoading) {
+    return (
+      <View>
+        <Text>Loading...</Text>
+      </View>
+    );
+  } else {
+    return (
+      <View style={{flex: 1, backgroundColor: 'white'}}>
+        <ScrollView contentContainerStyle={{paddingBottom: 80}}>
           <View
             style={{
-              width: '100%',
-              alignItems: 'center',
-              borderBottomColor: 'gray',
-              borderBottomWidth: 1,
+              flex: 1,
+              //  backgroundColor: 'pink'
             }}>
             <View
-              style={{
-                width: '90%',
-                // backgroundColor: 'yellow',
-                paddingVertical: 15,
-              }}>
-              <Text style={{fontSize: 18, fontWeight: 'bold'}}>
-                Nilesh Chavan
-              </Text>
-              <Text
-                style={{
-                  fontSize: 18,
-                  marginTop: 10,
-                  fontWeight: 'bold',
-                  fontStyle: 'italic',
-                }}>
-                {selectedAddress}
-              </Text>
-              <View style={{width: '100%', marginTop: 8}}>
-                <FlatButton
-                  title="Select Other Address"
-                  disabled={false}
-                  paddingVertical={8}
-                  paddingHorizontal={10}
-                  color={'#2874F0'}
-                  onPress={() => {
-                    props.navigation.navigate('SelectAddress', {
-                      setSelectedAddress: setSelectedAddress,
-                    });
-                  }}
-                />
-              </View>
-            </View>
-          </View>
-          {products.map((product, index) => (
-            <View
-              key={index}
               style={{
                 width: '100%',
                 alignItems: 'center',
                 borderBottomColor: 'gray',
-                borderBottomWidth: index === products.length - 1 ? 0 : 1,
-                paddingVertical: 20,
+                borderBottomWidth: 1,
               }}>
-              <View style={styles.productCard}>
-                <View
-                  style={{
-                    width: '100%',
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                  }}>
-                  <View
+              <View
+                style={{
+                  width: '90%',
+                  // backgroundColor: 'yellow',
+                  paddingVertical: 15,
+                }}>
+                <Text
+                  style={{fontSize: 18, fontWeight: 'bold', marginBottom: 10}}>
+                  {props.user?.customer_details?.first_name}{' '}
+                  {props.user?.customer_details?.last_name}
+                </Text>
+                {selectedAddress?.address && (
+                  <Text
                     style={{
-                      width: '50%',
-                      //   backgroundColor: 'yellow',
+                      fontSize: 18,
+
+                      fontWeight: 'bold',
+                      fontStyle: 'italic',
+                      opacity: 0.9,
                     }}>
-                    <Text style={{fontSize: 21, fontWeight: 'bold'}}>
-                      {product.DashboardProducts[0].product_name}
-                    </Text>
-                  </View>
-                  <View
-                    style={{
-                      width: '30%',
-                      //    backgroundColor: 'pink'
-                    }}>
-                    <Image
-                      style={{width: 70, height: 70}}
-                      source={{
-                        uri: `http://180.149.241.208:3022/${product.DashboardProducts[0].product_image}`,
-                      }}
-                    />
-                  </View>
-                </View>
-                <View
-                  style={{
-                    width: '100%',
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    marginTop: 12,
-                  }}>
-                  <View
-                    style={{
-                      width: '50%',
-                      //   backgroundColor: 'yellow'
-                    }}>
-                    <Text
-                      style={{fontSize: 18, fontWeight: 'bold', opacity: 0.7}}>
-                      {product.DashboardProducts[0].product_producer}
-                    </Text>
-                  </View>
-                  <View
-                    style={{
-                      width: '30%',
-                      //    backgroundColor: 'pink'
-                    }}>
-                    <Text style={{fontSize: 18, fontWeight: 'bold'}}>
-                      {product.DashboardProducts[0].product_cost}
-                    </Text>
-                  </View>
+                    {console.log(
+                      'User Add',
+                      selectedAddress,
+                      selectedAddress.address,
+                    )}
+                    {selectedAddress?.address}
+                  </Text>
+                )}
+
+                <View style={{width: '100%', marginTop: 8}}>
+                  <FlatButton
+                    title="Select Delivery Address"
+                    disabled={false}
+                    paddingVertical={8}
+                    paddingHorizontal={10}
+                    color={'#2874F0'}
+                    onPress={() => {
+                      props.navigation.navigate('SelectAddress', {
+                        setSelectedAddress: setSelectedAddress,
+                      });
+                    }}
+                  />
                 </View>
               </View>
             </View>
-          ))}
-        </View>
-      </ScrollView>
-      <View style={styles.footerAction}>
-        <View
-          style={{
-            width: '80%',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}>
-          <Text style={{fontSize: 20, fontWeight: 'bold'}}>Rs. 12000</Text>
-          <FlatButton
-            title="Order Now"
-            disabled={false}
-            paddingVertical={11}
-            paddingHorizontal={30}
-            color={'#2874F0'}
-            onPress={() => {
-              // navigation.navigate('OrderSummary');
-            }}
-          />
+            {cartArray.map((product, index) => (
+              <View
+                key={index}
+                style={{
+                  width: '100%',
+                  alignItems: 'center',
+                  borderBottomColor: 'gray',
+                  borderBottomWidth: index === cartArray.length - 1 ? 0 : 1,
+                  paddingVertical: 20,
+                }}>
+                <View style={styles.productCard}>
+                  <View
+                    style={{
+                      width: '100%',
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                    }}>
+                    <View
+                      style={{
+                        width: '60%',
+                        // backgroundColor: 'yellow',
+                      }}>
+                      <Text
+                        style={{
+                          fontSize: 20,
+                          fontWeight: 'bold',
+                          opacity: 0.8,
+                        }}>
+                        {product.product_name}
+                      </Text>
+                      <Text
+                        style={{
+                          fontSize: 15,
+                          fontWeight: 'bold',
+                          marginTop: 5,
+                          opacity: 0.7,
+                        }}>
+                        Quantity: {product.quantity}
+                      </Text>
+                    </View>
+                    <View
+                      style={{
+                        // width: '30%',
+                        backgroundColor: 'pink',
+                      }}>
+                      <Image
+                        style={{width: 90, height: 80}}
+                        source={{
+                          uri: `http://180.149.241.208:3022/${product.product_image}`,
+                        }}
+                      />
+                    </View>
+                  </View>
+                  <View
+                    style={{
+                      width: '100%',
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      marginTop: 12,
+                    }}>
+                    <View
+                      style={{
+                        width: '60%',
+                        // backgroundColor: 'yellow',
+                      }}>
+                      <Text
+                        style={{
+                          fontSize: 16,
+                          fontWeight: 'bold',
+                          opacity: 0.7,
+                        }}>
+                        Price Per Product
+                      </Text>
+                    </View>
+                    <View
+                      style={{
+                        // width: '30%',
+                        // backgroundColor: 'pink',
+
+                        marginRight: 15,
+                      }}>
+                      <Text
+                        style={{
+                          fontSize: 18,
+                          fontWeight: 'bold',
+                          color: '#EF5B3E',
+                        }}>
+                        ₹ {product.product_cost}
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+              </View>
+            ))}
+          </View>
+        </ScrollView>
+        <View style={styles.footerAction}>
+          <View
+            style={{
+              width: '80%',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}>
+            <Text style={{fontSize: 18, fontWeight: 'bold'}}>
+              Rs. {totalPay}
+            </Text>
+            <FlatButton
+              title="Order Now"
+              disabled={selectedAddress.address === undefined ? true : false}
+              paddingVertical={11}
+              paddingHorizontal={30}
+              color={selectedAddress.address === undefined ? 'gray' : '#2874F0'}
+              onPress={() => {
+                // navigation.navigate('OrderSummary');
+                console.log('Ordered');
+                orderProduct();
+              }}
+            />
+          </View>
         </View>
       </View>
-    </View>
-  );
+    );
+  }
 }
 
 const styles = StyleSheet.create({
   productCard: {
-    width: '90%',
+    width: '80%',
     maxWidth: 550,
     // backgroundColor: 'red',
   },
@@ -175,4 +290,18 @@ const styles = StyleSheet.create({
   },
 });
 
-export default OrderSummary;
+const mapStateToProps = (state) => {
+  return {
+    user: state.userReducer.user,
+    cart: state.userReducer.cart,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getCustAdd: (token) => dispatch(getCustomerAddress(token)),
+    buyProd: () => dispatch(buyProduct()),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(OrderSummary);

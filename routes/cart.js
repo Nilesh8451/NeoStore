@@ -34,7 +34,7 @@ function Cart(props) {
       return prevVal + nextVal.total;
     }, 0);
 
-    gstTax = parseInt(totalCartCost * 0.05);
+    gstTax = Math.round(totalCartCost * 0.05);
 
     totalPay = totalCartCost + gstTax;
 
@@ -329,9 +329,7 @@ function Cart(props) {
               color={'#2874F0'}
               paddingVertical={8}
               onPress={() => {
-                props.navigation.navigate('OrderSummary', {
-                  product: [...allProducts],
-                });
+                props.navigation.navigate('OrderSummary');
               }}
             />
           </View>

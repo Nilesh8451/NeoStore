@@ -2,46 +2,27 @@ import React, {useState, useEffect} from 'react';
 import {View, Text, YellowBox} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import RadioForm from 'react-native-simple-radio-button';
+import {connect} from 'react-redux';
+import axios from 'axios';
+import {baseUrl, updateUserAddress} from '../baseUrl';
 
 function SelectAddress(props) {
-  const [userAddress, setUserAddress] = useState([
-    {
-      address:
-        '201/A, sai sheena park, sai baba nagar, navghar road, bhayander East',
-      city: 'Mumbai',
-      pincode: '401051',
-      state: 'maharashtra',
-      country: 'India',
-    },
-    {
-      address: '201/A, sai sheena park',
-      city: 'Mumbai',
-      pincode: '401051',
-      state: 'gujrat',
-      country: 'India',
-    },
-    {
-      address: '201/A, sai sheena park, sai baba nagar',
-      city: 'Mumbai',
-      pincode: '401051',
-      state: 'delhi',
-      country: 'India',
-    },
-  ]);
+  useEffect(() => {
+    if (props.userAdd?.length > 0) {
+      console.log(props.userAdd);
+      props.userAdd.map((add, ind) => {
+        setRadioProps((prevState) => {
+          return [...prevState, {label: add.address, value: add.address}];
+        });
+      });
+    }
+  }, [props.userAdd]);
 
   const [radioProps, setRadioProps] = useState([]);
 
   YellowBox.ignoreWarnings([
     'Non-serializable values were found in the navigation state',
   ]);
-
-  useEffect(() => {
-    userAddress.map((add, ind) => {
-      setRadioProps((prevState) => {
-        return [...prevState, {label: add.address, value: add.address}];
-      });
-    });
-  }, []);
 
   return (
     <View
@@ -64,11 +45,36 @@ function SelectAddress(props) {
             labelStyle={{marginBottom: 25, fontSize: 18}}
             buttonSize={15}
             radio_props={radioProps}
-            initial={0}
-            onPress={(value) => {
-              console.log(value);
-              props.route.params.setSelectedAddress(value);
-              props.navigation.goBack();
+            initial={-1}
+            onPress={(value, ind) => {
+              console.log(value, props.userAdd[ind], ind);
+
+              axios
+                .put(
+                  `${baseUrl}/${updateUserAddress}`,
+                  {
+                    address_id: props.userAdd[ind].address_id,
+                    address: props.userAdd[ind].address,
+                    pincode: props.userAdd[ind].pincode,
+                    city: props.userAdd[ind].city,
+                    state: props.userAdd[ind].state,
+                    country: props.userAdd[ind].country,
+                    isDeliveryAddress: true,
+                  },
+                  {
+                    headers: {
+                      Authorization: `bearer ${props.user?.token}`,
+                    },
+                  },
+                )
+                .then((res) => {
+                  console.log('Update', res);
+                  props.route.params.setSelectedAddress(props.userAdd[ind]);
+                  props.navigation.goBack();
+                })
+                .catch((e) => {
+                  console.log('update error', e, e.response);
+                });
             }}
           />
         </View>
@@ -77,4 +83,11 @@ function SelectAddress(props) {
   );
 }
 
-export default SelectAddress;
+const mapStateToProps = (state) => {
+  return {
+    user: state.userReducer.user,
+    userAdd: state.userReducer.userAddress,
+  };
+};
+
+export default connect(mapStateToProps)(SelectAddress);
