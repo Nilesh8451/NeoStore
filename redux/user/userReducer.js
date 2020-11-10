@@ -16,6 +16,7 @@ import {
   ADD_PRODUCT_TO_CART_CHECKOUT,
   BUY_PRODUCT,
   GET_USER_ORDER_DETAILS,
+  RESTORE_USERCART_DATA,
 } from './types';
 import Toast from 'react-native-simple-toast';
 import {act} from 'react-test-renderer';
@@ -195,6 +196,14 @@ const userReducer = (state = initialState, action) => {
       return {
         ...state,
         order: action.data,
+      };
+    }
+
+    case RESTORE_USERCART_DATA: {
+      console.log('Cart Data Restored ', action.data);
+      return {
+        ...state,
+        cart: action.data,
       };
     }
 

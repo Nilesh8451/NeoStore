@@ -56,11 +56,12 @@ function Login({
 
   if (user?.token) {
     getDataOfUserCart(user.token);
+    navigation.navigate('HomeDrawer');
   }
 
   return isLoading === false ? (
     <View style={{flex: 1, backgroundColor: 'white'}}>
-      {user.token && navigation.navigate('HomeDrawer')}
+      {/* {user.token && navigation.navigate('HomeDrawer')} */}
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <ScrollView
           contentContainerStyle={{

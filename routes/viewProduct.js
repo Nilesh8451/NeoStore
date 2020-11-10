@@ -674,7 +674,7 @@ function ViewProduct({navigation, route}) {
                           );
                           setBatch(1);
                           Toast.show(
-                            `Filtered List With ${colorVal} color`,
+                            `Filtered List With ${costVal}`,
                             Toast.SHORT,
                           );
                         } else {

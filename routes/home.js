@@ -19,7 +19,11 @@ import {
   getAllCategoriesData,
   getDefaultTopRatingProducts,
 } from '../redux/dashboard/dashboardAction';
-import {restoreLoginData, getUserCartData} from '../redux/user/userAction';
+import {
+  restoreLoginData,
+  getUserCartData,
+  restoreUserCartData,
+} from '../redux/user/userAction';
 import {connect} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
@@ -47,10 +51,12 @@ function Home({
   LoadingData,
   categories,
   topRatedProduct,
+  cart,
   getAllCategories,
   getTopRatingProducts,
   restoreData,
   getDataOfUserCart,
+  restoreCartData,
   navigation,
 }) {
   const [searchInput, setSearchInput] = useState('');
@@ -64,16 +70,40 @@ function Home({
 
       if (user !== null) {
         restoreData(parseUserData);
-        getDataOfUserCart(parseUserData.token);
+        // getDataOfUserCart(parseUserData.token);
       }
     } catch (error) {}
   };
 
+  const restoreUserCartInfo = async () => {
+    try {
+      const cartData = await AsyncStorage.getItem('userCartData');
+      const parseCartData = await JSON.parse(cartData);
+
+      if (cartData !== null) {
+        restoreCartData(parseCartData);
+        console.log('AAAAAAAA ', parseCartData);
+      }
+    } catch (error) {}
+  };
+
+  const storeUserCartData = async (data) => {
+    try {
+      await AsyncStorage.setItem('userCartData', JSON.stringify(data));
+    } catch (e) {}
+  };
+
   useEffect(() => {
     restoreUserInfo();
+    restoreUserCartInfo();
     getAllCategories();
     getTopRatingProducts();
   }, []);
+
+  useEffect(() => {
+    console.log('Changes in Cart --', cart);
+    storeUserCartData(cart);
+  }, [cart]);
 
   const handleChange = (val) => {
     setSearchInput(val);
@@ -480,6 +510,7 @@ const mapStateToProps = (state) => {
     categories: state.dashBoardReducer.categories,
     topRatedProduct: state.dashBoardReducer.topRatedProduct,
     LoadingData: state.dashBoardReducer.isLoading,
+    cart: state.userReducer.cart,
   };
 };
 
@@ -489,6 +520,7 @@ const mapDispatchToProps = (dispatch) => {
     getTopRatingProducts: () => dispatch(getDefaultTopRatingProducts()),
     restoreData: (user) => dispatch(restoreLoginData(user)),
     getDataOfUserCart: (token) => dispatch(getUserCartData(token)),
+    restoreCartData: (data) => dispatch(restoreUserCartData(data)),
   };
 };
 

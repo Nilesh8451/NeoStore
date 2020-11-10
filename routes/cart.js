@@ -18,6 +18,7 @@ import {
   deleteProductFromCart,
 } from '../redux/user/userAction';
 import {baseUrl} from '../baseUrl';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 let totalCartCost = 0;
 let gstTax = 0;
@@ -27,7 +28,17 @@ function Cart(props) {
   const [allProducts, setAllProducts] = useState([]);
   // console.log(props?.cart);
 
+  // const storeUserCartData = async (data) => {
+  //   try {
+  //     await AsyncStorage.setItem('userCartData', JSON.stringify(data));
+  //   } catch (e) {}
+  // };
+
   useEffect(() => {
+    console.log('Changes ', props.cart);
+
+    // storeUserCartData(props.cart);
+
     setAllProducts(props.cart);
 
     totalCartCost = props.cart.reduce((prevVal, nextVal) => {

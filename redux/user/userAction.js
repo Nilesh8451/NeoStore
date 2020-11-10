@@ -15,6 +15,7 @@ import {
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
   RESTORE_LOGINDATA,
+  RESTORE_USERCART_DATA,
   SIGNOUT,
   UPDATE_USERINFO,
 } from './types';
@@ -67,8 +68,10 @@ export const login = (user) => {
 };
 
 const removeData = async () => {
+  const data = [];
   try {
     await AsyncStorage.removeItem('userInfo');
+    await AsyncStorage.setItem('userCartData', JSON.stringify(data));
     // console.log('Removed Data');
   } catch (e) {
     // console.log(e);
@@ -119,6 +122,18 @@ export const getCustomerAddress = (token) => {
   };
 };
 
+const storeCartData = async (cartData) => {
+  try {
+    await AsyncStorage.setItem('userCartData', JSON.stringify(cartData));
+  } catch (e) {}
+};
+
+export const restoreUserCartData = (cartData) => {
+  return (dispatch) => {
+    dispatch({type: RESTORE_USERCART_DATA, data: cartData});
+  };
+};
+
 export const getUserCartData = (token) => {
   return (dispatch) => {
     axios
@@ -141,6 +156,7 @@ export const getUserCartData = (token) => {
           });
 
           // console.log('Change Cart Format', cartData);
+          storeCartData(cartData);
 
           dispatch({type: GET_USER_CART, data: cartData});
         }

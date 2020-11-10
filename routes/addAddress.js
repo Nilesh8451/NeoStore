@@ -57,7 +57,7 @@ function AddAddress(props) {
       .then((res) => {
         // console.log('Added ', res.data);
         Toast.show(res.data.message, Toast.LONG);
-        action.resetForm();
+        // action.resetForm();
         setLoading(false);
         props.navigation.popToTop();
       })
