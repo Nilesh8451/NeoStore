@@ -27,7 +27,7 @@ function UpdateAddress(props) {
       {
         text: 'YES',
         onPress: () => {
-          console.log('Deleted');
+          // console.log('Deleted');
           axios
             .delete(`${baseUrl}/${deleteUserAddress}/${id}`, {
               headers: {
@@ -35,13 +35,13 @@ function UpdateAddress(props) {
               },
             })
             .then((res) => {
-              console.log('Success', res.data);
+              // console.log('Success', res.data);
               Toast.show(`Address Deleted Successfully`, Toast.LONG);
               const userAdd = custAdd.filter((add) => add.address_id != id);
               setCustAdd(userAdd);
             })
             .catch((e) => {
-              console.log('error', e, e.response);
+              // console.log('error', e, e.response);
             });
         },
       },
@@ -115,7 +115,7 @@ function UpdateAddress(props) {
                 </View>
                 <TouchableWithoutFeedback
                   onPress={() => {
-                    console.log('clicked');
+                    // console.log('clicked');
                     handleDelete(add.address_id);
                   }}>
                   <View

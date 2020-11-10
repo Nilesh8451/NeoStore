@@ -8,7 +8,6 @@ import {
   TouchableWithoutFeedback,
   ScrollView,
   Alert,
-  ActivityIndicator,
 } from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {Formik} from 'formik';
@@ -56,14 +55,14 @@ function AddAddress(props) {
         },
       })
       .then((res) => {
-        console.log('Added ', res.data);
+        // console.log('Added ', res.data);
         Toast.show(res.data.message, Toast.LONG);
         action.resetForm();
         setLoading(false);
         props.navigation.popToTop();
       })
       .catch((e) => {
-        console.log('error', e, e.response);
+        // console.log('error', e, e.response);
         setLoading(false);
         Alert.alert('OOPS!', e.response.data.message);
       });
@@ -104,7 +103,7 @@ function AddAddress(props) {
                 }}
                 validationSchema={placeSchema}
                 onSubmit={(values, action) => {
-                  console.log(values);
+                  // console.log(values);
 
                   addNewUserAddress(values, action);
                 }}>

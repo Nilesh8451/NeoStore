@@ -95,7 +95,7 @@ const userReducer = (state = initialState, action) => {
       };
 
     case GET_USER_CART: {
-      console.log('Inside', action.data);
+      // console.log('Inside', action.data);
       const addPrevToUserCart = [];
 
       state.cart.map((prodC) => {
@@ -108,7 +108,7 @@ const userReducer = (state = initialState, action) => {
         }
       });
 
-      console.log(addPrevToUserCart, action.data);
+      // console.log(addPrevToUserCart, action.data);
       return {
         ...state,
         cart: [...addPrevToUserCart, ...action.data],
@@ -144,7 +144,7 @@ const userReducer = (state = initialState, action) => {
         }
       });
 
-      console.log(newCart);
+      // console.log(newCart);
 
       return {
         ...state,
@@ -183,7 +183,7 @@ const userReducer = (state = initialState, action) => {
     }
 
     case BUY_PRODUCT: {
-      console.log('Product BUYING');
+      // console.log('Product BUYING');
       return {
         ...state,
         cart: [],
@@ -191,7 +191,7 @@ const userReducer = (state = initialState, action) => {
     }
 
     case GET_USER_ORDER_DETAILS: {
-      console.log('User Order ', action.data);
+      // console.log('User Order ', action.data);
       return {
         ...state,
         order: action.data,

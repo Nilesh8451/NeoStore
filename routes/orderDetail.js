@@ -9,8 +9,9 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {baseUrl} from '../baseUrl';
 
 function OrderDetail(props) {
+  let subTotal = 0;
   const order = props.route.params.order;
-  console.log(order);
+  // console.log(order);
 
   var x = order.product_details[0].total_cartCost;
   x = x.toString();
@@ -33,7 +34,9 @@ function OrderDetail(props) {
             marginBottom: 75,
           }}>
           {order.product_details.map((product, index) => {
-            console.log(product);
+            // console.log(product);
+            subTotal +=
+              product.product_details[0].product_cost * product.quantity;
 
             var x = product.product_details[0].product_cost;
             x = x.toString();
@@ -111,6 +114,58 @@ function OrderDetail(props) {
               </View>
             );
           })}
+
+          <View
+            style={{
+              // flex: 1,
+              width: '90%',
+              marginTop: 30,
+              // backgroundColor: 'pink',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <View
+              style={{
+                width: '95%',
+                backgroundColor: 'white',
+                paddingVertical: 20,
+                // padding: 10,
+                marginBottom: 30,
+                paddingHorizontal: 20,
+              }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  marginBottom: 3,
+                }}>
+                <Text style={{fontSize: 18}}>Sub Total</Text>
+                <Text style={{fontSize: 16}}>₹ {subTotal}</Text>
+              </View>
+
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  marginBottom: 15,
+                  marginTop: 10,
+                }}>
+                <Text style={{fontSize: 18}}>GST(5%)</Text>
+                <Text style={{fontSize: 16}}>
+                  ₹ {Math.round(subTotal * 0.05)}
+                </Text>
+              </View>
+              <View
+                style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                <Text style={{fontSize: 18, fontWeight: 'bold'}}>
+                  Total Amount
+                </Text>
+                <Text style={{fontSize: 16, fontWeight: 'bold'}}>
+                  ₹ {totalCartCost}
+                </Text>
+              </View>
+            </View>
+          </View>
         </View>
       </ScrollView>
 

@@ -24,7 +24,7 @@ function OrderSummary(props) {
   const [cartArray, setCartArray] = useState([]);
 
   useEffect(() => {
-    console.log(props.user);
+    // console.log(props.user);
     if (props.user?.token) {
       props.getCustAdd(props.user.token);
     }
@@ -32,7 +32,7 @@ function OrderSummary(props) {
 
   useEffect(() => {
     if (props.cart?.length > 0) {
-      console.log('This is', props.cart);
+      // console.log('This is', props.cart);
       setCartArray(props.cart);
 
       totalCartCost = props.cart.reduce((prevVal, nextVal) => {
@@ -61,7 +61,7 @@ function OrderSummary(props) {
 
     userCartData.push({flag: 'checkout'});
 
-    console.log('After', userCartData);
+    // console.log('After', userCartData);
 
     setIsLoading(true);
     axios
@@ -71,14 +71,14 @@ function OrderSummary(props) {
         },
       })
       .then((res) => {
-        console.log('Inside Buy Pro Action', res);
+        // console.log('Inside Buy Pro Action', res);
         props.buyProd();
         props.getCustOrderDetail(props.user?.token);
         // setIsLoading(false);
         props.navigation.navigate('OrderResponse');
       })
       .catch((e) => {
-        console.log('Buy Pro Error', e, e.response);
+        // console.log('Buy Pro Error', e, e.response);
         setIsLoading(false);
       });
   };
@@ -139,11 +139,6 @@ function OrderSummary(props) {
                       fontStyle: 'italic',
                       opacity: 0.9,
                     }}>
-                    {console.log(
-                      'User Add',
-                      selectedAddress,
-                      selectedAddress.address,
-                    )}
                     {selectedAddress?.address}
                   </Text>
                 )}
@@ -210,7 +205,7 @@ function OrderSummary(props) {
                         backgroundColor: 'pink',
                       }}>
                       <Image
-                        style={{width: 90, height: 80}}
+                        style={{width: 90, height: 80, borderRadius: 8}}
                         source={{
                           uri: `http://180.149.241.208:3022/${product.product_image}`,
                         }}
@@ -279,7 +274,7 @@ function OrderSummary(props) {
               color={selectedAddress.address === undefined ? 'gray' : '#2874F0'}
               onPress={() => {
                 // navigation.navigate('OrderSummary');
-                console.log('Ordered');
+                // console.log('Ordered');
                 orderProduct();
               }}
             />

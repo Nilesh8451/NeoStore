@@ -22,6 +22,9 @@ import {updateUserInformation} from '../redux/user/userAction';
 import axios from 'axios';
 import {baseUrl, updateProfile} from '../baseUrl';
 import LottieView from 'lottie-react-native';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import moment from 'moment';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 const profileSchema = yup.object({
   firstname: yup
@@ -57,16 +60,25 @@ var radio_props = [
 function EditProfile(props) {
   const [imgData, setImgData] = useState({});
   const [loadingAPI, setLoadingAPI] = useState(false);
+  const [dob, setDob] = useState(new Date(1598051730000));
+  const [show, setShow] = useState(false);
 
-  console.log('User ', props.user);
+  const onChangeDate = (event, selectedDate, formikProp) => {
+    const currentDate = selectedDate || dob;
+    const convertedDate = moment(currentDate).format('L');
+    setShow(false);
+    formikProp.setFieldValue('dob', convertedDate);
+  };
+
+  // console.log('User ', props.user);
 
   const userDetail = props.user.customer_details;
-  console.log('SSSSSSSSSSS ', userDetail);
+  // console.log('SSSSSSSSSSS ', userDetail);
 
   const handleChooseFile = () => {
     const options = {};
     ImagePicker.launchImageLibrary(options, (response) => {
-      console.log('Response ', response);
+      // console.log('Response ', response);
       if (response?.didCancel !== true) {
         setImgData(response);
       }
@@ -83,7 +95,7 @@ function EditProfile(props) {
         },
       })
       .then((res) => {
-        console.log('This is update res', res);
+        // console.log('This is update res', res);
         props.updateInfo(res.data.customer_details);
         setLoadingAPI(false);
         Toast.show('Detail Updated Successfully', Toast.LONG);
@@ -91,7 +103,7 @@ function EditProfile(props) {
       })
       .catch((e) => {
         setLoadingAPI(false);
-        console.log('Update Error', e);
+        // console.log('Update Error', e);
       });
   };
 
@@ -132,12 +144,24 @@ function EditProfile(props) {
             }}>
             {imgData.uri ? (
               <Image
-                style={{width: 80, height: 80, borderRadius: 40}}
+                style={{
+                  width: 80,
+                  height: 80,
+                  borderRadius: 40,
+                  borderColor: '#2874F0',
+                  borderWidth: 1,
+                }}
                 source={{uri: imgData.uri}}
               />
             ) : (
               <Image
-                style={{width: 80, height: 80, borderRadius: 40}}
+                style={{
+                  width: 80,
+                  height: 80,
+                  borderRadius: 40,
+                  borderColor: '#2874F0',
+                  borderWidth: 1,
+                }}
                 source={
                   props?.user.customer_details?.profile_img
                     ? {
@@ -170,12 +194,12 @@ function EditProfile(props) {
                 email: userDetail?.email,
                 phoneno: userDetail.phone_no,
                 gender: userDetail.gender,
-                dob: '12/01/1999',
+                dob: userDetail.dob || '01/01/1999',
               }}
               validationSchema={profileSchema}
               onSubmit={(values, action) => {
-                console.log(values);
-                console.log(props.user.token);
+                // console.log(values);
+                // console.log(props.user.token);
 
                 const data = new FormData();
                 data.append('first_name', values.firstname);
@@ -186,7 +210,7 @@ function EditProfile(props) {
                 data.append('gender', values.gender);
 
                 if (imgData.data) {
-                  console.log('Adding', imgData.data);
+                  // console.log('Adding', imgData.data);
                   const imageData = 'data:image/jpeg;base64,' + imgData.data;
                   data.append('profile_img', imageData);
                 }
@@ -251,6 +275,40 @@ function EditProfile(props) {
                           formikProps.errors.phoneno}
                       </Text>
                     )}
+
+                  <View
+                    style={{
+                      height: 40,
+                      marginTop: 15,
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      paddingHorizontal: 10,
+                      borderBottomColor: 'gray',
+                      borderBottomWidth: 1,
+                    }}>
+                    <Text style={{fontSize: 17}}>{formikProps.values.dob}</Text>
+                    <FontAwesome5
+                      name={'calendar-alt'}
+                      color={'black'}
+                      solid
+                      size={18}
+                      onPress={() => {
+                        setShow(true);
+                      }}
+                    />
+                  </View>
+
+                  {show && (
+                    <DateTimePicker
+                      testID="dateTimePicker"
+                      maximumDate={new Date()}
+                      value={dob}
+                      mode={'date'}
+                      // display="default"
+                      onChange={(e, val) => onChangeDate(e, val, formikProps)}
+                    />
+                  )}
 
                   <View style={{alignItems: 'flex-start'}}>
                     <View

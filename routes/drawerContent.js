@@ -33,12 +33,18 @@ function DrawerContent({...props}) {
         {props.user?.token ? (
           <View
             style={{
-              paddingTop: 20,
+              paddingTop: 15,
               flexDirection: 'column',
               alignItems: 'center',
             }}>
             <Image
-              style={{width: 60, height: 60, borderRadius: 40}}
+              style={{
+                width: 65,
+                height: 65,
+                borderRadius: 40,
+                borderWidth: 1.5,
+                borderColor: 'white',
+              }}
               source={
                 props?.user.customer_details?.profile_img
                   ? {

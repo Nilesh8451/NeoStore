@@ -41,8 +41,8 @@ const placeSchema = yup.object({
 });
 
 function EditAddress(props) {
-  console.log(props.route.params.address);
-  console.log(props.route.params.token);
+  // console.log(props.route.params.address);
+  // console.log(props.route.params.token);
 
   const addressObj = props.route.params.address;
 
@@ -61,7 +61,7 @@ function EditAddress(props) {
               }}
               validationSchema={placeSchema}
               onSubmit={(values, action) => {
-                console.log(values);
+                // console.log(values);
 
                 axios
                   .put(
@@ -87,7 +87,7 @@ function EditAddress(props) {
                     props.navigation.goBack();
                   })
                   .catch((e) => {
-                    console.log('error', e, e.response);
+                    // console.log('error', e, e.response);
                   });
               }}>
               {(formikProps) => (

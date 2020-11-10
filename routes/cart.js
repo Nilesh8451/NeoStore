@@ -25,7 +25,7 @@ let totalPay = 0;
 
 function Cart(props) {
   const [allProducts, setAllProducts] = useState([]);
-  console.log(props?.cart);
+  // console.log(props?.cart);
 
   useEffect(() => {
     setAllProducts(props.cart);
@@ -57,7 +57,7 @@ function Cart(props) {
         {
           text: 'YES',
           onPress: () => {
-            console.log('Deleted');
+            // console.log('Deleted');
             props.delCartProduct(product.product_id, props.user?.token);
             Toast.show(
               `${product.product_name} removed from your cart successfully`,
@@ -93,7 +93,7 @@ function Cart(props) {
                 <TouchableWithoutFeedback
                   key={item._id}
                   onPress={() => {
-                    console.log('Clicked on Card');
+                    // console.log('Clicked on Card');
                   }}>
                   <View
                     style={{
@@ -403,6 +403,7 @@ const styles = StyleSheet.create({
   cardImage: {
     width: '100%',
     height: '100%',
+    borderRadius: 8,
     // marginLeft: 10,
   },
   cardDetail: {

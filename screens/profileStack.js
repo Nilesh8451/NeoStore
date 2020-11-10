@@ -52,7 +52,7 @@ function ProfileStack({navigation}) {
                 marginRight: 20,
               }}
               onPress={() => {
-                console.log('Edit Page');
+                // console.log('Edit Page');
                 navigation.navigate('EditProfile');
               }}
             />

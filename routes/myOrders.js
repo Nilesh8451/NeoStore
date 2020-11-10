@@ -11,6 +11,7 @@ import axios from 'axios';
 import {baseUrl, getCustOrderDetails} from '../baseUrl';
 import LottieView from 'lottie-react-native';
 import {connect} from 'react-redux';
+import moment from 'moment';
 
 function MyOrders(props) {
   const [myOrder, setMyOrder] = useState([]);
@@ -68,7 +69,7 @@ function MyOrders(props) {
                   <TouchableWithoutFeedback
                     key={index}
                     onPress={() => {
-                      console.log('Clicked on Card');
+                      // console.log('Clicked on Card');
                       props.navigation.navigate('OrderDetail', {
                         order_id: item.product_details[0].order_id,
                         order: item,
@@ -89,7 +90,7 @@ function MyOrders(props) {
                           </Text>
                           <View
                             style={{
-                              marginTop: -10,
+                              marginTop: -15,
                               width: '93%',
                               //   backgroundColor: 'red',
                               flexDirection: 'row',
@@ -109,8 +110,14 @@ function MyOrders(props) {
                           </View>
                           <Text
                             numberOfLines={1}
-                            style={{fontSize: 16, marginTop: 5}}>
-                            Ordered Date : {item.product_details[0].createdAt}
+                            style={{fontSize: 16, marginTop: 10}}>
+                            <Text style={{fontWeight: 'bold', opacity: 0.8}}>
+                              Ordered Date :
+                            </Text>{' '}
+                            {moment(item.product_details[0].createdAt).format(
+                              'llll',
+                            )}
+                            {/* {item.product_details[0].createdAt} */}
                           </Text>
                         </View>
                       </View>

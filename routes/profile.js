@@ -13,11 +13,11 @@ import {baseUrl} from '../baseUrl';
 import {getCustomerOrderDetails} from '../redux/user/userAction';
 
 function Profile(props) {
-  console.log('User Info', props.user, props);
+  // console.log('User Info', props.user, props);
   const userInfo = props.user;
 
   if (props.user?.token === undefined) {
-    console.log('Going Home');
+    // console.log('Going Home');
     props.navigation.navigate('Home');
   }
 
@@ -37,6 +37,8 @@ function Profile(props) {
                 width: 80,
                 height: 80,
                 borderRadius: 40,
+                borderColor: '#2874F0',
+                borderWidth: 1,
               }}
               source={
                 props?.user.customer_details?.profile_img

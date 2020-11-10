@@ -8,7 +8,6 @@ import {
   TouchableWithoutFeedback,
   ScrollView,
   Alert,
-  ActivityIndicator,
 } from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {Formik} from 'formik';
@@ -47,7 +46,7 @@ function ChangePassword(props) {
   const [CPEyeStyle, setCPEyeStyle] = useState('eye-slash');
   const [loadingAPI, setLoadingAPI] = useState(false);
 
-  console.log(props.route.params.token);
+  // console.log(props.route.params.token);
 
   const handleOPasswordEyeClick = () => {
     setSecureOldPassword(!secureOldPassword);
@@ -138,7 +137,7 @@ function ChangePassword(props) {
                 }}
                 validationSchema={mySchema}
                 onSubmit={(values, action) => {
-                  console.log(values);
+                  // console.log(values);
 
                   changeUserPassword(values, action);
                 }}>

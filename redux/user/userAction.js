@@ -53,13 +53,13 @@ export const login = (user) => {
       })
       .then((res) => {
         storeData(res.data);
-        console.log(res);
+        // console.log(res);
         dispatch({type: LOGIN_SUCCESS, data: res.data});
         Toast.show('Successfully Login', Toast.LONG);
         // getUserCartData(res.data.token);
       })
       .catch((e) => {
-        console.log(e.response);
+        // console.log(e.response);
         Alert.alert('OOPS!', e.response.data.message);
         dispatch({type: LOGIN_FAILURE, data: e});
       });
@@ -69,9 +69,9 @@ export const login = (user) => {
 const removeData = async () => {
   try {
     await AsyncStorage.removeItem('userInfo');
-    console.log('Removed Data');
+    // console.log('Removed Data');
   } catch (e) {
-    console.log(e);
+    // console.log(e);
   }
 };
 
@@ -128,7 +128,7 @@ export const getUserCartData = (token) => {
         },
       })
       .then((res) => {
-        console.log('Success', res.data);
+        // console.log('Success', res.data);
         if (
           res.data.message !=
           'Your cart is empty. Please, first add products on your cart'
@@ -140,19 +140,19 @@ export const getUserCartData = (token) => {
             return dataobj;
           });
 
-          console.log('Change Cart Format', cartData);
+          // console.log('Change Cart Format', cartData);
 
           dispatch({type: GET_USER_CART, data: cartData});
         }
       })
       .catch((e) => {
-        console.log('Error', e, e.response);
+        // console.log('Error', e, e.response);
       });
   };
 };
 
 export const addProductToCart = (product) => {
-  console.log('Product To Cart', product);
+  // console.log('Product To Cart', product);
   product.total = product.product_cost;
   product.quantity = 1;
   return {type: ADD_PRODUCT_TO_CART, data: product};
@@ -188,14 +188,14 @@ export const deleteProductFromCart = (productId, token) => {
         },
       })
       .then((res) => {
-        console.log('Delete Success Res ', res);
+        // console.log('Delete Success Res ', res);
         dispatch({
           type: DELETE_PRODUCT_FROM_CART,
           data: productId,
         });
       })
       .catch((e) => {
-        console.log('Delete Error ', e, e.response);
+        // console.log('Delete Error ', e, e.response);
         dispatch({
           type: DELETE_PRODUCT_FROM_CART,
           data: productId,
@@ -205,7 +205,7 @@ export const deleteProductFromCart = (productId, token) => {
 };
 
 export const addProductToCartCheckout = (cartData, token) => {
-  console.log('Cart Data ', cartData, token);
+  // console.log('Cart Data ', cartData, token);
 
   const cart = [...cartData];
 
@@ -219,20 +219,20 @@ export const addProductToCartCheckout = (cartData, token) => {
         },
       })
       .then((res) => {
-        console.log('Inside Cart Action', res);
+        // console.log('Inside Cart Action', res);
         dispatch({
           type: ADD_PRODUCT_TO_CART_CHECKOUT,
           data: res,
         });
       })
       .catch((e) => {
-        console.log('cart Error', e, e.response);
+        // console.log('cart Error', e, e.response);
       });
   };
 };
 
 export const buyProduct = () => {
-  console.log('This is ---');
+  // console.log('This is ---');
 
   return {type: BUY_PRODUCT};
 };
@@ -246,14 +246,14 @@ export const getCustomerOrderDetails = (token) => {
         },
       })
       .then((res) => {
-        console.log('This is i want', res.data.product_details);
+        // console.log('This is i want', res.data.product_details);
         dispatch({
           type: GET_USER_ORDER_DETAILS,
           data: res.data.product_details,
         });
       })
       .catch((e) => {
-        console.log('This is error', e, e.response);
+        // console.log('This is error', e, e.response);
       });
   };
 };
