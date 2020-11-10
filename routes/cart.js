@@ -368,8 +368,8 @@ function Cart(props) {
             title="Go To Product Screen"
             disabled={false}
             color={'#2874F0'}
-            // 2874F0
-            // FF0000
+            paddingHorizontal={20}
+            fontSize={14}
             onPress={() => {
               props.navigation.navigate('ViewProduct');
             }}

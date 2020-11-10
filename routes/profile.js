@@ -17,6 +17,7 @@ function Profile(props) {
   const userInfo = props.user;
 
   if (props.user?.token === undefined) {
+    console.log('Going Home');
     props.navigation.navigate('Home');
   }
 

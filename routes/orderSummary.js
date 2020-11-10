@@ -73,8 +73,8 @@ function OrderSummary(props) {
       .then((res) => {
         console.log('Inside Buy Pro Action', res);
         props.buyProd();
-        setIsLoading(false);
         props.getCustOrderDetail(props.user?.token);
+        // setIsLoading(false);
         props.navigation.navigate('OrderResponse');
       })
       .catch((e) => {

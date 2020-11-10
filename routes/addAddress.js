@@ -17,6 +17,7 @@ import FlatButton from '../shared/button';
 import Toast from 'react-native-simple-toast';
 import axios from 'axios';
 import {addNewAddress, baseUrl} from '../baseUrl';
+import LottieView from 'lottie-react-native';
 
 const placeSchema = yup.object({
   address: yup.string().required(),
@@ -45,51 +46,70 @@ function AddAddress(props) {
 
   const [loading, setLoading] = useState(false);
 
+  const addNewUserAddress = (values, action) => {
+    setLoading(true);
+
+    axios
+      .post(`${baseUrl}/${addNewAddress}`, values, {
+        headers: {
+          Authorization: `bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        console.log('Added ', res.data);
+        Toast.show(res.data.message, Toast.LONG);
+        action.resetForm();
+        setLoading(false);
+        props.navigation.popToTop();
+      })
+      .catch((e) => {
+        console.log('error', e, e.response);
+        setLoading(false);
+        Alert.alert('OOPS!', e.response.data.message);
+      });
+  };
+
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
-      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-        <ScrollView>
-          <View style={styles.container}>
-            <Formik
-              initialValues={{
-                address: '',
-                pincode: '',
-                city: '',
-                state: '',
-                country: '',
+      {loading ? (
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <View
+            style={{
+              ...styles.container,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <LottieView
+              source={require('../assets/json/loader2.json')}
+              autoPlay
+              style={{
+                width: 200,
+                height: 200,
               }}
-              validationSchema={placeSchema}
-              onSubmit={(values, action) => {
-                console.log(values);
+              loop
+            />
+          </View>
+        </View>
+      ) : (
+        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+          <ScrollView>
+            <View style={styles.container}>
+              <Formik
+                initialValues={{
+                  address: '',
+                  pincode: '',
+                  city: '',
+                  state: '',
+                  country: '',
+                }}
+                validationSchema={placeSchema}
+                onSubmit={(values, action) => {
+                  console.log(values);
 
-                setLoading(true);
-
-                axios
-                  .post(`${baseUrl}/${addNewAddress}`, values, {
-                    headers: {
-                      Authorization: `bearer ${token}`,
-                    },
-                  })
-                  .then((res) => {
-                    console.log('Added ', res.data);
-                    Toast.show(res.data.message, Toast.LONG);
-                    action.resetForm();
-                    setLoading(false);
-                    props.navigation.popToTop();
-                  })
-                  .catch((e) => {
-                    console.log('error', e, e.response);
-                    setLoading(false);
-                    Alert.alert('OOPS!', e.response.data.message);
-                  });
-              }}>
-              {(formikProps) => (
-                <View style={styles.mainDiv}>
-                  {loading ? (
-                    <View style={{marginTop: 100}}>
-                      <ActivityIndicator size={'large'} color={'blue'} />
-                    </View>
-                  ) : (
+                  addNewUserAddress(values, action);
+                }}>
+                {(formikProps) => (
+                  <View style={styles.mainDiv}>
                     <View style={styles.card}>
                       <View style={styles.cardContent}>
                         <View style={{justifyContent: 'center'}}>
@@ -269,13 +289,13 @@ function AddAddress(props) {
                         </View>
                       </View>
                     </View>
-                  )}
-                </View>
-              )}
-            </Formik>
-          </View>
-        </ScrollView>
-      </TouchableWithoutFeedback>
+                  </View>
+                )}
+              </Formik>
+            </View>
+          </ScrollView>
+        </TouchableWithoutFeedback>
+      )}
     </View>
   );
 }

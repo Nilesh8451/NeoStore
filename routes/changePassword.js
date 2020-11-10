@@ -17,6 +17,7 @@ import FlatButton from '../shared/button';
 import Toast from 'react-native-simple-toast';
 import axios from 'axios';
 import {baseUrl, changePassword} from '../baseUrl';
+import LottieView from 'lottie-react-native';
 
 const mySchema = yup.object({
   oldPassword: yup
@@ -75,63 +76,74 @@ function ChangePassword(props) {
     }
   };
 
+  const changeUserPassword = (values, action) => {
+    setLoadingAPI(true);
+
+    axios
+      .post(
+        `${baseUrl}/${changePassword}`,
+        {
+          oldPass: values.oldPassword,
+          newPass: values.password,
+          confirmPass: values.confirmPassowrd,
+        },
+        {
+          headers: {
+            Authorization: `bearer ${props.route.params.token}`,
+          },
+        },
+      )
+      .then((res) => {
+        Toast.show('Your Password Changed Successfully', Toast.LONG);
+        setLoadingAPI(false);
+        props.navigation.popToTop();
+        action.resetForm();
+      })
+      .catch((e) => {
+        setLoadingAPI(false);
+        Alert.alert('OOPS!', e.response.data.message);
+      });
+  };
+
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
-      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-        <ScrollView>
-          <View style={styles.container}>
-            <Formik
-              initialValues={{
-                oldPassword: '',
-                password: '',
-                confirmPassowrd: '',
+      {loadingAPI ? (
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <View
+            style={{
+              ...styles.container,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <LottieView
+              source={require('../assets/json/loader2.json')}
+              autoPlay
+              style={{
+                width: 200,
+                height: 200,
               }}
-              validationSchema={mySchema}
-              onSubmit={(values, action) => {
-                console.log(values);
+              loop
+            />
+          </View>
+        </View>
+      ) : (
+        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+          <ScrollView>
+            <View style={styles.container}>
+              <Formik
+                initialValues={{
+                  oldPassword: '',
+                  password: '',
+                  confirmPassowrd: '',
+                }}
+                validationSchema={mySchema}
+                onSubmit={(values, action) => {
+                  console.log(values);
 
-                setLoadingAPI(true);
-
-                axios
-                  .post(
-                    `${baseUrl}/${changePassword}`,
-                    {
-                      oldPass: values.oldPassword,
-                      newPass: values.password,
-                      confirmPass: values.confirmPassowrd,
-                    },
-                    {
-                      headers: {
-                        Authorization: `bearer ${props.route.params.token}`,
-                      },
-                    },
-                  )
-                  .then((res) => {
-                    Toast.show(
-                      'Your Password Changed Successfully',
-                      Toast.LONG,
-                    );
-                    setLoadingAPI(false);
-                    props.navigation.popToTop();
-                    action.resetForm();
-                  })
-                  .catch((e) => {
-                    setLoadingAPI(false);
-                    Alert.alert('OOPS!', e.response.data.message);
-                  });
-              }}>
-              {(formikProps) => (
-                <View style={styles.mainDiv}>
-                  {loadingAPI ? (
-                    <View
-                      style={{
-                        // flex: 1,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                      }}>
-                      <ActivityIndicator size={'large'} color={'blue'} />
-                    </View>
-                  ) : (
+                  changeUserPassword(values, action);
+                }}>
+                {(formikProps) => (
+                  <View style={styles.mainDiv}>
                     <View style={styles.card}>
                       <View style={styles.cardContent}>
                         <View>
@@ -291,13 +303,13 @@ function ChangePassword(props) {
                         </View>
                       </View>
                     </View>
-                  )}
-                </View>
-              )}
-            </Formik>
-          </View>
-        </ScrollView>
-      </TouchableWithoutFeedback>
+                  </View>
+                )}
+              </Formik>
+            </View>
+          </ScrollView>
+        </TouchableWithoutFeedback>
+      )}
     </View>
   );
 }

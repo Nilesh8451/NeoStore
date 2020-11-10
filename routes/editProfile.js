@@ -8,6 +8,7 @@ import {
   StyleSheet,
   Image,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
 import {Avatar} from 'react-native-elements';
 import FlatButton from '../shared/button';
@@ -20,6 +21,7 @@ import {connect} from 'react-redux';
 import {updateUserInformation} from '../redux/user/userAction';
 import axios from 'axios';
 import {baseUrl, updateProfile} from '../baseUrl';
+import LottieView from 'lottie-react-native';
 
 const profileSchema = yup.object({
   firstname: yup
@@ -71,15 +73,55 @@ function EditProfile(props) {
     });
   };
 
+  const updateProfileData = (data) => {
+    setLoadingAPI(true);
+
+    axios
+      .put(`${baseUrl}/${updateProfile}`, data, {
+        headers: {
+          Authorization: `bearer ${props.user.token}`,
+        },
+      })
+      .then((res) => {
+        console.log('This is update res', res);
+        props.updateInfo(res.data.customer_details);
+        setLoadingAPI(false);
+        Toast.show('Detail Updated Successfully', Toast.LONG);
+        props.navigation.pop();
+      })
+      .catch((e) => {
+        setLoadingAPI(false);
+        console.log('Update Error', e);
+      });
+  };
+
   return (
     <View
       style={{
         flex: 1,
         backgroundColor: 'white',
-        // backgroundColor: 'yellow',
       }}>
-      <ScrollView>
-        {loadingAPI == false && (
+      {loadingAPI ? (
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <View
+            style={{
+              ...styles.container,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <LottieView
+              source={require('../assets/json/loader2.json')}
+              autoPlay
+              style={{
+                width: 200,
+                height: 200,
+              }}
+              loop
+            />
+          </View>
+        </View>
+      ) : (
+        <ScrollView>
           <View
             style={{
               width: '100%',
@@ -112,71 +154,50 @@ function EditProfile(props) {
               </Text>
             </TouchableOpacity>
           </View>
-        )}
 
-        <View
-          style={{
-            // backgroundColor: 'pink',
-            marginTop: 10,
-            width: '100%',
-            // justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <Formik
-            initialValues={{
-              firstname: userDetail?.first_name,
-              lastname: userDetail?.last_name,
-              email: userDetail?.email,
-              phoneno: userDetail.phone_no,
-              gender: userDetail.gender,
-              dob: '12/01/1999',
-            }}
-            validationSchema={profileSchema}
-            onSubmit={(values, action) => {
-              console.log(values);
-              console.log(props.user.token);
-
-              const data = new FormData();
-              data.append('first_name', values.firstname);
-              data.append('last_name', values.lastname);
-              data.append('email', values.email);
-              data.append('dob', values.dob);
-              data.append('phone_no', values.phoneno);
-              data.append('gender', values.gender);
-
-              if (imgData.data) {
-                console.log('Adding', imgData.data);
-                const imageData = 'data:image/jpeg;base64,' + imgData.data;
-                data.append('profile_img', imageData);
-              }
-
-              setLoadingAPI(true);
-
-              axios
-                .put(`${baseUrl}/${updateProfile}`, data, {
-                  headers: {
-                    Authorization: `bearer ${props.user.token}`,
-                  },
-                })
-                .then((res) => {
-                  console.log('This is update res', res);
-                  props.updateInfo(res.data.customer_details);
-                  setLoadingAPI(false);
-                  Toast.show('Detail Updated Successfully', Toast.LONG);
-                  props.navigation.goBack();
-                  action.resetForm();
-                })
-                .catch((e) => {
-                  setLoadingAPI(false);
-                  console.log('Update Error', e);
-                });
+          <View
+            style={{
+              // backgroundColor: 'pink',
+              marginTop: 10,
+              width: '100%',
+              // justifyContent: 'center',
+              alignItems: 'center',
             }}>
-            {(formikProps) =>
-              loadingAPI ? (
-                <View style={{flex: 1, marginTop: 100}}>
-                  <ActivityIndicator size={'large'} color={'blue'} />
-                </View>
-              ) : (
+            <Formik
+              initialValues={{
+                firstname: userDetail?.first_name,
+                lastname: userDetail?.last_name,
+                email: userDetail?.email,
+                phoneno: userDetail.phone_no,
+                gender: userDetail.gender,
+                dob: '12/01/1999',
+              }}
+              validationSchema={profileSchema}
+              onSubmit={(values, action) => {
+                console.log(values);
+                console.log(props.user.token);
+
+                const data = new FormData();
+                data.append('first_name', values.firstname);
+                data.append('last_name', values.lastname);
+                data.append('email', values.email);
+                data.append('dob', values.dob);
+                data.append('phone_no', values.phoneno);
+                data.append('gender', values.gender);
+
+                if (imgData.data) {
+                  console.log('Adding', imgData.data);
+                  const imageData = 'data:image/jpeg;base64,' + imgData.data;
+                  data.append('profile_img', imageData);
+                }
+
+                if (!imgData.data) {
+                  Alert.alert('OOPS!', 'Please Select New Profile Image');
+                } else {
+                  updateProfileData(data);
+                }
+              }}>
+              {(formikProps) => (
                 <View style={{width: '77%', marginBottom: 25, maxWidth: 450}}>
                   <TextInput
                     style={styles.input}
@@ -242,6 +263,7 @@ function EditProfile(props) {
                         style={{
                           flexDirection: 'row',
                         }}
+                        animation={false}
                         labelStyle={{marginRight: 10}}
                         buttonSize={15}
                         radio_props={radio_props}
@@ -280,11 +302,11 @@ function EditProfile(props) {
                     />
                   </View>
                 </View>
-              )
-            }
-          </Formik>
-        </View>
-      </ScrollView>
+              )}
+            </Formik>
+          </View>
+        </ScrollView>
+      )}
     </View>
   );
 }

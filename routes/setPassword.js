@@ -17,6 +17,7 @@ import FlatButton from '../shared/button';
 import Toast from 'react-native-simple-toast';
 import axios from 'axios';
 import {baseUrl, recoverPassword} from '../baseUrl';
+import LottieView from 'lottie-react-native';
 
 const mySchema = yup.object({
   optInput: yup
@@ -49,7 +50,7 @@ function SetPassword(props) {
   const [CPEyeStyle, setCPEyeStyle] = useState('eye-slash');
   const [loading, setLoading] = useState(false);
 
-  handlePasswordEyeClick = () => {
+  const handlePasswordEyeClick = () => {
     setSecurePassword(!securePassword);
     if (PEyeStyle === 'eye-slash') {
       setPEyeStyle('eye');
@@ -58,7 +59,7 @@ function SetPassword(props) {
     }
   };
 
-  handleCPasswordEyeClick = () => {
+  const handleCPasswordEyeClick = () => {
     setSecureCPassword(!secureCPassword);
     if (CPEyeStyle === 'eye-slash') {
       setCPEyeStyle('eye');
@@ -67,57 +68,70 @@ function SetPassword(props) {
     }
   };
 
+  const setNewPassword = (values, action) => {
+    setLoading(true);
+    axios
+      .post(
+        `${baseUrl}/${recoverPassword}`,
+        {
+          otpCode: values.optInput,
+          newPass: values.password,
+          confirmPass: values.confirmPassowrd,
+        },
+        {
+          headers: {
+            Authorization: `bearer ${props.route.params.token}`,
+          },
+        },
+      )
+      .then((res) => {
+        setLoading(false);
+        Toast.show(res.data.message, Toast.LONG);
+        props.navigation.popToTop();
+        action.resetForm();
+      })
+      .catch((e) => {
+        Alert.alert('OPPS!', e.response.data.message);
+        setLoading(false);
+      });
+  };
+
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
-      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-        <ScrollView>
-          <View style={styles.container}>
-            <Formik
-              initialValues={{
-                optInput: '',
-                password: '',
-                confirmPassowrd: '',
+      {loading ? (
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <View
+            style={{
+              ...styles.container,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <LottieView
+              source={require('../assets/json/loader2.json')}
+              autoPlay
+              style={{
+                width: 200,
+                height: 200,
               }}
-              validationSchema={mySchema}
-              onSubmit={(values, action) => {
-                setLoading(true);
-                axios
-                  .post(
-                    `${baseUrl}/${recoverPassword}`,
-                    {
-                      otpCode: values.optInput,
-                      newPass: values.password,
-                      confirmPass: values.confirmPassowrd,
-                    },
-                    {
-                      headers: {
-                        Authorization: `bearer ${props.route.params.token}`,
-                      },
-                    },
-                  )
-                  .then((res) => {
-                    setLoading(false);
-                    Toast.show(res.data.message, Toast.LONG);
-                    props.navigation.popToTop();
-                    action.resetForm();
-                  })
-                  .catch((e) => {
-                    Alert.alert('OPPS!', e.response.data.message);
-                    setLoading(false);
-                  });
-              }}>
-              {(formikProps) =>
-                loading ? (
-                  <View
-                    style={{
-                      flex: 1,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      marginTop: 100,
-                    }}>
-                    <ActivityIndicator size={'large'} color={'blue'} />
-                  </View>
-                ) : (
+              loop
+            />
+          </View>
+        </View>
+      ) : (
+        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+          <ScrollView>
+            <View style={styles.container}>
+              <Formik
+                initialValues={{
+                  optInput: '',
+                  password: '',
+                  confirmPassowrd: '',
+                }}
+                validationSchema={mySchema}
+                onSubmit={(values, action) => {
+                  setNewPassword(values, action);
+                }}>
+                {(formikProps) => (
                   <View style={styles.mainDiv}>
                     <Text style={styles.companyName}>
                       Neo<Text style={{color: '#2874F0'}}>STORE</Text>
@@ -266,12 +280,12 @@ function SetPassword(props) {
                       </View>
                     </View>
                   </View>
-                )
-              }
-            </Formik>
-          </View>
-        </ScrollView>
-      </TouchableWithoutFeedback>
+                )}
+              </Formik>
+            </View>
+          </ScrollView>
+        </TouchableWithoutFeedback>
+      )}
     </View>
   );
 }
