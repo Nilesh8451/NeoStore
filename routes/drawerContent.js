@@ -98,6 +98,7 @@ function DrawerContent({...props}) {
                   size={18}
                   style={{
                     opacity: 0.6,
+                    marginLeft: 10,
                   }}
                 />
               )}
@@ -114,6 +115,7 @@ function DrawerContent({...props}) {
                   size={18}
                   style={{
                     opacity: 0.6,
+                    marginLeft: 10,
                   }}
                 />
               )}
@@ -131,6 +133,7 @@ function DrawerContent({...props}) {
                   size={18}
                   style={{
                     opacity: 0.6,
+                    marginLeft: 10,
                   }}
                 />
               )}
@@ -148,6 +151,7 @@ function DrawerContent({...props}) {
                     size={18}
                     style={{
                       opacity: 0.6,
+                      marginLeft: 10,
                     }}
                   />
                 )}
@@ -168,6 +172,7 @@ function DrawerContent({...props}) {
                       size={18}
                       style={{
                         opacity: 0.6,
+                        marginLeft: 10,
                       }}
                     />
                   )}
@@ -184,6 +189,7 @@ function DrawerContent({...props}) {
                       size={18}
                       style={{
                         opacity: 0.6,
+                        marginLeft: 10,
                       }}
                     />
                   )}

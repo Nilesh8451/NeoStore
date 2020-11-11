@@ -93,6 +93,37 @@ function Registration({navigation}) {
     }
   };
 
+  const registerUser = (values, action) => {
+    // console.log(values);
+    setLoading(true);
+    axios
+      .post(`${baseUrl}/${register}`, {
+        first_name: values.firstname,
+        last_name: values.lastname,
+        email: values.email,
+        pass: values.password,
+        confirmPass: values.confirmPassowrd,
+        phone_no: values.phoneno,
+        gender: values.gender,
+      })
+      .then((res) => {
+        Toast.show(res.data.message, Toast.LONG);
+        action.resetForm();
+        navigation.navigate('LoginDrawer');
+        setLoading(false);
+      })
+      .catch((e) => {
+        console.log('ERRRRORRORORORORROR ', e, e.response);
+        if (e.response?.data?.message == undefined) {
+          setLoading(false);
+          Alert.alert('OPPS!', 'Something went wrong, Please try again later!');
+        } else {
+          setLoading(false);
+          Alert.alert('OOPS!', e.response.data.message);
+        }
+      });
+  };
+
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <ScrollView
@@ -112,27 +143,7 @@ function Registration({navigation}) {
             }}
             validationSchema={loginSchema}
             onSubmit={(values, action) => {
-              setLoading(true);
-              axios
-                .post(`${baseUrl}/${register}`, {
-                  first_name: values.firstname,
-                  last_name: values.lastname,
-                  email: values.email,
-                  pass: values.password,
-                  confirmPass: values.confirmPassowrd,
-                  phone_no: values.phoneno,
-                  gender: values.gender,
-                })
-                .then((res) => {
-                  Toast.show(res.data.message, Toast.LONG);
-                  action.resetForm();
-                  navigation.navigate('LoginDrawer');
-                  setLoading(false);
-                })
-                .catch((e) => {
-                  Alert.alert('OOPS!', e.response.data.message);
-                  setLoading(false);
-                });
+              registerUser(values, action);
             }}>
             {(formikProps) =>
               loading === false ? (
@@ -381,10 +392,17 @@ function Registration({navigation}) {
                             style={{
                               flexDirection: 'row',
                             }}
+                            animation={false}
                             labelStyle={{marginRight: 10}}
                             buttonSize={15}
                             radio_props={radio_props}
-                            initial={-1}
+                            initial={
+                              formikProps.values.gender == 'Male'
+                                ? 0
+                                : formikProps.values.gender == 'Female'
+                                ? 1
+                                : -1
+                            }
                             onPress={(value) => {
                               if (value === 0) {
                                 formikProps.setFieldValue('gender', 'Male');

@@ -9,10 +9,14 @@ import {baseUrl, updateUserAddress} from '../baseUrl';
 function SelectAddress(props) {
   useEffect(() => {
     if (props.userAdd?.length > 0) {
-      // console.log(props.userAdd);
+      console.log(props.userAdd);
       props.userAdd.map((add, ind) => {
+        let address = `${add.address} ${add.city}, ${
+          add.state
+        } - ${add.pincode.toString()}, ${add.country}.`;
+
         setRadioProps((prevState) => {
-          return [...prevState, {label: add.address, value: add.address}];
+          return [...prevState, {label: address, value: address}];
         });
       });
     }
@@ -73,7 +77,7 @@ function SelectAddress(props) {
               radio_props={radioProps}
               initial={-1}
               onPress={(value, ind) => {
-                // console.log(value, props.userAdd[ind], ind);
+                console.log(value, props.userAdd[ind], ind);
 
                 axios
                   .put(

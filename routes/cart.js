@@ -19,6 +19,7 @@ import {
 } from '../redux/user/userAction';
 import {baseUrl} from '../baseUrl';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import SomethingWrong from './somethingWentWrong';
 
 let totalCartCost = 0;
 let gstTax = 0;
@@ -79,6 +80,10 @@ function Cart(props) {
       ],
     );
   };
+
+  if (props.error) {
+    return <SomethingWrong />;
+  }
 
   return props.cart.length > 0 ? (
     <View style={{flex: 1}}>
@@ -451,6 +456,7 @@ const mapStateToProps = (state) => {
   return {
     user: state.userReducer.user,
     cart: state.userReducer.cart,
+    error: state.dashBoardReducer.error,
   };
 };
 

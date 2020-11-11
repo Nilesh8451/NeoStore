@@ -23,8 +23,11 @@ export const getAllCategoriesData = () => {
         dispatch({type: GETALLCATEGORIES_SUCCESS, data: res.data});
       })
       .catch((e) => {
-        dispatch({type: GETALLCATEGORIES_FAILURE});
-        // console.log(e);
+        dispatch({
+          type: GETALLCATEGORIES_FAILURE,
+          data: 'Something Went Wrong, Please Try Again Later',
+        });
+        // console.log('Category', e, e.response);
       });
   };
 };
@@ -39,8 +42,11 @@ export const getDefaultTopRatingProducts = () => {
         dispatch({type: GETTOPRATINGPRODUCT_SUCCESS, data: res.data});
       })
       .catch((e) => {
-        dispatch({type: GETTOPRATINGPRODUCT_FAILURE});
-        // console.log(e);
+        dispatch({
+          type: GETTOPRATINGPRODUCT_FAILURE,
+          data: 'Something Went Wrong, Please Try Again Later',
+        });
+        // console.log('Category', e, e.response);
       });
   };
 };

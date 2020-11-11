@@ -27,6 +27,7 @@ import {
 import {connect} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import SomethingWrong from './somethingWentWrong';
 
 let timerId;
 
@@ -52,6 +53,7 @@ function Home({
   categories,
   topRatedProduct,
   cart,
+  error,
   getAllCategories,
   getTopRatingProducts,
   restoreData,
@@ -82,7 +84,7 @@ function Home({
 
       if (cartData !== null) {
         restoreCartData(parseCartData);
-        console.log('AAAAAAAA ', parseCartData);
+        // console.log('AAAAAAAA ', parseCartData);
       }
     } catch (error) {}
   };
@@ -101,7 +103,7 @@ function Home({
   }, []);
 
   useEffect(() => {
-    console.log('Changes in Cart --', cart);
+    // console.log('Changes in Cart --', cart);
     storeUserCartData(cart);
   }, [cart]);
 
@@ -132,6 +134,10 @@ function Home({
   };
 
   const debounceSearch = debounce(handleSearch, 1000);
+
+  if (error) {
+    return <SomethingWrong />;
+  }
 
   if (LoadingData) {
     return (
@@ -452,7 +458,7 @@ const styles = StyleSheet.create({
     fontSize: 17,
     paddingLeft: 43,
     paddingRight: 40,
-    borderRadius: 2,
+    borderRadius: 5,
   },
 
   sliderContainer: {
@@ -514,6 +520,7 @@ const mapStateToProps = (state) => {
     topRatedProduct: state.dashBoardReducer.topRatedProduct,
     LoadingData: state.dashBoardReducer.isLoading,
     cart: state.userReducer.cart,
+    error: state.dashBoardReducer.error,
   };
 };
 

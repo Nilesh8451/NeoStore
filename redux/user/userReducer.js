@@ -17,6 +17,7 @@ import {
   BUY_PRODUCT,
   GET_USER_ORDER_DETAILS,
   RESTORE_USERCART_DATA,
+  PROFILE_ERROR,
 } from './types';
 import Toast from 'react-native-simple-toast';
 import {act} from 'react-test-renderer';
@@ -29,6 +30,7 @@ const initialState = {
   isLoading: false,
   addressLoading: false,
   error: null,
+  profileError: null,
 };
 
 const userReducer = (state = initialState, action) => {
@@ -195,8 +197,13 @@ const userReducer = (state = initialState, action) => {
       // console.log('User Order ', action.data);
       return {
         ...state,
+        profileError: null,
         order: action.data,
       };
+    }
+
+    case PROFILE_ERROR: {
+      return {...state, profileError: 'Something Went Wrong'};
     }
 
     case RESTORE_USERCART_DATA: {

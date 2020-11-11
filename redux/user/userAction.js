@@ -14,6 +14,7 @@ import {
   LOGIN_FAILURE,
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
+  PROFILE_ERROR,
   RESTORE_LOGINDATA,
   RESTORE_USERCART_DATA,
   SIGNOUT,
@@ -60,8 +61,12 @@ export const login = (user) => {
         // getUserCartData(res.data.token);
       })
       .catch((e) => {
-        // console.log(e.response);
-        Alert.alert('OOPS!', e.response.data.message);
+        console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA ', e.response);
+        if (e.response?.data?.message == undefined) {
+          Alert.alert('OPPS!', 'Something went wrong, Please try again later!');
+        } else {
+          Alert.alert('OOPS!', e.response.data.message);
+        }
         dispatch({type: LOGIN_FAILURE, data: e});
       });
   };
@@ -269,7 +274,8 @@ export const getCustomerOrderDetails = (token) => {
         });
       })
       .catch((e) => {
-        // console.log('This is error', e, e.response);
+        console.log('This is error', e, e.response);
+        dispatch({type: PROFILE_ERROR});
       });
   };
 };

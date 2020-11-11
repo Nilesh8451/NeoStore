@@ -12,6 +12,7 @@ import LottieView from 'lottie-react-native';
 import {baseUrl, getProductById, rateProductByCustomer} from '../baseUrl';
 import {connect} from 'react-redux';
 import {addProductToCart} from '../redux/user/userAction';
+import SomethingWrong from './somethingWentWrong';
 
 /**
  * @author Nilesh Ganpat Chavan
@@ -62,29 +63,7 @@ function ProductDetail({user, addToCart, navigation, route}) {
   }, []);
 
   if (error) {
-    return (
-      <View style={{flex: 1, alignItems: 'center'}}>
-        <FontAwesome5
-          name={'exclamation-circle'}
-          color={'red'}
-          solid
-          size={70}
-          style={{opacity: 0.5, marginTop: 50}}
-          onPress={() => {}}
-        />
-        <Text
-          style={{
-            fontSize: 18,
-            fontWeight: 'bold',
-            opacity: 0.7,
-            textAlign: 'center',
-            marginHorizontal: 50,
-            marginTop: 10,
-          }}>
-          {error}
-        </Text>
-      </View>
-    );
+    return <SomethingWrong />;
   }
 
   return myProduct._id ? (

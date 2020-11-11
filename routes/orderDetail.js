@@ -11,7 +11,7 @@ import {baseUrl} from '../baseUrl';
 function OrderDetail(props) {
   let subTotal = 0;
   const order = props.route.params.order;
-  // console.log(order);
+  console.log(order);
 
   var x = order.product_details[0].total_cartCost;
   x = x.toString();

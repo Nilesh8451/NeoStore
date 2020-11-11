@@ -24,6 +24,7 @@ import {
   getAllColors,
 } from '../baseUrl';
 import CustomChip from '../shared/chip';
+import SomethingWrong from './somethingWentWrong';
 
 /**
  * @author Nilesh Ganpat Chavan
@@ -48,13 +49,12 @@ function ViewProduct({navigation, route}) {
   const [colorCode, setColorCode] = useState('');
   const [colorName, setColorName] = useState('');
   const [categoryCode, setCategoryCode] = useState('');
-
   const [categories, setCategories] = useState([]);
-
   const [costType, setCostType] = useState([
     'Price: Low To High',
     'Price: High To Low',
   ]);
+  const [error, setError] = useState('');
 
   const getCommonProduct = () => {
     axios
@@ -70,6 +70,7 @@ function ViewProduct({navigation, route}) {
       })
       .catch((e) => {
         // console.log('Error on Common Products', e, e.response);
+        setError('Something Went Wrong');
         setIsLoading(false);
       });
   };
@@ -207,6 +208,10 @@ function ViewProduct({navigation, route}) {
       <View></View>
     );
   };
+
+  if (error) {
+    return <SomethingWrong />;
+  }
 
   if (isLoading) {
     return (

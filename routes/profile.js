@@ -11,6 +11,7 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {connect} from 'react-redux';
 import {baseUrl} from '../baseUrl';
 import {getCustomerOrderDetails} from '../redux/user/userAction';
+import SomethingWrong from './somethingWentWrong';
 
 function Profile(props) {
   // console.log('User Info', props.user, props);
@@ -26,6 +27,10 @@ function Profile(props) {
       props.getCustOrderDetail(props.user.token);
     }
   }, [props.user]);
+
+  if (props.profileError) {
+    return <SomethingWrong />;
+  }
 
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
@@ -323,6 +328,7 @@ const styles = StyleSheet.create({
 const mapStateToProps = (state) => {
   return {
     user: state.userReducer.user,
+    profileError: state.userReducer.profileError,
     order: state.userReducer.order,
   };
 };
