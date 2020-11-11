@@ -166,9 +166,12 @@ function ViewProduct({navigation, route}) {
       setColorVal('');
       setColorCode('');
       setCostVal('');
+      setRecentClicked('');
     } else {
       setCategoryCode('');
       setCategoryVal('');
+      setCostVal('');
+      setRecentClicked('');
     }
 
     axios
@@ -344,7 +347,7 @@ function ViewProduct({navigation, route}) {
                                 imageSize={20}
                                 type={'custom'}
                                 readonly={true}
-                                tintColor="rgba( 0, 0, 0, 0.5 )"
+                                tintColor="rgba( 0, 0, 0, 0.7 )"
                               />
                               <Text
                                 style={{

@@ -118,7 +118,7 @@ function Profile(props) {
               height: '100%',
               width: '50%',
             }}>
-            <Text style={{fontWeight: 'bold', fontSize: 17}}>₹0</Text>
+            <Text style={{fontWeight: 'bold', fontSize: 17}}>₹ 0</Text>
             <Text style={{fontSize: 17}}>Wallet</Text>
           </View>
           <View
@@ -165,7 +165,7 @@ function Profile(props) {
                   name={'first-order'}
                   color={'black'}
                   solid
-                  size={23}
+                  size={18}
                   style={{
                     opacity: 0.9,
                     color: 'white',
@@ -205,7 +205,7 @@ function Profile(props) {
                   name={'lock'}
                   color={'black'}
                   solid
-                  size={23}
+                  size={18}
                   style={{
                     opacity: 0.9,
                     color: 'white',
@@ -249,7 +249,7 @@ function Profile(props) {
                   name={'address-card'}
                   color={'black'}
                   solid
-                  size={23}
+                  size={18}
                   style={{
                     opacity: 0.9,
                     color: 'white',
@@ -293,7 +293,7 @@ function Profile(props) {
                   name={'address-card'}
                   color={'black'}
                   solid
-                  size={23}
+                  size={18}
                   style={{
                     opacity: 0.9,
                     color: 'white',

@@ -106,6 +106,9 @@ function Home({
   }, [cart]);
 
   const handleChange = (val) => {
+    if (val == '') {
+      setSearchLoading(true);
+    }
     setSearchInput(val);
     debounceSearch(val);
   };

@@ -153,37 +153,49 @@ function Cart(props) {
                             ₹ {productTotalCost}
                           </Text>
                           <View style={styles.cartItemAction}>
-                            <View
-                              style={{
-                                // width: 30,
-                                height: '100%',
-                                padding: 4,
-                                paddingHorizontal: 9,
-                                // borderRadius: 30,
-                                justifyContent: 'center',
-                                backgroundColor: '#F0F0F0',
-                                marginRight: 2,
-                                borderRightWidth: 1,
-                                borderRightColor: 'gray',
+                            <TouchableWithoutFeedback
+                              onPress={() => {
+                                if (item.quantity > 1) {
+                                  props.decQuantity(item.product_id);
+                                } else {
+                                  Toast.show(
+                                    `Mininum limit reached, Click on Delete icon to delete item from cart`,
+                                    Toast.SHORT,
+                                  );
+                                }
                               }}>
-                              <FontAwesome5
-                                name={'minus'}
-                                color={'black'}
-                                solid
-                                size={17}
-                                style={{opacity: 0.6}}
-                                onPress={() => {
-                                  if (item.quantity > 1) {
-                                    props.decQuantity(item.product_id);
-                                  } else {
-                                    Toast.show(
-                                      `Mininum limit reached, Click on Delete icon to delete item from cart`,
-                                      Toast.SHORT,
-                                    );
-                                  }
-                                }}
-                              />
-                            </View>
+                              <View
+                                style={{
+                                  // width: 30,
+                                  height: '100%',
+                                  padding: 4,
+                                  paddingHorizontal: 9,
+                                  // borderRadius: 30,
+                                  justifyContent: 'center',
+                                  backgroundColor: '#F0F0F0',
+                                  marginRight: 2,
+                                  borderRightWidth: 1,
+                                  borderRightColor: 'gray',
+                                }}>
+                                <FontAwesome5
+                                  name={'minus'}
+                                  color={'black'}
+                                  solid
+                                  size={17}
+                                  style={{opacity: 0.6}}
+                                  // onPress={() => {
+                                  //   if (item.quantity > 1) {
+                                  //     props.decQuantity(item.product_id);
+                                  //   } else {
+                                  //     Toast.show(
+                                  //       `Mininum limit reached, Click on Delete icon to delete item from cart`,
+                                  //       Toast.SHORT,
+                                  //     );
+                                  //   }
+                                  // }}
+                                />
+                              </View>
+                            </TouchableWithoutFeedback>
                             <View
                               style={{
                                 height: '100%',
@@ -200,34 +212,36 @@ function Cart(props) {
                                 {item.quantity}
                               </Text>
                             </View>
-                            <View
-                              style={{
-                                // width: 30,
-                                height: '100%',
-                                padding: 4,
-                                paddingHorizontal: 9,
-                                // borderRadius: 30,
-                                justifyContent: 'center',
-                                backgroundColor: '#F0F0F0',
+                            <TouchableWithoutFeedback
+                              onPress={() => {
+                                if (item.quantity < 10) {
+                                  props.incQuantity(item.product_id);
+                                } else {
+                                  Toast.show(
+                                    `Maximum limit reached for this product.`,
+                                    Toast.SHORT,
+                                  );
+                                }
                               }}>
-                              <FontAwesome5
-                                name={'plus'}
-                                color={'black'}
-                                solid
-                                size={17}
-                                style={{opacity: 0.6}}
-                                onPress={() => {
-                                  if (item.quantity < 10) {
-                                    props.incQuantity(item.product_id);
-                                  } else {
-                                    Toast.show(
-                                      `Maximum limit reached for this product.`,
-                                      Toast.SHORT,
-                                    );
-                                  }
-                                }}
-                              />
-                            </View>
+                              <View
+                                style={{
+                                  // width: 30,
+                                  height: '100%',
+                                  padding: 4,
+                                  paddingHorizontal: 9,
+                                  // borderRadius: 30,
+                                  justifyContent: 'center',
+                                  backgroundColor: '#F0F0F0',
+                                }}>
+                                <FontAwesome5
+                                  name={'plus'}
+                                  color={'black'}
+                                  solid
+                                  size={17}
+                                  style={{opacity: 0.6}}
+                                />
+                              </View>
+                            </TouchableWithoutFeedback>
                           </View>
                         </View>
                       </View>

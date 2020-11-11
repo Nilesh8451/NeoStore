@@ -28,6 +28,7 @@ function ProductDetail({user, addToCart, navigation, route}) {
   const [subImages, setSubImages] = useState([]);
   const [myProduct, setMYProduct] = useState({});
   const [productCost, setProductCost] = useState('');
+  const [error, setError] = useState('');
 
   useEffect(() => {
     axios
@@ -55,9 +56,36 @@ function ProductDetail({user, addToCart, navigation, route}) {
         setProductCost(res);
       })
       .catch((e) => {
-        // console.log(e);
+        // console.log(e, e.response);
+        setError('Something Went Wrong, Please Try Again Later');
       });
   }, []);
+
+  if (error) {
+    return (
+      <View style={{flex: 1, alignItems: 'center'}}>
+        <FontAwesome5
+          name={'exclamation-circle'}
+          color={'red'}
+          solid
+          size={70}
+          style={{opacity: 0.5, marginTop: 50}}
+          onPress={() => {}}
+        />
+        <Text
+          style={{
+            fontSize: 18,
+            fontWeight: 'bold',
+            opacity: 0.7,
+            textAlign: 'center',
+            marginHorizontal: 50,
+            marginTop: 10,
+          }}>
+          {error}
+        </Text>
+      </View>
+    );
+  }
 
   return myProduct._id ? (
     <View style={styles.container}>
