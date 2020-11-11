@@ -8,7 +8,6 @@ import {
   TouchableWithoutFeedback,
   ScrollView,
   Alert,
-  ActivityIndicator,
 } from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {Formik} from 'formik';

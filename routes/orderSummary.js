@@ -16,15 +16,11 @@ let gstTax = 0;
 let totalPay = 0;
 
 function OrderSummary(props) {
-  // console.log(props.route.params.product);
-  // const products = props.route.params.product;
-
   const [selectedAddress, setSelectedAddress] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [cartArray, setCartArray] = useState([]);
 
   useEffect(() => {
-    // console.log(props.user);
     if (props.user?.token) {
       props.getCustAdd(props.user.token);
     }
@@ -32,7 +28,6 @@ function OrderSummary(props) {
 
   useEffect(() => {
     if (props.cart?.length > 0) {
-      // console.log('This is', props.cart);
       setCartArray(props.cart);
 
       totalCartCost = props.cart.reduce((prevVal, nextVal) => {
@@ -55,13 +50,9 @@ function OrderSummary(props) {
   }, [props.cart]);
 
   const orderProduct = () => {
-    // props.buyProd(cartArray, props.user?.token);
-
     const userCartData = [...cartArray];
 
     userCartData.push({flag: 'checkout'});
-
-    // console.log('After', userCartData);
 
     setIsLoading(true);
     axios
@@ -71,14 +62,13 @@ function OrderSummary(props) {
         },
       })
       .then((res) => {
-        // console.log('Inside Buy Pro Action', res);
+        // console.log('Product To Checkout Response ', res);
         props.buyProd();
         props.getCustOrderDetail(props.user?.token);
-        // setIsLoading(false);
         props.navigation.navigate('OrderResponse');
       })
       .catch((e) => {
-        // console.log('Buy Pro Error', e, e.response);
+        // console.log('Product To Checkout Error', e, e.response);
         setIsLoading(false);
       });
   };
@@ -110,7 +100,6 @@ function OrderSummary(props) {
           <View
             style={{
               flex: 1,
-              //  backgroundColor: 'pink'
             }}>
             <View
               style={{
@@ -122,7 +111,6 @@ function OrderSummary(props) {
               <View
                 style={{
                   width: '90%',
-                  // backgroundColor: 'yellow',
                   paddingVertical: 15,
                 }}>
                 <Text
@@ -134,7 +122,6 @@ function OrderSummary(props) {
                   <Text
                     style={{
                       fontSize: 18,
-
                       fontWeight: 'bold',
                       fontStyle: 'italic',
                       opacity: 0.9,
@@ -179,7 +166,6 @@ function OrderSummary(props) {
                     <View
                       style={{
                         width: '60%',
-                        // backgroundColor: 'yellow',
                       }}>
                       <Text
                         style={{
@@ -201,7 +187,6 @@ function OrderSummary(props) {
                     </View>
                     <View
                       style={{
-                        // width: '30%',
                         backgroundColor: 'pink',
                       }}>
                       <Image
@@ -222,7 +207,6 @@ function OrderSummary(props) {
                     <View
                       style={{
                         width: '60%',
-                        // backgroundColor: 'yellow',
                       }}>
                       <Text
                         style={{
@@ -235,9 +219,6 @@ function OrderSummary(props) {
                     </View>
                     <View
                       style={{
-                        // width: '30%',
-                        // backgroundColor: 'pink',
-
                         marginRight: 15,
                       }}>
                       <Text
@@ -273,8 +254,6 @@ function OrderSummary(props) {
               paddingHorizontal={30}
               color={selectedAddress.address === undefined ? 'gray' : '#2874F0'}
               onPress={() => {
-                // navigation.navigate('OrderSummary');
-                // console.log('Ordered');
                 orderProduct();
               }}
             />
@@ -289,7 +268,6 @@ const styles = StyleSheet.create({
   productCard: {
     width: '80%',
     maxWidth: 550,
-    // backgroundColor: 'red',
   },
   footerAction: {
     position: 'absolute',

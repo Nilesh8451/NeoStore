@@ -1,17 +1,10 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {View, Text, StyleSheet, ScrollView, Image} from 'react-native';
-import Swiper from 'react-native-swiper';
-import {Rating, AirbnbRating} from 'react-native-ratings';
-import FlatButton from '../shared/button';
-import CustomModal from '../shared/modal';
-import Toast from 'react-native-simple-toast';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {baseUrl} from '../baseUrl';
 
 function OrderDetail(props) {
   let subTotal = 0;
   const order = props.route.params.order;
-  console.log(order);
 
   var x = order.product_details[0].total_cartCost;
   x = x.toString();
@@ -20,9 +13,6 @@ function OrderDetail(props) {
   if (otherNumbers != '') lastThree = ',' + lastThree;
   var totalCartCost =
     otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + lastThree;
-
-  const [openModal, setOpenModal] = useState(false);
-  const [ratingValue, setRatingValue] = useState('');
 
   return (
     <View style={styles.container}>
@@ -34,7 +24,6 @@ function OrderDetail(props) {
             marginBottom: 75,
           }}>
           {order.product_details.map((product, index) => {
-            // console.log(product);
             subTotal +=
               product.product_details[0].product_cost * product.quantity;
 
@@ -52,10 +41,8 @@ function OrderDetail(props) {
                 style={{
                   flex: 1,
                   width: '90%',
-                  // marginBottom: 10,
                   flexDirection: 'row',
                   justifyContent: 'space-between',
-                  // backgroundColor: 'yellow',
                   backgroundColor: 'white',
                   marginTop: 15,
                   paddingVertical: 10,
@@ -94,7 +81,6 @@ function OrderDetail(props) {
                     style={{
                       fontSize: 18,
                       fontWeight: 'bold',
-                      // marginTop: 10,
                       color: '#EF5B3E',
                       flexDirection: 'row',
                       textAlign: 'right',
@@ -117,10 +103,8 @@ function OrderDetail(props) {
 
           <View
             style={{
-              // flex: 1,
               width: '90%',
               marginTop: 30,
-              // backgroundColor: 'pink',
               justifyContent: 'center',
               alignItems: 'center',
             }}>
@@ -129,7 +113,6 @@ function OrderDetail(props) {
                 width: '95%',
                 backgroundColor: 'white',
                 paddingVertical: 20,
-                // padding: 10,
                 marginBottom: 30,
                 paddingHorizontal: 20,
               }}>
@@ -196,11 +179,8 @@ function OrderDetail(props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: 'white',
   },
   sliderContainer: {
-    // height: 200,
-    // width: '100%',
     marginTop: 15,
     marginBottom: 5,
     justifyContent: 'center',
@@ -211,13 +191,11 @@ const styles = StyleSheet.create({
   sliderImage: {
     height: 120,
     width: 120,
-    // alignSelf: 'center',
     borderRadius: 8,
   },
   productContent: {
     marginTop: 15,
     flex: 0.95,
-    // backgroundColor: 'red',
   },
 });
 

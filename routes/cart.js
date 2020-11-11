@@ -18,7 +18,6 @@ import {
   deleteProductFromCart,
 } from '../redux/user/userAction';
 import {baseUrl} from '../baseUrl';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import SomethingWrong from './somethingWentWrong';
 
 let totalCartCost = 0;
@@ -27,19 +26,8 @@ let totalPay = 0;
 
 function Cart(props) {
   const [allProducts, setAllProducts] = useState([]);
-  // console.log(props?.cart);
-
-  // const storeUserCartData = async (data) => {
-  //   try {
-  //     await AsyncStorage.setItem('userCartData', JSON.stringify(data));
-  //   } catch (e) {}
-  // };
 
   useEffect(() => {
-    console.log('Changes ', props.cart);
-
-    // storeUserCartData(props.cart);
-
     setAllProducts(props.cart);
 
     totalCartCost = props.cart.reduce((prevVal, nextVal) => {
@@ -69,7 +57,6 @@ function Cart(props) {
         {
           text: 'YES',
           onPress: () => {
-            // console.log('Deleted');
             props.delCartProduct(product.product_id, props.user?.token);
             Toast.show(
               `${product.product_name} removed from your cart successfully`,
@@ -92,7 +79,6 @@ function Cart(props) {
           <View
             style={{
               flex: 1,
-              // backgroundColor: 'yellow',
               marginHorizontal: 10,
               marginVertical: 10,
             }}>
@@ -106,15 +92,10 @@ function Cart(props) {
                 otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + lastThree;
 
               return (
-                <TouchableWithoutFeedback
-                  key={item._id}
-                  onPress={() => {
-                    // console.log('Clicked on Card');
-                  }}>
+                <TouchableWithoutFeedback key={item._id} onPress={() => {}}>
                   <View
                     style={{
                       ...styles.productCardContent,
-                      // backgroundColor: 'red',
                       marginBottom: 15,
                     }}>
                     <View style={styles.productCard}>
@@ -128,11 +109,9 @@ function Cart(props) {
                       </View>
                       <View style={styles.cardDetail}>
                         <Text
-                          // numberOfLines={1}
                           style={{
                             fontSize: 20,
                             marginRight: 35,
-                            // backgroundColor: 'red',
                           }}>
                           {item.product_name}
                         </Text>
@@ -144,7 +123,6 @@ function Cart(props) {
                         <View
                           style={{
                             marginTop: 10,
-                            // backgroundColor: 'red',
                             flexDirection: 'row',
                             justifyContent: 'space-between',
                             alignItems: 'center',
@@ -153,7 +131,6 @@ function Cart(props) {
                             style={{
                               fontSize: 20,
                               color: '#FE5555',
-                              // marginTop: 10,
                             }}>
                             ₹ {productTotalCost}
                           </Text>
@@ -171,11 +148,9 @@ function Cart(props) {
                               }}>
                               <View
                                 style={{
-                                  // width: 30,
                                   height: '100%',
                                   padding: 4,
                                   paddingHorizontal: 9,
-                                  // borderRadius: 30,
                                   justifyContent: 'center',
                                   backgroundColor: '#F0F0F0',
                                   marginRight: 2,
@@ -188,16 +163,6 @@ function Cart(props) {
                                   solid
                                   size={17}
                                   style={{opacity: 0.6}}
-                                  // onPress={() => {
-                                  //   if (item.quantity > 1) {
-                                  //     props.decQuantity(item.product_id);
-                                  //   } else {
-                                  //     Toast.show(
-                                  //       `Mininum limit reached, Click on Delete icon to delete item from cart`,
-                                  //       Toast.SHORT,
-                                  //     );
-                                  //   }
-                                  // }}
                                 />
                               </View>
                             </TouchableWithoutFeedback>
@@ -206,7 +171,6 @@ function Cart(props) {
                                 height: '100%',
                                 padding: 4,
                                 paddingHorizontal: 9,
-                                // borderRadius: 30,
                                 justifyContent: 'center',
                                 backgroundColor: '#F0F0F0',
                                 marginRight: 2,
@@ -230,11 +194,9 @@ function Cart(props) {
                               }}>
                               <View
                                 style={{
-                                  // width: 30,
                                   height: '100%',
                                   padding: 4,
                                   paddingHorizontal: 9,
-                                  // borderRadius: 30,
                                   justifyContent: 'center',
                                   backgroundColor: '#F0F0F0',
                                 }}>
@@ -253,7 +215,6 @@ function Cart(props) {
                     </View>
                     <TouchableWithoutFeedback
                       onPress={() => {
-                        // console.log('clicked');
                         handleDelete(item);
                       }}>
                       <View
@@ -284,7 +245,6 @@ function Cart(props) {
           </View>
           <View
             style={{
-              // backgroundColor: 'pink',
               justifyContent: 'center',
               alignItems: 'center',
             }}>
@@ -293,7 +253,6 @@ function Cart(props) {
                 width: '95%',
                 backgroundColor: 'white',
                 paddingVertical: 20,
-                // padding: 10,
                 marginBottom: 75,
                 paddingHorizontal: 20,
               }}>
@@ -346,7 +305,6 @@ function Cart(props) {
           style={{
             width: '90%',
             maxWidth: 600,
-            // backgroundColor: 'red',
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'center',
@@ -379,7 +337,6 @@ function Cart(props) {
           marginHorizontal: 10,
           marginVertical: 10,
           paddingVertical: 30,
-          // justifyContent: 'center',
           alignItems: 'center',
         }}>
         <Image
@@ -413,11 +370,9 @@ function Cart(props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: 'orange',
   },
 
   productCardContainer: {
-    // backgroundColor: 'white',
     marginBottom: 20,
   },
   productCardContent: {
@@ -426,7 +381,6 @@ const styles = StyleSheet.create({
     marginVertical: 5,
   },
   productCard: {
-    // backgroundColor: 'pink',
     paddingVertical: 20,
     flexDirection: 'row',
   },
@@ -434,20 +388,15 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     borderRadius: 8,
-    // marginLeft: 10,
   },
   cardDetail: {
-    // backgroundColor: 'red',
     width: '68%',
     marginLeft: 20,
   },
   cartItemAction: {
-    // backgroundColor: 'yellow',
     width: 110,
     height: 36,
-    // paddingHorizontal: 20,
     flexDirection: 'row',
-    // justifyContent: 'space-between',
     alignItems: 'center',
   },
 });

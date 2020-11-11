@@ -57,7 +57,6 @@ function Home({
   getAllCategories,
   getTopRatingProducts,
   restoreData,
-  getDataOfUserCart,
   restoreCartData,
   navigation,
 }) {
@@ -72,7 +71,6 @@ function Home({
 
       if (user !== null) {
         restoreData(parseUserData);
-        // getDataOfUserCart(parseUserData.token);
       }
     } catch (error) {}
   };
@@ -84,7 +82,6 @@ function Home({
 
       if (cartData !== null) {
         restoreCartData(parseCartData);
-        // console.log('AAAAAAAA ', parseCartData);
       }
     } catch (error) {}
   };
@@ -103,7 +100,6 @@ function Home({
   }, []);
 
   useEffect(() => {
-    // console.log('Changes in Cart --', cart);
     storeUserCartData(cart);
   }, [cart]);
 
@@ -128,7 +124,7 @@ function Home({
         setSearchLoading(false);
       })
       .catch((e) => {
-        // console.log(e);
+        // console.log("Get Product By Search Error ",e);
         setSearchLoading(false);
       });
   };
@@ -317,7 +313,6 @@ function Home({
                                       color: 'white',
                                       fontWeight: 'bold',
                                     }}>
-                                    {/* {product.DashboardProducts[0].product_cost} */}
                                     ₹ {res}
                                   </Text>
                                 </View>

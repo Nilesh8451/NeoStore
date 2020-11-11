@@ -94,7 +94,6 @@ function Registration({navigation}) {
   };
 
   const registerUser = (values, action) => {
-    // console.log(values);
     setLoading(true);
     axios
       .post(`${baseUrl}/${register}`, {
@@ -113,7 +112,7 @@ function Registration({navigation}) {
         setLoading(false);
       })
       .catch((e) => {
-        console.log('ERRRRORRORORORORROR ', e, e.response);
+        // console.log('Register User Error ', e, e.response);
         if (e.response?.data?.message == undefined) {
           setLoading(false);
           Alert.alert('OPPS!', 'Something went wrong, Please try again later!');

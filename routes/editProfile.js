@@ -7,10 +7,8 @@ import {
   TextInput,
   StyleSheet,
   Image,
-  ActivityIndicator,
   Alert,
 } from 'react-native';
-import {Avatar} from 'react-native-elements';
 import FlatButton from '../shared/button';
 import {Formik} from 'formik';
 import Toast from 'react-native-simple-toast';
@@ -70,15 +68,11 @@ function EditProfile(props) {
     formikProp.setFieldValue('dob', convertedDate);
   };
 
-  // console.log('User ', props.user);
-
   const userDetail = props.user.customer_details;
-  // console.log('SSSSSSSSSSS ', userDetail);
 
   const handleChooseFile = () => {
     const options = {};
     ImagePicker.launchImageLibrary(options, (response) => {
-      // console.log('Response ', response);
       if (response?.didCancel !== true) {
         setImgData(response);
       }
@@ -95,7 +89,7 @@ function EditProfile(props) {
         },
       })
       .then((res) => {
-        // console.log('This is update res', res);
+        // console.log('Update Profile Response ', res);
         props.updateInfo(res.data.customer_details);
         setLoadingAPI(false);
         Toast.show('Detail Updated Successfully', Toast.LONG);
@@ -103,7 +97,7 @@ function EditProfile(props) {
       })
       .catch((e) => {
         setLoadingAPI(false);
-        // console.log('Update Error', e);
+        // console.log('Update Profile Error', e);
       });
   };
 
@@ -137,7 +131,6 @@ function EditProfile(props) {
           <View
             style={{
               width: '100%',
-              // backgroundColor: 'pink',
               paddingTop: 30,
               paddingBottom: 10,
               alignItems: 'center',
@@ -181,10 +174,8 @@ function EditProfile(props) {
 
           <View
             style={{
-              // backgroundColor: 'pink',
               marginTop: 10,
               width: '100%',
-              // justifyContent: 'center',
               alignItems: 'center',
             }}>
             <Formik
@@ -198,9 +189,6 @@ function EditProfile(props) {
               }}
               validationSchema={profileSchema}
               onSubmit={(values, action) => {
-                // console.log(values);
-                // console.log(props.user.token);
-
                 const data = new FormData();
                 data.append('first_name', values.firstname);
                 data.append('last_name', values.lastname);
@@ -210,7 +198,6 @@ function EditProfile(props) {
                 data.append('gender', values.gender);
 
                 if (imgData.data) {
-                  // console.log('Adding', imgData.data);
                   const imageData = 'data:image/jpeg;base64,' + imgData.data;
                   data.append('profile_img', imageData);
                 }
@@ -331,7 +318,6 @@ function EditProfile(props) {
                             : 1
                         }
                         onPress={(value) => {
-                          // console.log(value);
                           if (value === 0) {
                             formikProps.setFieldValue('gender', 'Male');
                           } else {
@@ -371,7 +357,6 @@ function EditProfile(props) {
 
 const styles = StyleSheet.create({
   input: {
-    // borderWidth: 1,
     borderBottomWidth: 0.8,
     borderBottomColor: 'gray',
     backgroundColor: 'white',

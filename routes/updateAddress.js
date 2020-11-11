@@ -27,7 +27,6 @@ function UpdateAddress(props) {
       {
         text: 'YES',
         onPress: () => {
-          // console.log('Deleted');
           axios
             .delete(`${baseUrl}/${deleteUserAddress}/${id}`, {
               headers: {
@@ -35,13 +34,13 @@ function UpdateAddress(props) {
               },
             })
             .then((res) => {
-              // console.log('Success', res.data);
+              // console.log('Delete Address Response ', res.data);
               Toast.show(`Address Deleted Successfully`, Toast.LONG);
               const userAdd = custAdd.filter((add) => add.address_id != id);
               setCustAdd(userAdd);
             })
             .catch((e) => {
-              // console.log('error', e, e.response);
+              // console.log('Delete Address Error ', e, e.response);
             });
         },
       },
@@ -80,7 +79,6 @@ function UpdateAddress(props) {
       <View
         style={{
           flex: 1,
-          // backgroundColor: 'yellow'
         }}>
         <ScrollView>
           <View style={styles.container}>
@@ -115,7 +113,6 @@ function UpdateAddress(props) {
                 </View>
                 <TouchableWithoutFeedback
                   onPress={() => {
-                    // console.log('clicked');
                     handleDelete(add.address_id);
                   }}>
                   <View
@@ -124,7 +121,6 @@ function UpdateAddress(props) {
                       right: 20,
                       top: 20,
                       padding: 4,
-                      // backgroundColor: '#EE5233',
                     }}>
                     <FontAwesome5
                       name={'trash-alt'}
@@ -184,11 +180,8 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     paddingHorizontal: 30,
     maxWidth: 500,
-    // backgroundColor: 'pink',
     backgroundColor: 'white',
     marginBottom: 20,
-
-    // height: 150,
   },
 });
 

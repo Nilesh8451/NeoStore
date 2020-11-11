@@ -7,7 +7,6 @@ function OrderResponse(props) {
     <View
       style={{
         flex: 1,
-        //  backgroundColor: 'yellow'
       }}>
       <View style={{alignItems: 'center', width: '100%', marginTop: 70}}>
         <Text style={{fontSize: 24, fontWeight: 'bold'}}>
@@ -30,8 +29,6 @@ function OrderResponse(props) {
           color={'#2874F0'}
           fontSize={14}
           paddingHorizontal={20}
-          // 2874F0
-          // FF0000
           onPress={() => {
             props.navigation.navigate('Home');
           }}

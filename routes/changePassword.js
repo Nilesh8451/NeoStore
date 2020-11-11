@@ -46,8 +46,6 @@ function ChangePassword(props) {
   const [CPEyeStyle, setCPEyeStyle] = useState('eye-slash');
   const [loadingAPI, setLoadingAPI] = useState(false);
 
-  // console.log(props.route.params.token);
-
   const handleOPasswordEyeClick = () => {
     setSecureOldPassword(!secureOldPassword);
     if (OPEyeStyle === 'eye-slash') {
@@ -96,7 +94,6 @@ function ChangePassword(props) {
         Toast.show('Your Password Changed Successfully', Toast.LONG);
         setLoadingAPI(false);
         props.navigation.popToTop();
-        action.resetForm();
       })
       .catch((e) => {
         setLoadingAPI(false);
@@ -137,8 +134,6 @@ function ChangePassword(props) {
                 }}
                 validationSchema={mySchema}
                 onSubmit={(values, action) => {
-                  // console.log(values);
-
                   changeUserPassword(values, action);
                 }}>
                 {(formikProps) => (
@@ -177,7 +172,6 @@ function ChangePassword(props) {
                             style={{
                               position: 'absolute',
                               right: 13,
-                              //   paddingTop: 18,
                               top: 35,
                               opacity: 0.6,
                             }}
@@ -293,7 +287,6 @@ function ChangePassword(props) {
                           <View style={styles.button}>
                             <FlatButton
                               title="Update Password"
-                              // color="#f01d71"
                               disabled={!formikProps.isValid}
                               color={!formikProps.isValid ? 'gray' : '#2874F0'}
                               onPress={formikProps.handleSubmit}
@@ -326,25 +319,19 @@ const styles = StyleSheet.create({
     width: '90%',
     maxWidth: 600,
     justifyContent: 'center',
-    // alignItems: 'center',
     marginTop: 35,
     marginBottom: 50,
-    // backgroundColor: 'red',
   },
   companyName: {
     textAlign: 'center',
     fontSize: 40,
     color: 'black',
-    // backgroundColor: 'pink',
     fontWeight: 'bold',
     marginTop: 10,
   },
 
   card: {
-    // marginTop: 20,
     marginTop: -10,
-    // backgroundColor: 'blue',
-    // marginHorizontal: 20,
   },
   cardContent: {
     marginHorizontal: 15,
@@ -355,7 +342,6 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    // marginTop: 10,
     borderColor: 'gray',
     padding: 12,
     fontSize: 16,
@@ -383,13 +369,10 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     marginTop: 25,
   },
-  button: {
-    // marginRight: 20,
-  },
+  button: {},
   oppositeBut: {},
   errorText: {
     color: 'red',
-    // marginBottom: 10,
     marginTop: 5,
     marginLeft: 5,
     textTransform: 'capitalize',
@@ -398,13 +381,11 @@ const styles = StyleSheet.create({
   goToAccountView: {
     width: '100%',
     marginTop: 15,
-    // backgroundColor: 'yellow',
     flexDirection: 'row',
     justifyContent: 'center',
   },
   goToAccountInnerView: {
     width: '85%',
-    // backgroundColor: 'red',
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',

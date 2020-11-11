@@ -54,19 +54,19 @@ export const login = (user) => {
         pass: user.password,
       })
       .then((res) => {
+        // console.log("Login Success Response ",res);
         storeData(res.data);
-        // console.log(res);
         dispatch({type: LOGIN_SUCCESS, data: res.data});
         Toast.show('Successfully Login', Toast.LONG);
-        // getUserCartData(res.data.token);
       })
       .catch((e) => {
-        console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA ', e.response);
+        // console.log('Login Error ', e.response);
         if (e.response?.data?.message == undefined) {
           Alert.alert('OPPS!', 'Something went wrong, Please try again later!');
         } else {
           Alert.alert('OOPS!', e.response.data.message);
         }
+
         dispatch({type: LOGIN_FAILURE, data: e});
       });
   };
@@ -77,10 +77,7 @@ const removeData = async () => {
   try {
     await AsyncStorage.removeItem('userInfo');
     await AsyncStorage.setItem('userCartData', JSON.stringify(data));
-    // console.log('Removed Data');
-  } catch (e) {
-    // console.log(e);
-  }
+  } catch (e) {}
 };
 
 export const signOut = () => {
@@ -116,12 +113,12 @@ export const getCustomerAddress = (token) => {
         },
       })
       .then((res) => {
-        // console.log('Inside Action', res.data);
+        // console.log('Get User Address Response ', res.data);
         dispatch({type: GET_USERADDRESS_SUC, data: res.data.customer_address});
         //
       })
       .catch((e) => {
-        // console.log(e, e.response);
+        // console.log("Get User Address Error ",e, e.response);
         dispatch({type: GET_USERADDRESS_FAI});
       });
   };
@@ -148,7 +145,7 @@ export const getUserCartData = (token) => {
         },
       })
       .then((res) => {
-        // console.log('Success', res.data);
+        // console.log('Get User Cart Data Response ', res.data);
         if (
           res.data.message !=
           'Your cart is empty. Please, first add products on your cart'
@@ -160,20 +157,18 @@ export const getUserCartData = (token) => {
             return dataobj;
           });
 
-          // console.log('Change Cart Format', cartData);
           storeCartData(cartData);
 
           dispatch({type: GET_USER_CART, data: cartData});
         }
       })
       .catch((e) => {
-        // console.log('Error', e, e.response);
+        // console.log('Get User Cart Data Error ', e, e.response);
       });
   };
 };
 
 export const addProductToCart = (product) => {
-  // console.log('Product To Cart', product);
   product.total = product.product_cost;
   product.quantity = 1;
   return {type: ADD_PRODUCT_TO_CART, data: product};
@@ -209,14 +204,14 @@ export const deleteProductFromCart = (productId, token) => {
         },
       })
       .then((res) => {
-        // console.log('Delete Success Res ', res);
+        // console.log('Delete Customer Cart Response ', res);
         dispatch({
           type: DELETE_PRODUCT_FROM_CART,
           data: productId,
         });
       })
       .catch((e) => {
-        // console.log('Delete Error ', e, e.response);
+        // console.log('Delete Customer Cart Error ', e, e.response);
         dispatch({
           type: DELETE_PRODUCT_FROM_CART,
           data: productId,
@@ -226,8 +221,6 @@ export const deleteProductFromCart = (productId, token) => {
 };
 
 export const addProductToCartCheckout = (cartData, token) => {
-  // console.log('Cart Data ', cartData, token);
-
   const cart = [...cartData];
 
   cart.push({flag: 'logout'});
@@ -240,21 +233,19 @@ export const addProductToCartCheckout = (cartData, token) => {
         },
       })
       .then((res) => {
-        // console.log('Inside Cart Action', res);
+        // console.log('Add Product To Cart Checkout Response ', res);
         dispatch({
           type: ADD_PRODUCT_TO_CART_CHECKOUT,
           data: res,
         });
       })
       .catch((e) => {
-        // console.log('cart Error', e, e.response);
+        // console.log('Add Product To Cart Checkout Error', e, e.response);
       });
   };
 };
 
 export const buyProduct = () => {
-  // console.log('This is ---');
-
   return {type: BUY_PRODUCT};
 };
 
@@ -267,14 +258,14 @@ export const getCustomerOrderDetails = (token) => {
         },
       })
       .then((res) => {
-        // console.log('This is i want', res.data.product_details);
+        // console.log('Get Customer Order Detail Response ', res.data.product_details);
         dispatch({
           type: GET_USER_ORDER_DETAILS,
           data: res.data.product_details,
         });
       })
       .catch((e) => {
-        console.log('This is error', e, e.response);
+        // console.log('Get Customer Order Detail Error', e, e.response);
         dispatch({type: PROFILE_ERROR});
       });
   };

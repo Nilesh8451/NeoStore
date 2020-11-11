@@ -14,11 +14,9 @@ import {getCustomerOrderDetails} from '../redux/user/userAction';
 import SomethingWrong from './somethingWentWrong';
 
 function Profile(props) {
-  // console.log('User Info', props.user, props);
   const userInfo = props.user;
 
   if (props.user?.token === undefined) {
-    // console.log('Going Home');
     props.navigation.navigate('Home');
   }
 
@@ -69,7 +67,6 @@ function Profile(props) {
             <FontAwesome5
               name={'phone-alt'}
               color={'black'}
-              // backgroundColor="black"
               solid
               size={18}
               style={{opacity: 0.6}}
@@ -89,7 +86,6 @@ function Profile(props) {
             <FontAwesome5
               name={'envelope'}
               color={'black'}
-              // backgroundColor="black"
               solid
               size={18}
               style={{opacity: 0.6}}
@@ -103,7 +99,6 @@ function Profile(props) {
         <View
           style={{
             width: '100%',
-            // backgroundColor: 'red',
             height: 75,
             borderTopWidth: 0.4,
             borderBottomWidth: 0.4,
@@ -151,7 +146,6 @@ function Profile(props) {
               style={{
                 flexDirection: 'row',
                 paddingHorizontal: 30,
-                // backgroundColor: 'yellow',
                 alignItems: 'center',
                 paddingVertical: 10,
                 borderBottomWidth: 0.5,
@@ -191,7 +185,6 @@ function Profile(props) {
               style={{
                 flexDirection: 'row',
                 paddingHorizontal: 30,
-                // backgroundColor: 'yellow',
                 alignItems: 'center',
                 paddingVertical: 10,
                 borderBottomWidth: 0.5,
@@ -235,7 +228,6 @@ function Profile(props) {
               style={{
                 flexDirection: 'row',
                 paddingHorizontal: 30,
-                //   backgroundColor: 'yellow',
                 alignItems: 'center',
                 paddingVertical: 10,
                 borderBottomWidth: 0.5,
@@ -279,7 +271,6 @@ function Profile(props) {
               style={{
                 flexDirection: 'row',
                 paddingHorizontal: 30,
-                //   backgroundColor: 'yellow',
                 alignItems: 'center',
                 paddingVertical: 10,
                 borderBottomWidth: 0.5,
@@ -321,7 +312,6 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingVertical: 25,
     paddingHorizontal: 20,
-    // backgroundColor: 'yellow',
   },
 });
 

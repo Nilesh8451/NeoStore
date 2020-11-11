@@ -57,7 +57,7 @@ function ProductDetail({user, addToCart, navigation, route}) {
         setProductCost(res);
       })
       .catch((e) => {
-        // console.log(e, e.response);
+        // console.log("Get Product By Product Id Error ",e, e.response);
         setError('Something Went Wrong, Please Try Again Later');
       });
   }, []);
@@ -114,7 +114,7 @@ function ProductDetail({user, addToCart, navigation, route}) {
                   marginTop: 10,
                   color: '#EF5B3E',
                 }}>
-                {/* {myProduct?.product_cost} */}₹ {productCost}
+                ₹ {productCost}
               </Text>
 
               <View
@@ -196,11 +196,7 @@ function ProductDetail({user, addToCart, navigation, route}) {
             title="Shop Now"
             disabled={!true}
             color={!true ? 'gray' : '#2874F0'}
-            onPress={() => {
-              // navigation.navigate('OrderSummary', {
-              //   product: productArray,
-              // });
-            }}
+            onPress={() => {}}
           />
         </View>
 
@@ -236,7 +232,6 @@ function ProductDetail({user, addToCart, navigation, route}) {
               disabled={!true}
               color={!true ? 'gray' : '#2874F0'}
               onPress={() => {
-                // console.log('Submit Rating With Rating Of', ratingValue);
                 setOpenModal(false);
 
                 axios

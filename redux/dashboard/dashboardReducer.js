@@ -25,7 +25,6 @@ const dashBoardReducer = (state = initialState, action) => {
     case GETALLCATEGORIES_SUCCESS:
       return {
         ...state,
-        // isLoading: false,
         error: null,
         categories: action.data.category_details,
       };

@@ -19,7 +19,7 @@ export const getAllCategoriesData = () => {
     axios
       .get(`${baseUrl}/${getAllCategories}`)
       .then((res) => {
-        // console.log(res);
+        // console.log('Category Response ',res);
         dispatch({type: GETALLCATEGORIES_SUCCESS, data: res.data});
       })
       .catch((e) => {
@@ -27,7 +27,7 @@ export const getAllCategoriesData = () => {
           type: GETALLCATEGORIES_FAILURE,
           data: 'Something Went Wrong, Please Try Again Later',
         });
-        // console.log('Category', e, e.response);
+        // console.log('Category Error', e, e.response);
       });
   };
 };
@@ -38,7 +38,7 @@ export const getDefaultTopRatingProducts = () => {
     axios
       .get(`${baseUrl}/${defaultTopRatingProduct}`)
       .then((res) => {
-        // console.log(res);
+        // console.log("Top Rated Product Response",res);
         dispatch({type: GETTOPRATINGPRODUCT_SUCCESS, data: res.data});
       })
       .catch((e) => {
@@ -46,7 +46,7 @@ export const getDefaultTopRatingProducts = () => {
           type: GETTOPRATINGPRODUCT_FAILURE,
           data: 'Something Went Wrong, Please Try Again Later',
         });
-        // console.log('Category', e, e.response);
+        // console.log('Top Rated Product Error', e, e.response);
       });
   };
 };

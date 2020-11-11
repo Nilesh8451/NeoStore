@@ -41,9 +41,6 @@ const placeSchema = yup.object({
 });
 
 function EditAddress(props) {
-  // console.log(props.route.params.address);
-  // console.log(props.route.params.token);
-
   const addressObj = props.route.params.address;
 
   return (
@@ -61,8 +58,6 @@ function EditAddress(props) {
               }}
               validationSchema={placeSchema}
               onSubmit={(values, action) => {
-                // console.log(values);
-
                 axios
                   .put(
                     `${baseUrl}/${updateUserAddress}`,
@@ -87,7 +82,7 @@ function EditAddress(props) {
                     props.navigation.goBack();
                   })
                   .catch((e) => {
-                    // console.log('error', e, e.response);
+                    // console.log('Edit Address Error', e, e.response);
                   });
               }}>
               {(formikProps) => (
@@ -262,7 +257,6 @@ function EditAddress(props) {
                         <View style={styles.button}>
                           <FlatButton
                             title="Save Changes"
-                            // color="#f01d71"
                             disabled={!formikProps.isValid}
                             color={!formikProps.isValid ? 'gray' : '#2874F0'}
                             onPress={formikProps.handleSubmit}
@@ -294,25 +288,19 @@ const styles = StyleSheet.create({
     width: '90%',
     maxWidth: 600,
     justifyContent: 'center',
-    // alignItems: 'center',
     marginTop: 35,
     marginBottom: 50,
-    // backgroundColor: 'red',
   },
   companyName: {
     textAlign: 'center',
     fontSize: 40,
     color: 'black',
-    // backgroundColor: 'pink',
     fontWeight: 'bold',
     marginTop: 10,
   },
 
   card: {
-    // marginTop: 20,
     marginTop: -10,
-    // backgroundColor: 'blue',
-    // marginHorizontal: 20,
   },
   cardContent: {
     marginHorizontal: 15,
@@ -323,7 +311,6 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    // marginTop: 10,
     borderColor: 'gray',
     padding: 12,
     fontSize: 16,
@@ -351,13 +338,10 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     marginTop: 25,
   },
-  button: {
-    // marginRight: 20,
-  },
+  button: {},
   oppositeBut: {},
   errorText: {
     color: 'red',
-    // marginBottom: 10,
     marginTop: 5,
     marginLeft: 5,
     textTransform: 'capitalize',
@@ -366,13 +350,11 @@ const styles = StyleSheet.create({
   goToAccountView: {
     width: '100%',
     marginTop: 15,
-    // backgroundColor: 'yellow',
     flexDirection: 'row',
     justifyContent: 'center',
   },
   goToAccountInnerView: {
     width: '85%',
-    // backgroundColor: 'red',
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',

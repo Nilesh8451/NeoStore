@@ -69,7 +69,7 @@ function ViewProduct({navigation, route}) {
         setIsLoading(false);
       })
       .catch((e) => {
-        // console.log('Error on Common Products', e, e.response);
+        // console.log('Common Products Error ', e, e.response);
         setError('Something Went Wrong');
         setIsLoading(false);
       });
@@ -82,7 +82,7 @@ function ViewProduct({navigation, route}) {
         setCategories(res.data.category_details);
       })
       .catch((e) => {
-        // console.log('Error Cate', e, e.response);
+        // console.log('Get All Category Error ', e, e.response);
       });
   };
 
@@ -93,7 +93,7 @@ function ViewProduct({navigation, route}) {
         setColors(res.data.color_details);
       })
       .catch((e) => {
-        // console.log('Error Col', e, e.response);
+        // console.log('Get All Color Error ', e, e.response);
       });
   };
 
@@ -124,7 +124,7 @@ function ViewProduct({navigation, route}) {
         }
       })
       .catch((e) => {
-        // console.log('Filter Error', e, e.response);
+        // console.log('Filter Products Error ', e, e.response);
         setCommonPro({});
         setDisplayProducts([]);
         setBatch(1);
@@ -193,7 +193,7 @@ function ViewProduct({navigation, route}) {
         }
       })
       .catch((e) => {
-        // console.log('Cate Filter Error', e, e.response);
+        // console.log('Chip Clicked Error ', e, e.response);
         setCommonPro({});
         setDisplayProducts([]);
       });
@@ -238,19 +238,16 @@ function ViewProduct({navigation, route}) {
         <View
           style={{
             flex: 1,
-            // backgroundColor: 'yellow',
             marginHorizontal: 10,
             marginVertical: 10,
           }}>
           <View
             style={{
-              // backgroundColor: 'yellow',
               alignItems: 'center',
             }}>
             <View
               style={{
                 width: '100%',
-                // backgroundColor: 'pink',
                 flexDirection: 'row',
                 justifyContent: 'center',
                 flexWrap: 'wrap',
@@ -260,7 +257,6 @@ function ViewProduct({navigation, route}) {
                   text={categoryVal}
                   onClick={() => {
                     handleChipClose('Category', '', colorCode);
-                    // handleSelectedCategoryClose();
                   }}
                 />
               ) : null}
@@ -270,7 +266,6 @@ function ViewProduct({navigation, route}) {
                   color={colorVal}
                   onClick={() => {
                     handleChipClose('Color', categoryCode, '');
-                    // handleSelectedColorClose();
                   }}
                 />
               ) : null}
@@ -360,7 +355,7 @@ function ViewProduct({navigation, route}) {
                                   color: 'white',
                                   fontWeight: 'bold',
                                 }}>
-                                {/* {item.product_cost} */}₹ {res}
+                                ₹ {res}
                               </Text>
                             </View>
                           </View>
@@ -375,7 +370,6 @@ function ViewProduct({navigation, route}) {
             <View
               style={{
                 flex: 1,
-                // backgroundColor: 'yellow',
                 alignItems: 'center',
                 paddingTop: 80,
               }}>
@@ -410,7 +404,7 @@ function ViewProduct({navigation, route}) {
           setClickedVal={() => handleChipClose('Category', '', colorCode)}>
           <View
             style={{
-              height: 130,
+              height: 140,
               borderWidth: 1,
               borderColor: 'gray',
               marginTop: 10,
@@ -517,8 +511,7 @@ function ViewProduct({navigation, route}) {
               setClickedVal={() => handleChipClose('Color', categoryCode, '')}>
               <View
                 style={{
-                  height: 130,
-                  // backgroundColor: 'pink',
+                  height: 140,
                   borderWidth: 1,
                   borderColor: 'gray',
                   marginTop: 10,
@@ -546,7 +539,6 @@ function ViewProduct({navigation, route}) {
                           style={{
                             width: !(colorVal === color.color_code) ? 45 : 50,
                             height: !(colorVal === color.color_code) ? 25 : 30,
-                            // backgroundColor: 'rgba(0,0,0,0.1)',
                             backgroundColor: color.color_code,
                             marginRight: 10,
                             marginBottom: 10,
@@ -606,7 +598,7 @@ function ViewProduct({navigation, route}) {
               setClickedCode={() => {}}>
               <View
                 style={{
-                  height: 130,
+                  height: 120,
                   borderWidth: 1,
                   borderColor: 'gray',
                   marginTop: 10,
@@ -635,7 +627,6 @@ function ViewProduct({navigation, route}) {
                         <View
                           style={{
                             width: '90%',
-
                             backgroundColor:
                               costVal === type ? '#2874F0' : 'rgba(0,0,0,0.1)',
                             marginBottom: 10,
@@ -693,7 +684,6 @@ function ViewProduct({navigation, route}) {
                         }
                       })
                       .catch((e) => {
-                        // console.log('Cate Filter Error', e, e.response);
                         setCommonPro({});
                         setDisplayProducts([]);
 
@@ -745,7 +735,7 @@ function ViewProduct({navigation, route}) {
                     },
                   })
                   .then((res) => {
-                    // console.log('Rate res with ', res);
+                    // console.log('Filter With Rating Response ', res);
                     if (res.data.message != 'No Product is available') {
                       setCommonPro(res.data);
                       setDisplayProducts(res.data.product_details.slice(0, 5));
@@ -762,7 +752,7 @@ function ViewProduct({navigation, route}) {
                     }
                   })
                   .catch((e) => {
-                    // console.log('Rate Filter Error', e, e.response);
+                    // console.log('Filter With Rating Error ', e, e.response);
                     setCommonPro({});
                     setDisplayProducts([]);
                     setBatch(1);
@@ -822,7 +812,6 @@ const styles = StyleSheet.create({
   bottomActionContentBox: {
     width: '24%',
     height: '100%',
-
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',

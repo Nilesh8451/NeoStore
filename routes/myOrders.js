@@ -7,8 +7,6 @@ import {
   Image,
   ScrollView,
 } from 'react-native';
-import axios from 'axios';
-import {baseUrl, getCustOrderDetails} from '../baseUrl';
 import LottieView from 'lottie-react-native';
 import {connect} from 'react-redux';
 import moment from 'moment';
@@ -51,7 +49,6 @@ function MyOrders(props) {
             <View
               style={{
                 flex: 1,
-                // backgroundColor: 'yellow',
                 marginHorizontal: 10,
                 marginVertical: 10,
               }}>
@@ -69,7 +66,6 @@ function MyOrders(props) {
                   <TouchableWithoutFeedback
                     key={index}
                     onPress={() => {
-                      // console.log('Clicked on Card');
                       props.navigation.navigate('OrderDetail', {
                         order_id: item.product_details[0].order_id,
                         order: item,
@@ -79,12 +75,9 @@ function MyOrders(props) {
                       <View style={styles.productCard}>
                         <View style={styles.cardDetail}>
                           <Text
-                            // numberOfLines={1}
                             style={{
                               fontSize: 22,
-                              //   marginRight: 30,
                               fontWeight: 'bold',
-                              // backgroundColor: 'red',
                             }}>
                             ID: {item.product_details[0].order_id}
                           </Text>
@@ -92,7 +85,6 @@ function MyOrders(props) {
                             style={{
                               marginTop: -15,
                               width: '93%',
-                              //   backgroundColor: 'red',
                               flexDirection: 'row',
                               justifyContent: 'flex-end',
                               alignItems: 'center',
@@ -100,11 +92,8 @@ function MyOrders(props) {
                             <Text
                               style={{
                                 fontSize: 20,
-                                // color: '#2874F0',
                                 color: '#EF5B3E',
-                                // marginTop: 10,
                               }}>
-                              {/* {item.product_details[0].total_productCost} */}
                               ₹ {totalCartCost}
                             </Text>
                           </View>
@@ -117,7 +106,6 @@ function MyOrders(props) {
                             {moment(item.product_details[0].createdAt).format(
                               'llll',
                             )}
-                            {/* {item.product_details[0].createdAt} */}
                           </Text>
                         </View>
                       </View>
@@ -138,7 +126,6 @@ function MyOrders(props) {
             marginHorizontal: 10,
             marginVertical: 10,
             paddingVertical: 30,
-            // justifyContent: 'center',
             alignItems: 'center',
           }}>
           <Image
@@ -162,11 +149,9 @@ function MyOrders(props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: 'orange',
   },
 
   productCardContainer: {
-    // backgroundColor: 'white',
     marginBottom: 20,
   },
   productCardContent: {
@@ -176,27 +161,20 @@ const styles = StyleSheet.create({
   },
   productCard: {
     paddingVertical: 15,
-
-    // backgroundColor: 'pink',
     flexDirection: 'row',
   },
   cardImage: {
     width: '100%',
     height: '100%',
-    // marginLeft: 10,
   },
   cardDetail: {
-    // backgroundColor: 'red',
     width: '90%',
     marginLeft: 20,
   },
   cartItemAction: {
-    // backgroundColor: 'yellow',
     width: 110,
     height: 36,
-    // paddingHorizontal: 20,
     flexDirection: 'row',
-    // justifyContent: 'space-between',
     alignItems: 'center',
   },
 });

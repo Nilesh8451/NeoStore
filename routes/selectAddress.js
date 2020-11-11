@@ -5,11 +5,11 @@ import RadioForm from 'react-native-simple-radio-button';
 import {connect} from 'react-redux';
 import axios from 'axios';
 import {baseUrl, updateUserAddress} from '../baseUrl';
+import FlatButton from '../shared/button';
 
 function SelectAddress(props) {
   useEffect(() => {
     if (props.userAdd?.length > 0) {
-      console.log(props.userAdd);
       props.userAdd.map((add, ind) => {
         let address = `${add.address} ${add.city}, ${
           add.state
@@ -32,32 +32,42 @@ function SelectAddress(props) {
     <View
       style={{
         flex: 1,
-        //  backgroundColor: 'pink'
       }}>
       {radioProps.length == 0 ? (
-        <View>
-          <View
+        <View
+          style={{
+            flex: 1,
+            marginVertical: 40,
+            paddingVertical: 30,
+            alignItems: 'center',
+          }}>
+          <Image
+            source={require('../assets/images/emptycart.png')}
+            style={{width: 70, height: 70, opacity: 0.7}}
+          />
+          <Text
             style={{
-              flex: 1,
-              marginVertical: 40,
-              paddingVertical: 30,
-              alignItems: 'center',
+              fontSize: 18,
+              marginTop: 16,
+              fontWeight: 'bold',
+              textTransform: 'capitalize',
+              opacity: 0.8,
+              marginBottom: 10,
             }}>
-            <Image
-              source={require('../assets/images/emptycart.png')}
-              style={{width: 70, height: 70, opacity: 0.7}}
-            />
-            <Text
-              style={{
-                fontSize: 18,
-                marginTop: 16,
-                fontWeight: 'bold',
-                textTransform: 'capitalize',
-                opacity: 0.8,
-              }}>
-              YOU HAVEN'T ADDED ANY ADDRESS YET
-            </Text>
-          </View>
+            YOU HAVEN'T ADDED ANY ADDRESS YET
+          </Text>
+
+          <FlatButton
+            title="Add Address"
+            disabled={false}
+            paddingVertical={6}
+            paddingHorizontal={20}
+            fontSize={14}
+            color={'#2874F0'}
+            onPress={() => {
+              props.navigation.navigate('ProfileDrawer');
+            }}
+          />
         </View>
       ) : (
         <ScrollView
@@ -68,7 +78,6 @@ function SelectAddress(props) {
             style={{
               width: '90%',
               marginTop: 30,
-              // backgroundColor: 'yellow',
             }}>
             <RadioForm
               style={{}}
@@ -77,8 +86,6 @@ function SelectAddress(props) {
               radio_props={radioProps}
               initial={-1}
               onPress={(value, ind) => {
-                console.log(value, props.userAdd[ind], ind);
-
                 axios
                   .put(
                     `${baseUrl}/${updateUserAddress}`,
@@ -98,12 +105,12 @@ function SelectAddress(props) {
                     },
                   )
                   .then((res) => {
-                    // console.log('Update', res);
+                    // console.log('Update User Address Response ', res);
                     props.route.params.setSelectedAddress(props.userAdd[ind]);
                     props.navigation.goBack();
                   })
                   .catch((e) => {
-                    // console.log('update error', e, e.response);
+                    // console.log('Update User Address Error', e, e.response);
                   });
               }}
             />
