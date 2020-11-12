@@ -16,6 +16,7 @@ import FlatButton from '../shared/button';
 import {connect} from 'react-redux';
 import {login, getUserCartData} from '../redux/user/userAction';
 import LottieView from 'lottie-react-native';
+import {globalStyles} from '../shared/globalStyle';
 
 const loginSchema = yup.object({
   email: yup.string().required().email(),
@@ -67,7 +68,7 @@ function Login({
             paddingVertical: 60,
             backgroundColor: 'white',
           }}>
-          <View style={styles.container}>
+          <View style={globalStyles.authContainer}>
             <Formik
               initialValues={{email: '', password: ''}}
               validationSchema={loginSchema}
@@ -76,7 +77,7 @@ function Login({
               }}>
               {(formikProps) => (
                 <View style={styles.mainDiv}>
-                  <Text style={styles.companyName}>
+                  <Text style={globalStyles.companyName}>
                     Neo
                     <Text style={{color: '#FF0000', color: '#2874F0'}}>
                       STORE
@@ -99,20 +100,23 @@ function Login({
                           onPress={() => {}}
                         />
                         <TextInput
-                          style={styles.input}
+                          style={globalStyles.input}
                           placeholder="Email"
                           value={formikProps.values.email}
                           onChangeText={formikProps.handleChange('email')}
                           onBlur={formikProps.handleBlur('email')}
                         />
 
-                        {formikProps.touched.email &&
-                          formikProps.errors.email && (
-                            <Text style={styles.errorText}>
-                              {formikProps.touched.email &&
-                                formikProps.errors.email}
-                            </Text>
-                          )}
+                        {formikProps.touched.email && formikProps.errors.email && (
+                          <Text
+                            style={{
+                              ...globalStyles.errorText,
+                              marginBottom: 10,
+                            }}>
+                            {formikProps.touched.email &&
+                              formikProps.errors.email}
+                          </Text>
+                        )}
                       </View>
 
                       <View>
@@ -131,7 +135,7 @@ function Login({
                             onPress={() => {}}
                           />
                           <TextInput
-                            style={styles.input}
+                            style={globalStyles.input}
                             placeholder="Password"
                             secureTextEntry={securePassword}
                             value={formikProps.values.password}
@@ -155,14 +159,18 @@ function Login({
 
                         {formikProps.touched.password &&
                           formikProps.errors.password && (
-                            <Text style={styles.errorText}>
+                            <Text
+                              style={{
+                                ...globalStyles.errorText,
+                                marginBottom: 10,
+                              }}>
                               {formikProps.touched.password &&
                                 formikProps.errors.password}
                             </Text>
                           )}
                       </View>
 
-                      <View style={styles.buttonDiv}>
+                      <View style={globalStyles.authButtonDiv}>
                         <View style={styles.button}>
                           <FlatButton
                             title="Login"
@@ -219,7 +227,7 @@ function Login({
   ) : (
     <View
       style={{
-        ...styles.container,
+        ...globalStyles.authContainer,
         justifyContent: 'center',
         alignItems: 'center',
       }}>
@@ -237,12 +245,6 @@ function Login({
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-  },
   mainDiv: {
     flex: 1,
     height: '93%',
@@ -253,12 +255,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     paddingVertical: 20,
   },
-  companyName: {
-    textAlign: 'center',
-    fontSize: 35,
-    color: 'black',
-    fontWeight: 'bold',
-  },
 
   card: {
     marginHorizontal: 10,
@@ -267,47 +263,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
     marginVertical: 40,
   },
-  cardHeading: {
-    fontSize: 20,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: 'gray',
-    padding: 12,
-    fontSize: 16,
-    paddingLeft: 43,
-    paddingRight: 40,
-    borderRadius: 4,
-  },
-  inputImage: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: 'gray',
-    marginTop: 10,
-  },
-  inputImageBox: {
-    backgroundColor: 'gray',
-    padding: 7,
-    marginRight: 10,
-  },
-  inputHeading: {
-    marginTop: 10,
-    fontSize: 17,
-  },
-  buttonDiv: {
-    flexDirection: 'column',
-    marginTop: 25,
-  },
+
   button: {},
   oppositeBut: {},
-  errorText: {
-    color: 'red',
-    marginBottom: 10,
-    marginTop: 5,
-    marginLeft: 5,
-    textTransform: 'capitalize',
-  },
 
   createAccountView: {
     width: '100%',

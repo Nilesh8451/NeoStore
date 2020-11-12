@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {View, Text, StyleSheet, ScrollView, Image} from 'react-native';
 import {baseUrl} from '../baseUrl';
 
@@ -36,20 +36,7 @@ function OrderDetail(props) {
               otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + lastThree;
 
             return (
-              <View
-                key={index}
-                style={{
-                  flex: 1,
-                  width: '90%',
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  backgroundColor: 'white',
-                  marginTop: 15,
-                  paddingVertical: 10,
-                  paddingTop: 0,
-                  paddingHorizontal: 5,
-                  borderRadius: 6,
-                }}>
+              <View key={index} style={styles.orderDetailMainDiv}>
                 <View style={styles.sliderContainer}>
                   <Image
                     source={{
@@ -77,19 +64,7 @@ function OrderDetail(props) {
                       {product.quantity}
                     </Text>
                   </Text>
-                  <Text
-                    style={{
-                      fontSize: 18,
-                      fontWeight: 'bold',
-                      color: '#EF5B3E',
-                      flexDirection: 'row',
-                      textAlign: 'right',
-                      justifyContent: 'flex-end',
-                      marginRight: 25,
-                      marginBottom: 5,
-                    }}>
-                    ₹ {productCost}
-                  </Text>
+                  <Text style={styles.productCostStyle}>₹ {productCost}</Text>
 
                   <View
                     style={{
@@ -101,21 +76,8 @@ function OrderDetail(props) {
             );
           })}
 
-          <View
-            style={{
-              width: '90%',
-              marginTop: 30,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <View
-              style={{
-                width: '95%',
-                backgroundColor: 'white',
-                paddingVertical: 20,
-                marginBottom: 30,
-                paddingHorizontal: 20,
-              }}>
+          <View style={styles.subTotalMainDiv}>
+            <View style={styles.subTotalInnerDiv}>
               <View
                 style={{
                   flexDirection: 'row',
@@ -152,19 +114,7 @@ function OrderDetail(props) {
         </View>
       </ScrollView>
 
-      <View
-        style={{
-          position: 'absolute',
-          bottom: 0,
-          height: 55,
-          backgroundColor: 'white',
-          width: '100%',
-          flexDirection: 'row',
-          justifyContent: 'space-evenly',
-          alignItems: 'center',
-          borderTopWidth: 0.6,
-          borderTopColor: 'gray',
-        }}>
+      <View style={styles.floatingBottomView}>
         <Text style={{fontSize: 19, fontWeight: 'bold', marginRight: 30}}>
           Total
         </Text>
@@ -196,6 +146,54 @@ const styles = StyleSheet.create({
   productContent: {
     marginTop: 15,
     flex: 0.95,
+  },
+  orderDetailMainDiv: {
+    flex: 1,
+    width: '90%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: 'white',
+    marginTop: 15,
+    paddingVertical: 10,
+    paddingTop: 0,
+    paddingHorizontal: 5,
+    borderRadius: 6,
+  },
+  productCostStyle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#EF5B3E',
+    flexDirection: 'row',
+    textAlign: 'right',
+    justifyContent: 'flex-end',
+    marginRight: 25,
+    marginBottom: 5,
+  },
+
+  subTotalMainDiv: {
+    width: '90%',
+    marginTop: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  subTotalInnerDiv: {
+    width: '95%',
+    backgroundColor: 'white',
+    paddingVertical: 20,
+    marginBottom: 30,
+    paddingHorizontal: 20,
+  },
+  floatingBottomView: {
+    position: 'absolute',
+    bottom: 0,
+    height: 55,
+    backgroundColor: 'white',
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+    borderTopWidth: 0.6,
+    borderTopColor: 'gray',
   },
 });
 

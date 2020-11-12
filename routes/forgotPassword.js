@@ -15,6 +15,7 @@ import * as yup from 'yup';
 import FlatButton from '../shared/button';
 import axios from 'axios';
 import {baseUrl, forgotPassword} from '../baseUrl';
+import {globalStyles} from '../shared/globalStyle';
 
 const mySchema = yup.object({
   email: yup.string().required().min(4).email(),
@@ -32,7 +33,7 @@ function ForgotPassword({navigation}) {
     <View style={{flex: 1, backgroundColor: 'white'}}>
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <ScrollView>
-          <View style={styles.container}>
+          <View style={globalStyles.authContainer}>
             <Formik
               initialValues={{
                 email: '',
@@ -53,12 +54,12 @@ function ForgotPassword({navigation}) {
                   });
               }}>
               {(formikProps) => (
-                <View style={styles.mainDiv}>
-                  <Text style={styles.companyName}>
+                <View style={globalStyles.inputCardMainDiv}>
+                  <Text style={{...globalStyles.companyName, marginBottom: 25}}>
                     Neo<Text style={{color: '#2874F0'}}>STORE</Text>
                   </Text>
                   <View style={styles.card}>
-                    <View style={styles.cardContent}>
+                    <View style={globalStyles.cardContent}>
                       <View>
                         <Text
                           style={{
@@ -73,16 +74,11 @@ function ForgotPassword({navigation}) {
                           color={'black'}
                           solid
                           size={18}
-                          style={{
-                            position: 'relative',
-                            left: 13,
-                            top: 35,
-                            opacity: 0.5,
-                          }}
-                          onPress={() => handleEyeClick()}
+                          style={{...globalStyles.leftIconStyle, top: 37}}
+                          onPress={() => {}}
                         />
                         <TextInput
-                          style={styles.input}
+                          style={globalStyles.input}
                           placeholder="Enter Email"
                           value={formikProps.values.email}
                           onChangeText={formikProps.handleChange('email')}
@@ -91,13 +87,13 @@ function ForgotPassword({navigation}) {
 
                         {formikProps.touched.email &&
                           formikProps.errors.email && (
-                            <Text style={styles.errorText}>
+                            <Text style={globalStyles.errorText}>
                               {formikProps.touched.email &&
                                 formikProps.errors.email}
                             </Text>
                           )}
                       </View>
-                      <View style={styles.buttonDiv}>
+                      <View style={globalStyles.authButtonDiv}>
                         <View style={styles.button}>
                           <FlatButton
                             title="SUBMIT"
@@ -120,93 +116,12 @@ function ForgotPassword({navigation}) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    height: '100%',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-  },
-  mainDiv: {
-    flex: 1,
-    height: '100%',
-    width: '90%',
-    maxWidth: 600,
-    justifyContent: 'center',
-    marginTop: 35,
-    marginBottom: 50,
-  },
-  companyName: {
-    textAlign: 'center',
-    fontSize: 40,
-    color: 'black',
-    fontWeight: 'bold',
-    marginTop: 0,
-    marginBottom: 25,
-  },
-
   card: {
     marginTop: -10,
   },
-  cardContent: {
-    marginHorizontal: 15,
-    marginVertical: 20,
-  },
-  cardHeading: {
-    fontSize: 20,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: 'gray',
-    padding: 12,
-    fontSize: 16,
-    paddingLeft: 40,
-    paddingRight: 40,
-    borderRadius: 2,
-  },
-  inputImage: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: 'gray',
-    marginTop: 10,
-  },
-  inputImageBox: {
-    backgroundColor: 'gray',
-    padding: 7,
-    marginRight: 10,
-  },
-  inputHeading: {
-    marginTop: 10,
-    fontSize: 17,
-  },
-  buttonDiv: {
-    flexDirection: 'column',
-    marginTop: 25,
-  },
+
   button: {},
   oppositeBut: {},
-  errorText: {
-    color: 'red',
-
-    marginTop: 5,
-    marginLeft: 5,
-    textTransform: 'capitalize',
-  },
-
-  goToAccountView: {
-    width: '100%',
-    marginTop: 15,
-
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-  goToAccountInnerView: {
-    width: '85%',
-
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
 });
 
 export default ForgotPassword;

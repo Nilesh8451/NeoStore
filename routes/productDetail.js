@@ -135,15 +135,7 @@ function ProductDetail({user, addToCart, navigation, route}) {
                 Product Category -{' '}
                 <Text> {myProduct?.category_id?.category_name}</Text>
               </Text>
-              <Text
-                style={{
-                  fontSize: 20,
-                  fontWeight: 'bold',
-                  marginTop: 10,
-                  color: '#EF5B3E',
-                }}>
-                ₹ {productCost}
-              </Text>
+              <Text style={styles.productCostStyle}>₹ {productCost}</Text>
 
               <View
                 style={{
@@ -181,26 +173,7 @@ function ProductDetail({user, addToCart, navigation, route}) {
           addToCart(myProduct);
           navigation.pop();
         }}
-        containerStyle={{
-          position: 'absolute',
-          backgroundColor: '#2874F0',
-          width: 60,
-          height: 60,
-          right: 15,
-          bottom: 82,
-          justifyContent: 'center',
-          alignItems: 'center',
-          borderRadius: 30,
-          borderWidth: 0.5,
-          shadowColor: '#000',
-          shadowOffset: {
-            width: 0,
-            height: 7,
-          },
-          shadowOpacity: 0.43,
-          shadowRadius: 9.51,
-          elevation: 15,
-        }}>
+        containerStyle={styles.shoppingCartContainer}>
         <FontAwesome5
           name={'shopping-cart'}
           color="white"
@@ -210,15 +183,7 @@ function ProductDetail({user, addToCart, navigation, route}) {
         />
       </TouchableWithoutFeedback>
 
-      <View
-        style={{
-          paddingVertical: 8,
-          backgroundColor: 'white',
-          borderTopColor: 'gray',
-          borderTopWidth: 1,
-          flexDirection: 'row',
-          justifyContent: 'space-evenly',
-        }}>
+      <View style={styles.bottomActionView}>
         <View style={{width: '40%', height: '80%'}}>
           <FlatButton
             title="Share Now"
@@ -235,16 +200,7 @@ function ProductDetail({user, addToCart, navigation, route}) {
           setOpen={setOpenModal}
           title="Rate Product"
           setClickedVal={() => {}}>
-          <View
-            style={{
-              height: 110,
-              borderWidth: 1,
-              marginTop: 10,
-              paddingVertical: 10,
-              paddingVertical: 5,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
+          <View style={styles.rateProductModalView}>
             <AirbnbRating
               count={5}
               reviews={['Bad', 'OK', 'Good', 'Very Good', 'Amazing']}
@@ -353,6 +309,49 @@ const styles = StyleSheet.create({
   },
   productContent: {
     marginTop: 15,
+  },
+  productCostStyle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginTop: 10,
+    color: '#EF5B3E',
+  },
+  shoppingCartContainer: {
+    position: 'absolute',
+    backgroundColor: '#2874F0',
+    width: 60,
+    height: 60,
+    right: 15,
+    bottom: 82,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 30,
+    borderWidth: 0.5,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 7,
+    },
+    shadowOpacity: 0.43,
+    shadowRadius: 9.51,
+    elevation: 15,
+  },
+  bottomActionView: {
+    paddingVertical: 8,
+    backgroundColor: 'white',
+    borderTopColor: 'gray',
+    borderTopWidth: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+  },
+  rateProductModalView: {
+    height: 110,
+    borderWidth: 1,
+    marginTop: 10,
+    paddingVertical: 10,
+    paddingVertical: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

@@ -17,6 +17,7 @@ import Toast from 'react-native-simple-toast';
 import axios from 'axios';
 import {baseUrl, changePassword} from '../baseUrl';
 import LottieView from 'lottie-react-native';
+import {globalStyles} from '../shared/globalStyle';
 
 const mySchema = yup.object({
   oldPassword: yup
@@ -107,7 +108,7 @@ function ChangePassword(props) {
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
           <View
             style={{
-              ...styles.container,
+              ...globalStyles.authContainer,
               justifyContent: 'center',
               alignItems: 'center',
             }}>
@@ -125,7 +126,7 @@ function ChangePassword(props) {
       ) : (
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
           <ScrollView>
-            <View style={styles.container}>
+            <View style={globalStyles.authContainer}>
               <Formik
                 initialValues={{
                   oldPassword: '',
@@ -137,25 +138,20 @@ function ChangePassword(props) {
                   changeUserPassword(values, action);
                 }}>
                 {(formikProps) => (
-                  <View style={styles.mainDiv}>
+                  <View style={globalStyles.inputCardMainDiv}>
                     <View style={styles.card}>
-                      <View style={styles.cardContent}>
+                      <View style={globalStyles.cardContent}>
                         <View>
                           <FontAwesome5
                             name={'lock'}
                             color={'black'}
                             solid
                             size={18}
-                            style={{
-                              position: 'relative',
-                              left: 13,
-                              top: 35,
-                              opacity: 0.5,
-                            }}
+                            style={globalStyles.leftIconStyle}
                             onPress={() => {}}
                           />
                           <TextInput
-                            style={styles.input}
+                            style={globalStyles.input}
                             placeholder="Enter OLD Password"
                             secureTextEntry={secureOldPassword}
                             value={formikProps.values.oldPassword}
@@ -169,17 +165,12 @@ function ChangePassword(props) {
                             color={'black'}
                             solid
                             size={18}
-                            style={{
-                              position: 'absolute',
-                              right: 13,
-                              top: 35,
-                              opacity: 0.6,
-                            }}
+                            style={{...globalStyles.rightIconStyle, top: 35}}
                             onPress={() => handleOPasswordEyeClick()}
                           />
                           {formikProps.touched.oldPassword &&
                             formikProps.errors.oldPassword && (
-                              <Text style={styles.errorText}>
+                              <Text style={globalStyles.errorText}>
                                 {formikProps.touched.oldPassword &&
                                   formikProps.errors.oldPassword}
                               </Text>
@@ -192,16 +183,11 @@ function ChangePassword(props) {
                               color={'black'}
                               solid
                               size={18}
-                              style={{
-                                position: 'relative',
-                                left: 13,
-                                top: 35,
-                                opacity: 0.5,
-                              }}
+                              style={globalStyles.leftIconStyle}
                               onPress={() => handleEyeClick()}
                             />
                             <TextInput
-                              style={styles.input}
+                              style={globalStyles.input}
                               placeholder="Enter New Password"
                               secureTextEntry={securePassword}
                               value={formikProps.values.password}
@@ -216,10 +202,8 @@ function ChangePassword(props) {
                               solid
                               size={18}
                               style={{
-                                position: 'absolute',
-                                right: 13,
+                                ...globalStyles.rightIconStyle,
                                 paddingTop: 18,
-                                opacity: 0.6,
                               }}
                               onPress={() => handlePasswordEyeClick()}
                             />
@@ -227,7 +211,7 @@ function ChangePassword(props) {
 
                           {formikProps.touched.password &&
                             formikProps.errors.password && (
-                              <Text style={styles.errorText}>
+                              <Text style={globalStyles.errorText}>
                                 {formikProps.touched.password &&
                                   formikProps.errors.password}
                               </Text>
@@ -241,16 +225,11 @@ function ChangePassword(props) {
                               color={'black'}
                               solid
                               size={18}
-                              style={{
-                                position: 'relative',
-                                left: 13,
-                                top: 35,
-                                opacity: 0.5,
-                              }}
+                              style={globalStyles.leftIconStyle}
                               onPress={() => handleEyeClick()}
                             />
                             <TextInput
-                              style={styles.input}
+                              style={globalStyles.input}
                               placeholder="Enter Password Again"
                               secureTextEntry={secureCPassword}
                               value={formikProps.values.confirmPassowrd}
@@ -265,10 +244,8 @@ function ChangePassword(props) {
                               solid
                               size={18}
                               style={{
-                                position: 'absolute',
-                                right: 13,
+                                ...globalStyles.rightIconStyle,
                                 paddingTop: 18,
-                                opacity: 0.6,
                               }}
                               onPress={() => handleCPasswordEyeClick()}
                             />
@@ -276,14 +253,14 @@ function ChangePassword(props) {
 
                           {formikProps.touched.confirmPassowrd &&
                             formikProps.errors.confirmPassowrd && (
-                              <Text style={styles.errorText}>
+                              <Text style={globalStyles.errorText}>
                                 {formikProps.touched.confirmPassowrd &&
                                   formikProps.errors.confirmPassowrd}
                               </Text>
                             )}
                         </View>
 
-                        <View style={styles.buttonDiv}>
+                        <View style={globalStyles.authButtonDiv}>
                           <View style={styles.button}>
                             <FlatButton
                               title="Update Password"
@@ -307,89 +284,11 @@ function ChangePassword(props) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    height: '100%',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-  },
-  mainDiv: {
-    flex: 1,
-    height: '100%',
-    width: '90%',
-    maxWidth: 600,
-    justifyContent: 'center',
-    marginTop: 35,
-    marginBottom: 50,
-  },
-  companyName: {
-    textAlign: 'center',
-    fontSize: 40,
-    color: 'black',
-    fontWeight: 'bold',
-    marginTop: 10,
-  },
-
   card: {
     marginTop: -10,
   },
-  cardContent: {
-    marginHorizontal: 15,
-    marginVertical: 20,
-  },
-  cardHeading: {
-    fontSize: 20,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: 'gray',
-    padding: 12,
-    fontSize: 16,
-    paddingLeft: 40,
-    paddingRight: 40,
-    borderRadius: 4,
-  },
-  inputImage: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: 'gray',
-    marginTop: 10,
-  },
-  inputImageBox: {
-    backgroundColor: 'gray',
-    padding: 7,
-    marginRight: 10,
-  },
-  inputHeading: {
-    marginTop: 10,
-    fontSize: 17,
-  },
-  buttonDiv: {
-    flexDirection: 'column',
-    marginTop: 25,
-  },
   button: {},
   oppositeBut: {},
-  errorText: {
-    color: 'red',
-    marginTop: 5,
-    marginLeft: 5,
-    textTransform: 'capitalize',
-  },
-
-  goToAccountView: {
-    width: '100%',
-    marginTop: 15,
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-  goToAccountInnerView: {
-    width: '85%',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
 });
 
 export default ChangePassword;

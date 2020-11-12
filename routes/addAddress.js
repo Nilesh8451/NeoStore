@@ -17,6 +17,7 @@ import Toast from 'react-native-simple-toast';
 import axios from 'axios';
 import {addNewAddress, baseUrl} from '../baseUrl';
 import LottieView from 'lottie-react-native';
+import {globalStyles} from '../shared/globalStyle';
 
 const placeSchema = yup.object({
   address: yup.string().required(),
@@ -73,9 +74,8 @@ function AddAddress(props) {
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
           <View
             style={{
-              ...styles.container,
+              ...globalStyles.authContainer,
               justifyContent: 'center',
-              alignItems: 'center',
             }}>
             <LottieView
               source={require('../assets/json/loader2.json')}
@@ -91,7 +91,7 @@ function AddAddress(props) {
       ) : (
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
           <ScrollView>
-            <View style={styles.container}>
+            <View style={globalStyles.authContainer}>
               <Formik
                 initialValues={{
                   address: '',
@@ -105,25 +105,20 @@ function AddAddress(props) {
                   addNewUserAddress(values, action);
                 }}>
                 {(formikProps) => (
-                  <View style={styles.mainDiv}>
+                  <View style={globalStyles.inputCardMainDiv}>
                     <View style={styles.card}>
-                      <View style={styles.cardContent}>
+                      <View style={globalStyles.cardContent}>
                         <View style={{justifyContent: 'center'}}>
                           <FontAwesome5
                             name={'address-card'}
                             color={'black'}
                             solid
                             size={18}
-                            style={{
-                              position: 'relative',
-                              left: 13,
-                              top: 35,
-                              opacity: 0.5,
-                            }}
+                            style={globalStyles.leftIconStyle}
                             onPress={() => {}}
                           />
                           <TextInput
-                            style={styles.input}
+                            style={{...globalStyles.input, paddingLeft: 45}}
                             placeholder="Enter Your Address"
                             multiline
                             value={formikProps.values.address}
@@ -133,7 +128,7 @@ function AddAddress(props) {
 
                           {formikProps.touched.address &&
                             formikProps.errors.address && (
-                              <Text style={styles.errorText}>
+                              <Text style={globalStyles.errorText}>
                                 {formikProps.touched.address &&
                                   formikProps.errors.address}
                               </Text>
@@ -146,16 +141,11 @@ function AddAddress(props) {
                               color={'black'}
                               solid
                               size={18}
-                              style={{
-                                position: 'relative',
-                                left: 13,
-                                top: 35,
-                                opacity: 0.5,
-                              }}
+                              style={{...globalStyles.leftIconStyle, left: 18}}
                               onPress={() => {}}
                             />
                             <TextInput
-                              style={styles.input}
+                              style={{...globalStyles.input, paddingLeft: 45}}
                               keyboardType="number-pad"
                               placeholder="Enter Your Pin Code"
                               value={formikProps.values.pincode}
@@ -166,7 +156,7 @@ function AddAddress(props) {
 
                           {formikProps.touched.pincode &&
                             formikProps.errors.pincode && (
-                              <Text style={styles.errorText}>
+                              <Text style={globalStyles.errorText}>
                                 {formikProps.touched.pincode &&
                                   formikProps.errors.pincode}
                               </Text>
@@ -180,16 +170,11 @@ function AddAddress(props) {
                               color={'black'}
                               solid
                               size={18}
-                              style={{
-                                position: 'relative',
-                                left: 13,
-                                top: 35,
-                                opacity: 0.5,
-                              }}
+                              style={globalStyles.leftIconStyle}
                               onPress={() => {}}
                             />
                             <TextInput
-                              style={styles.input}
+                              style={{...globalStyles.input, paddingLeft: 45}}
                               placeholder="Enter Your City Name"
                               value={formikProps.values.city}
                               onChangeText={formikProps.handleChange('city')}
@@ -199,7 +184,7 @@ function AddAddress(props) {
 
                           {formikProps.touched.city &&
                             formikProps.errors.city && (
-                              <Text style={styles.errorText}>
+                              <Text style={globalStyles.errorText}>
                                 {formikProps.touched.city &&
                                   formikProps.errors.city}
                               </Text>
@@ -213,16 +198,11 @@ function AddAddress(props) {
                               color={'black'}
                               solid
                               size={18}
-                              style={{
-                                position: 'relative',
-                                left: 13,
-                                top: 35,
-                                opacity: 0.5,
-                              }}
+                              style={globalStyles.leftIconStyle}
                               onPress={() => {}}
                             />
                             <TextInput
-                              style={styles.input}
+                              style={{...globalStyles.input, paddingLeft: 45}}
                               placeholder="Enter Your State Name"
                               value={formikProps.values.state}
                               onChangeText={formikProps.handleChange('state')}
@@ -232,7 +212,7 @@ function AddAddress(props) {
 
                           {formikProps.touched.state &&
                             formikProps.errors.state && (
-                              <Text style={styles.errorText}>
+                              <Text style={globalStyles.errorText}>
                                 {formikProps.touched.state &&
                                   formikProps.errors.state}
                               </Text>
@@ -246,16 +226,11 @@ function AddAddress(props) {
                               color={'black'}
                               solid
                               size={18}
-                              style={{
-                                position: 'relative',
-                                left: 13,
-                                top: 35,
-                                opacity: 0.5,
-                              }}
+                              style={globalStyles.leftIconStyle}
                               onPress={() => {}}
                             />
                             <TextInput
-                              style={styles.input}
+                              style={{...globalStyles.input, paddingLeft: 45}}
                               placeholder="Enter Your Country Name"
                               value={formikProps.values.country}
                               onChangeText={formikProps.handleChange('country')}
@@ -265,14 +240,14 @@ function AddAddress(props) {
 
                           {formikProps.touched.country &&
                             formikProps.errors.country && (
-                              <Text style={styles.errorText}>
+                              <Text style={globalStyles.errorText}>
                                 {formikProps.touched.country &&
                                   formikProps.errors.country}
                               </Text>
                             )}
                         </View>
 
-                        <View style={styles.buttonDiv}>
+                        <View style={globalStyles.authButtonDiv}>
                           <View style={styles.button}>
                             <FlatButton
                               title="Submit"
@@ -296,89 +271,12 @@ function AddAddress(props) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    height: '100%',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-  },
-  mainDiv: {
-    flex: 1,
-    height: '100%',
-    width: '90%',
-    maxWidth: 600,
-    justifyContent: 'center',
-    marginTop: 35,
-    marginBottom: 50,
-  },
-  companyName: {
-    textAlign: 'center',
-    fontSize: 40,
-    color: 'black',
-    fontWeight: 'bold',
-    marginTop: 10,
-  },
-
   card: {
     marginTop: -10,
   },
-  cardContent: {
-    marginHorizontal: 15,
-    marginVertical: 20,
-  },
-  cardHeading: {
-    fontSize: 20,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: 'gray',
-    padding: 12,
-    fontSize: 16,
-    paddingLeft: 45,
-    paddingRight: 40,
-    borderRadius: 4,
-  },
-  inputImage: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: 'gray',
-    marginTop: 10,
-  },
-  inputImageBox: {
-    backgroundColor: 'gray',
-    padding: 7,
-    marginRight: 10,
-  },
-  inputHeading: {
-    marginTop: 10,
-    fontSize: 17,
-  },
-  buttonDiv: {
-    flexDirection: 'column',
-    marginTop: 25,
-  },
+
   button: {},
   oppositeBut: {},
-  errorText: {
-    color: 'red',
-    marginTop: 5,
-    marginLeft: 5,
-    textTransform: 'capitalize',
-  },
-
-  goToAccountView: {
-    width: '100%',
-    marginTop: 15,
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-  goToAccountInnerView: {
-    width: '85%',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
 });
 
 export default AddAddress;

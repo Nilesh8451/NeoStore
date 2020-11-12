@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, YellowBox, Image} from 'react-native';
+import {View, Text, YellowBox, Image, StyleSheet} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import RadioForm from 'react-native-simple-radio-button';
 import {connect} from 'react-redux';
@@ -34,26 +34,12 @@ function SelectAddress(props) {
         flex: 1,
       }}>
       {radioProps.length == 0 ? (
-        <View
-          style={{
-            flex: 1,
-            marginVertical: 40,
-            paddingVertical: 30,
-            alignItems: 'center',
-          }}>
+        <View style={styles.noAddressView}>
           <Image
             source={require('../assets/images/emptycart.png')}
             style={{width: 70, height: 70, opacity: 0.7}}
           />
-          <Text
-            style={{
-              fontSize: 18,
-              marginTop: 16,
-              fontWeight: 'bold',
-              textTransform: 'capitalize',
-              opacity: 0.8,
-              marginBottom: 10,
-            }}>
+          <Text style={styles.noAddressTextStyle}>
             YOU HAVEN'T ADDED ANY ADDRESS YET
           </Text>
 
@@ -120,6 +106,23 @@ function SelectAddress(props) {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  noAddressView: {
+    flex: 1,
+    marginVertical: 40,
+    paddingVertical: 30,
+    alignItems: 'center',
+  },
+  noAddressTextStyle: {
+    fontSize: 18,
+    marginTop: 16,
+    fontWeight: 'bold',
+    textTransform: 'capitalize',
+    opacity: 0.8,
+    marginBottom: 10,
+  },
+});
 
 const mapStateToProps = (state) => {
   return {

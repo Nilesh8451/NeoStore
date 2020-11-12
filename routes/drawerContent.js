@@ -31,20 +31,9 @@ function DrawerContent({...props}) {
       }}>
       <View style={styles.userInfoSection}>
         {props.user?.token ? (
-          <View
-            style={{
-              paddingTop: 15,
-              flexDirection: 'column',
-              alignItems: 'center',
-            }}>
+          <View style={styles.userSection}>
             <Image
-              style={{
-                width: 65,
-                height: 65,
-                borderRadius: 40,
-                borderWidth: 1.5,
-                borderColor: 'white',
-              }}
+              style={styles.profileImageStyle}
               source={
                 props?.user.customer_details?.profile_img
                   ? {
@@ -58,13 +47,7 @@ function DrawerContent({...props}) {
               style={{
                 marginTop: 10,
               }}>
-              <Text
-                style={{
-                  fontWeight: 'bold',
-                  fontSize: 19,
-                  textAlign: 'center',
-                  color: 'white',
-                }}>
+              <Text style={styles.profileHolderInfo}>
                 {props.user.customer_details.first_name}{' '}
                 {props.user.customer_details.last_name}
               </Text>
@@ -96,10 +79,7 @@ function DrawerContent({...props}) {
                   color={'black'}
                   solid
                   size={18}
-                  style={{
-                    opacity: 0.6,
-                    marginLeft: 10,
-                  }}
+                  style={styles.iconStyle}
                 />
               )}
             />
@@ -113,10 +93,7 @@ function DrawerContent({...props}) {
                   color={'black'}
                   solid
                   size={18}
-                  style={{
-                    opacity: 0.6,
-                    marginLeft: 10,
-                  }}
+                  style={styles.iconStyle}
                 />
               )}
             />
@@ -131,10 +108,7 @@ function DrawerContent({...props}) {
                   color={'black'}
                   solid
                   size={18}
-                  style={{
-                    opacity: 0.6,
-                    marginLeft: 10,
-                  }}
+                  style={styles.iconStyle}
                 />
               )}
             />
@@ -149,10 +123,7 @@ function DrawerContent({...props}) {
                     color={'black'}
                     solid
                     size={18}
-                    style={{
-                      opacity: 0.6,
-                      marginLeft: 10,
-                    }}
+                    style={styles.iconStyle}
                   />
                 )}
               />
@@ -170,10 +141,7 @@ function DrawerContent({...props}) {
                       color={'black'}
                       solid
                       size={18}
-                      style={{
-                        opacity: 0.6,
-                        marginLeft: 10,
-                      }}
+                      style={styles.iconStyle}
                     />
                   )}
                 />
@@ -187,10 +155,7 @@ function DrawerContent({...props}) {
                       color={'black'}
                       solid
                       size={18}
-                      style={{
-                        opacity: 0.6,
-                        marginLeft: 10,
-                      }}
+                      style={styles.iconStyle}
                     />
                   )}
                 />
@@ -211,9 +176,7 @@ function DrawerContent({...props}) {
                 color={'black'}
                 solid
                 size={18}
-                style={{
-                  opacity: 0.6,
-                }}
+                style={styles.iconStyle}
               />
             )}
           />
@@ -229,6 +192,28 @@ const styles = StyleSheet.create({
     backgroundColor: '#2874F0',
   },
   bottomItem: {},
+  iconStyle: {
+    opacity: 0.6,
+    marginLeft: 10,
+  },
+  userSection: {
+    paddingTop: 15,
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  profileImageStyle: {
+    width: 65,
+    height: 65,
+    borderRadius: 40,
+    borderWidth: 1.5,
+    borderColor: 'white',
+  },
+  profileHolderInfo: {
+    fontWeight: 'bold',
+    fontSize: 19,
+    textAlign: 'center',
+    color: 'white',
+  },
 });
 
 const mapStateToProps = (state) => {

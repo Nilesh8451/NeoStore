@@ -357,17 +357,7 @@ function Home({
                           product_id: res.product_id,
                         });
                       }}>
-                      <View
-                        style={{
-                          width: '100%',
-                          paddingHorizontal: 20,
-                          paddingVertical: 10,
-                          flexDirection: 'row',
-                          justifyContent: 'space-between',
-                          alignItems: 'center',
-                          borderBottomWidth: 1,
-                          borderBottomColor: 'gray',
-                        }}>
+                      <View style={styles.searchResultMainDiv}>
                         <View
                           style={{
                             width: '80%',
@@ -506,6 +496,17 @@ const styles = StyleSheet.create({
   cardDetail: {
     width: '68%',
     marginLeft: 20,
+  },
+
+  searchResultMainDiv: {
+    width: '100%',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: 'gray',
   },
 });
 

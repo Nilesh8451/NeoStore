@@ -81,14 +81,7 @@ function MyOrders(props) {
                             }}>
                             ID: {item.product_details[0].order_id}
                           </Text>
-                          <View
-                            style={{
-                              marginTop: -15,
-                              width: '93%',
-                              flexDirection: 'row',
-                              justifyContent: 'flex-end',
-                              alignItems: 'center',
-                            }}>
+                          <View style={styles.orderCostView}>
                             <Text
                               style={{
                                 fontSize: 20,
@@ -119,20 +112,18 @@ function MyOrders(props) {
       </View>
     ) : (
       <View style={styles.container}>
-        <View
-          style={{
-            flex: 1,
-            backgroundColor: 'white',
-            marginHorizontal: 10,
-            marginVertical: 10,
-            paddingVertical: 30,
-            alignItems: 'center',
-          }}>
+        <View style={styles.noOrdersView}>
           <Image
             source={require('../assets/images/emptycart.png')}
             style={{width: 70, height: 70, opacity: 0.9}}
           />
-          <Text style={{fontSize: 18, marginTop: 10}}>
+          <Text
+            style={{
+              fontSize: 18,
+              marginTop: 10,
+              fontWeight: 'bold',
+              opacity: 0.8,
+            }}>
             You Haven't Placed Any Order yet
           </Text>
           <Text style={{fontSize: 16, marginTop: 10, textAlign: 'center'}}>
@@ -175,6 +166,21 @@ const styles = StyleSheet.create({
     width: 110,
     height: 36,
     flexDirection: 'row',
+    alignItems: 'center',
+  },
+  orderCostView: {
+    marginTop: -15,
+    width: '93%',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
+  noOrdersView: {
+    flex: 1,
+    backgroundColor: 'white',
+    marginHorizontal: 10,
+    marginVertical: 10,
+    paddingVertical: 30,
     alignItems: 'center',
   },
 });

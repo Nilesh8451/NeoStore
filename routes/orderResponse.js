@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text} from 'react-native';
+import {View, Text, StyleSheet} from 'react-native';
 import FlatButton from '../shared/button';
 
 function OrderResponse(props) {
@@ -12,14 +12,7 @@ function OrderResponse(props) {
         <Text style={{fontSize: 24, fontWeight: 'bold'}}>
           Thank you for your order
         </Text>
-        <Text
-          style={{
-            fontSize: 18,
-            marginHorizontal: 20,
-            textAlign: 'center',
-            marginTop: 20,
-            marginBottom: 20,
-          }}>
+        <Text style={styles.placedOrderInfo}>
           Your order has been placed and is being processed
         </Text>
 
@@ -37,5 +30,15 @@ function OrderResponse(props) {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  placedOrderInfo: {
+    fontSize: 18,
+    marginHorizontal: 20,
+    textAlign: 'center',
+    marginTop: 20,
+    marginBottom: 20,
+  },
+});
 
 export default OrderResponse;

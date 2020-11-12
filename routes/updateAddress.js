@@ -141,25 +141,12 @@ function UpdateAddress(props) {
       </View>
     ) : (
       <View style={{flex: 1, backgroundColor: 'white'}}>
-        <View
-          style={{
-            flex: 1,
-            marginVertical: 40,
-            paddingVertical: 30,
-            alignItems: 'center',
-          }}>
+        <View style={styles.noAddressAddedView}>
           <Image
             source={require('../assets/images/emptycart.png')}
             style={{width: 70, height: 70, opacity: 0.7}}
           />
-          <Text
-            style={{
-              fontSize: 18,
-              marginTop: 16,
-              fontWeight: 'bold',
-              textTransform: 'capitalize',
-              opacity: 0.8,
-            }}>
+          <Text style={styles.noAddressAddedText}>
             YOU HAVEN'T ADDED ANY ADDRESS YET
           </Text>
         </View>
@@ -182,6 +169,19 @@ const styles = StyleSheet.create({
     maxWidth: 500,
     backgroundColor: 'white',
     marginBottom: 20,
+  },
+  noAddressAddedView: {
+    flex: 1,
+    marginVertical: 40,
+    paddingVertical: 30,
+    alignItems: 'center',
+  },
+  noAddressAddedText: {
+    fontSize: 18,
+    marginTop: 16,
+    fontWeight: 'bold',
+    textTransform: 'capitalize',
+    opacity: 0.8,
   },
 });
 

@@ -245,13 +245,7 @@ function ViewProduct({navigation, route}) {
             style={{
               alignItems: 'center',
             }}>
-            <View
-              style={{
-                width: '100%',
-                flexDirection: 'row',
-                justifyContent: 'center',
-                flexWrap: 'wrap',
-              }}>
+            <View style={styles.chipContainer}>
               {categoryVal ? (
                 <CustomChip
                   text={categoryVal}
@@ -311,22 +305,9 @@ function ViewProduct({navigation, route}) {
                           imageStyle={{}}>
                           <View
                             style={{
-                              flex: 1,
-                              borderRadius: 6,
-                              flexDirection: 'row',
-                              alignItems: 'center',
+                              ...styles.productInfoWrapper,
                               justifyContent:
                                 index % 2 ? 'flex-start' : 'flex-end',
-                              backgroundColor: 'rgba( 0, 0, 0, 0.5 )',
-                              shadowColor: '#000',
-                              shadowOffset: {
-                                width: 0,
-                                height: 3,
-                              },
-                              shadowOpacity: 0.27,
-                              shadowRadius: 4.65,
-
-                              elevation: 3,
                             }}>
                             <View
                               style={{
@@ -381,16 +362,7 @@ function ViewProduct({navigation, route}) {
                 style={{opacity: 0.5}}
                 onPress={() => {}}
               />
-              <Text
-                style={{
-                  fontSize: 20,
-                  marginTop: 20,
-                  textTransform: 'uppercase',
-                  fontWeight: 'bold',
-                  opacity: 0.9,
-                }}>
-                No Product Found
-              </Text>
+              <Text style={styles.noProductFoundText}>No Product Found</Text>
             </View>
           )}
         </View>
@@ -402,23 +374,9 @@ function ViewProduct({navigation, route}) {
           setOpen={setOpenCategoryModal}
           title="Select Category"
           setClickedVal={() => handleChipClose('Category', '', colorCode)}>
-          <View
-            style={{
-              height: 140,
-              borderWidth: 1,
-              borderColor: 'gray',
-              marginTop: 10,
-              paddingVertical: 5,
-            }}>
+          <View style={styles.modalInnerContainer}>
             <ScrollView style={{flex: 1}}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  flexWrap: 'wrap',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  marginTop: 10,
-                }}>
+              <View style={styles.modalMainContent}>
                 {categories.map((category, index) => (
                   <TouchableOpacity
                     key={index}
@@ -509,23 +467,9 @@ function ViewProduct({navigation, route}) {
               setOpen={setOpenColorModal}
               title="Select Color"
               setClickedVal={() => handleChipClose('Color', categoryCode, '')}>
-              <View
-                style={{
-                  height: 140,
-                  borderWidth: 1,
-                  borderColor: 'gray',
-                  marginTop: 10,
-                  paddingVertical: 5,
-                }}>
+              <View style={styles.modalInnerContainer}>
                 <ScrollView style={{flex: 1}}>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      flexWrap: 'wrap',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      marginTop: 10,
-                    }}>
+                  <View style={styles.modalMainContent}>
                     {colors.map((color, index) => (
                       <TouchableOpacity
                         key={index}
@@ -598,21 +542,11 @@ function ViewProduct({navigation, route}) {
               setClickedCode={() => {}}>
               <View
                 style={{
+                  ...styles.modalMainContent,
                   height: 120,
-                  borderWidth: 1,
-                  borderColor: 'gray',
-                  marginTop: 10,
-                  paddingVertical: 5,
                 }}>
                 <ScrollView style={{flex: 1}}>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      flexWrap: 'wrap',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      marginTop: 10,
-                    }}>
+                  <View style={styles.modalMainContent}>
                     {costType.map((type) => (
                       <TouchableOpacity
                         key={type}
@@ -815,6 +749,50 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  noProductFoundText: {
+    fontSize: 20,
+    marginTop: 20,
+    textTransform: 'uppercase',
+    fontWeight: 'bold',
+    opacity: 0.9,
+  },
+
+  chipContainer: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    flexWrap: 'wrap',
+  },
+  productInfoWrapper: {
+    flex: 1,
+    borderRadius: 6,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba( 0, 0, 0, 0.5 )',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.27,
+    shadowRadius: 4.65,
+    elevation: 3,
+  },
+  modalInnerContainer: {
+    height: 140,
+    borderWidth: 1,
+    borderColor: 'gray',
+    marginTop: 10,
+    paddingVertical: 5,
+  },
+
+  modalMainContent: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 10,
   },
 });
 

@@ -18,6 +18,7 @@ import Toast from 'react-native-simple-toast';
 import axios from 'axios';
 import {baseUrl, register} from '../baseUrl';
 import LottieView from 'lottie-react-native';
+import {globalStyles} from '../shared/globalStyle';
 
 const loginSchema = yup.object({
   firstname: yup
@@ -75,7 +76,7 @@ function Registration({navigation}) {
   const [CPEyeStyle, setCPEyeStyle] = useState('eye-slash');
   const [loading, setLoading] = useState(false);
 
-  handlePasswordEyeClick = () => {
+  const handlePasswordEyeClick = () => {
     setSecurePassword(!securePassword);
     if (PEyeStyle === 'eye-slash') {
       setPEyeStyle('eye');
@@ -84,7 +85,7 @@ function Registration({navigation}) {
     }
   };
 
-  handleCPasswordEyeClick = () => {
+  const handleCPasswordEyeClick = () => {
     setSecureCPassword(!secureCPassword);
     if (CPEyeStyle === 'eye-slash') {
       setCPEyeStyle('eye');
@@ -129,7 +130,7 @@ function Registration({navigation}) {
         contentContainerStyle={{
           backgroundColor: loading ? 'transparent' : 'white',
         }}>
-        <View style={styles.container}>
+        <View style={globalStyles.authContainer}>
           <Formik
             initialValues={{
               firstname: '',
@@ -151,7 +152,7 @@ function Registration({navigation}) {
                     ...styles.mainDiv,
                     backgroundColor: loading ? '' : 'white',
                   }}>
-                  <Text style={styles.companyName}>
+                  <Text style={globalStyles.companyName}>
                     Neo<Text style={{color: '#2874F0'}}>STORE</Text>
                   </Text>
                   <View style={styles.card}>
@@ -162,16 +163,11 @@ function Registration({navigation}) {
                           color={'black'}
                           solid
                           size={18}
-                          style={{
-                            position: 'relative',
-                            left: 13,
-                            top: 35,
-                            opacity: 0.5,
-                          }}
+                          style={globalStyles.leftIconStyle}
                           onPress={() => {}}
                         />
                         <TextInput
-                          style={styles.input}
+                          style={globalStyles.input}
                           placeholder="First Name"
                           value={formikProps.values.firstname}
                           onChangeText={formikProps.handleChange('firstname')}
@@ -180,7 +176,7 @@ function Registration({navigation}) {
 
                         {formikProps.touched.firstname &&
                           formikProps.errors.firstname && (
-                            <Text style={styles.errorText}>
+                            <Text style={globalStyles.errorText}>
                               {formikProps.touched.firstname &&
                                 formikProps.errors.firstname}
                             </Text>
@@ -193,16 +189,11 @@ function Registration({navigation}) {
                           color={'black'}
                           solid
                           size={18}
-                          style={{
-                            position: 'relative',
-                            left: 13,
-                            top: 35,
-                            opacity: 0.5,
-                          }}
+                          style={globalStyles.leftIconStyle}
                           onPress={() => {}}
                         />
                         <TextInput
-                          style={styles.input}
+                          style={globalStyles.input}
                           placeholder="Last Name"
                           value={formikProps.values.lastname}
                           onChangeText={formikProps.handleChange('lastname')}
@@ -211,7 +202,7 @@ function Registration({navigation}) {
 
                         {formikProps.touched.lastname &&
                           formikProps.errors.lastname && (
-                            <Text style={styles.errorText}>
+                            <Text style={globalStyles.errorText}>
                               {formikProps.touched.lastname &&
                                 formikProps.errors.lastname}
                             </Text>
@@ -224,16 +215,11 @@ function Registration({navigation}) {
                           color={'black'}
                           solid
                           size={18}
-                          style={{
-                            position: 'relative',
-                            left: 13,
-                            top: 35,
-                            opacity: 0.5,
-                          }}
+                          style={globalStyles.leftIconStyle}
                           onPress={() => {}}
                         />
                         <TextInput
-                          style={styles.input}
+                          style={globalStyles.input}
                           placeholder="Email"
                           value={formikProps.values.email}
                           onChangeText={formikProps.handleChange('email')}
@@ -242,7 +228,7 @@ function Registration({navigation}) {
 
                         {formikProps.touched.email &&
                           formikProps.errors.email && (
-                            <Text style={styles.errorText}>
+                            <Text style={globalStyles.errorText}>
                               {formikProps.touched.email &&
                                 formikProps.errors.email}
                             </Text>
@@ -256,16 +242,11 @@ function Registration({navigation}) {
                             color={'black'}
                             solid
                             size={18}
-                            style={{
-                              position: 'relative',
-                              left: 13,
-                              top: 35,
-                              opacity: 0.5,
-                            }}
+                            style={globalStyles.leftIconStyle}
                             onPress={() => {}}
                           />
                           <TextInput
-                            style={styles.input}
+                            style={globalStyles.input}
                             placeholder="Password"
                             secureTextEntry={securePassword}
                             value={formikProps.values.password}
@@ -278,10 +259,8 @@ function Registration({navigation}) {
                             solid
                             size={18}
                             style={{
-                              position: 'absolute',
-                              right: 13,
+                              ...globalStyles.rightIconStyle,
                               paddingTop: 18,
-                              opacity: 0.6,
                             }}
                             onPress={() => handlePasswordEyeClick()}
                           />
@@ -289,7 +268,7 @@ function Registration({navigation}) {
 
                         {formikProps.touched.password &&
                           formikProps.errors.password && (
-                            <Text style={styles.errorText}>
+                            <Text style={globalStyles.errorText}>
                               {formikProps.touched.password &&
                                 formikProps.errors.password}
                             </Text>
@@ -303,16 +282,11 @@ function Registration({navigation}) {
                             color={'black'}
                             solid
                             size={18}
-                            style={{
-                              position: 'relative',
-                              left: 13,
-                              top: 35,
-                              opacity: 0.5,
-                            }}
+                            style={globalStyles.leftIconStyle}
                             onPress={() => {}}
                           />
                           <TextInput
-                            style={styles.input}
+                            style={globalStyles.input}
                             placeholder="Confirm Password"
                             secureTextEntry={secureCPassword}
                             value={formikProps.values.confirmPassowrd}
@@ -327,10 +301,8 @@ function Registration({navigation}) {
                             solid
                             size={18}
                             style={{
-                              position: 'absolute',
-                              right: 13,
+                              ...globalStyles.rightIconStyle,
                               paddingTop: 18,
-                              opacity: 0.6,
                             }}
                             onPress={() => handleCPasswordEyeClick()}
                           />
@@ -338,7 +310,7 @@ function Registration({navigation}) {
 
                         {formikProps.touched.confirmPassowrd &&
                           formikProps.errors.confirmPassowrd && (
-                            <Text style={styles.errorText}>
+                            <Text style={globalStyles.errorText}>
                               {formikProps.touched.confirmPassowrd &&
                                 formikProps.errors.confirmPassowrd}
                             </Text>
@@ -351,16 +323,11 @@ function Registration({navigation}) {
                           color={'black'}
                           solid
                           size={18}
-                          style={{
-                            position: 'relative',
-                            left: 13,
-                            top: 35,
-                            opacity: 0.5,
-                          }}
+                          style={globalStyles.leftIconStyle}
                           onPress={() => {}}
                         />
                         <TextInput
-                          style={styles.input}
+                          style={globalStyles.input}
                           keyboardType="number-pad"
                           placeholder="Phone Number"
                           value={formikProps.values.phoneno}
@@ -370,7 +337,7 @@ function Registration({navigation}) {
 
                         {formikProps.touched.phoneno &&
                           formikProps.errors.phoneno && (
-                            <Text style={styles.errorText}>
+                            <Text style={globalStyles.errorText}>
                               {formikProps.touched.phoneno &&
                                 formikProps.errors.phoneno}
                             </Text>
@@ -413,14 +380,14 @@ function Registration({navigation}) {
                         </View>
                         {formikProps.touched.gender &&
                           formikProps.errors.gender && (
-                            <Text style={styles.errorText}>
+                            <Text style={globalStyles.errorText}>
                               {formikProps.touched.gender &&
                                 formikProps.errors.gender}
                             </Text>
                           )}
                       </View>
 
-                      <View style={styles.buttonDiv}>
+                      <View style={globalStyles.authButtonDiv}>
                         <View style={styles.button}>
                           <FlatButton
                             title="Register"
@@ -456,7 +423,7 @@ function Registration({navigation}) {
               ) : (
                 <View
                   style={{
-                    ...styles.container,
+                    ...globalStyles.authContainer,
                     justifyContent: 'center',
                     alignItems: 'center',
                     paddingTop: 100,
@@ -481,12 +448,6 @@ function Registration({navigation}) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    height: '100%',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-  },
   mainDiv: {
     flex: 1,
     height: '100%',
@@ -497,13 +458,6 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     paddingVertical: 20,
   },
-  companyName: {
-    textAlign: 'center',
-    fontSize: 35,
-    color: 'black',
-    fontWeight: 'bold',
-    marginTop: 10,
-  },
 
   card: {
     marginTop: -10,
@@ -513,46 +467,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
     marginVertical: 20,
   },
-  cardHeading: {
-    fontSize: 20,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: 'gray',
-    padding: 12,
-    fontSize: 16,
-    paddingLeft: 40,
-    paddingRight: 40,
-    borderRadius: 4,
-  },
-  inputImage: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: 'gray',
-    marginTop: 10,
-  },
-  inputImageBox: {
-    backgroundColor: 'gray',
-    padding: 7,
-    marginRight: 10,
-  },
-  inputHeading: {
-    marginTop: 10,
-    fontSize: 17,
-  },
-  buttonDiv: {
-    flexDirection: 'column',
-    marginTop: 25,
-  },
+
   button: {},
   oppositeBut: {},
-  errorText: {
-    color: 'red',
-    marginTop: 5,
-    marginLeft: 5,
-    textTransform: 'capitalize',
-  },
 
   goToAccountView: {
     width: '100%',

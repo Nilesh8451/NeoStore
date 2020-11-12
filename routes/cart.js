@@ -76,12 +76,7 @@ function Cart(props) {
     <View style={{flex: 1}}>
       <ScrollView>
         <View style={styles.container}>
-          <View
-            style={{
-              flex: 1,
-              marginHorizontal: 10,
-              marginVertical: 10,
-            }}>
+          <View style={{flex: 1, marginHorizontal: 10, marginVertical: 10}}>
             {allProducts.map((item, index) => {
               var x = item.total;
               x = x.toString();
@@ -94,10 +89,7 @@ function Cart(props) {
               return (
                 <TouchableWithoutFeedback key={item._id} onPress={() => {}}>
                   <View
-                    style={{
-                      ...styles.productCardContent,
-                      marginBottom: 15,
-                    }}>
+                    style={{...styles.productCardContent, marginBottom: 15}}>
                     <View style={styles.productCard}>
                       <View style={{width: 100, height: 100}}>
                         <Image
@@ -108,11 +100,7 @@ function Cart(props) {
                         />
                       </View>
                       <View style={styles.cardDetail}>
-                        <Text
-                          style={{
-                            fontSize: 20,
-                            marginRight: 35,
-                          }}>
+                        <Text style={{fontSize: 20, marginRight: 35}}>
                           {item.product_name}
                         </Text>
                         <Text
@@ -127,11 +115,7 @@ function Cart(props) {
                             justifyContent: 'space-between',
                             alignItems: 'center',
                           }}>
-                          <Text
-                            style={{
-                              fontSize: 20,
-                              color: '#FE5555',
-                            }}>
+                          <Text style={{fontSize: 20, color: '#FE5555'}}>
                             ₹ {productTotalCost}
                           </Text>
                           <View style={styles.cartItemAction}>
@@ -148,11 +132,7 @@ function Cart(props) {
                               }}>
                               <View
                                 style={{
-                                  height: '100%',
-                                  padding: 4,
-                                  paddingHorizontal: 9,
-                                  justifyContent: 'center',
-                                  backgroundColor: '#F0F0F0',
+                                  ...styles.userActionOnCartItem,
                                   marginRight: 2,
                                   borderRightWidth: 1,
                                   borderRightColor: 'gray',
@@ -168,11 +148,7 @@ function Cart(props) {
                             </TouchableWithoutFeedback>
                             <View
                               style={{
-                                height: '100%',
-                                padding: 4,
-                                paddingHorizontal: 9,
-                                justifyContent: 'center',
-                                backgroundColor: '#F0F0F0',
+                                ...styles.userActionOnCartItem,
                                 marginRight: 2,
                                 borderRightWidth: 1,
                                 borderRightColor: 'gray',
@@ -192,14 +168,7 @@ function Cart(props) {
                                   );
                                 }
                               }}>
-                              <View
-                                style={{
-                                  height: '100%',
-                                  padding: 4,
-                                  paddingHorizontal: 9,
-                                  justifyContent: 'center',
-                                  backgroundColor: '#F0F0F0',
-                                }}>
+                              <View style={styles.userActionOnCartItem}>
                                 <FontAwesome5
                                   name={'plus'}
                                   color={'black'}
@@ -217,24 +186,13 @@ function Cart(props) {
                       onPress={() => {
                         handleDelete(item);
                       }}>
-                      <View
-                        style={{
-                          position: 'absolute',
-                          right: 20,
-                          top: 23,
-                          padding: 3,
-                          opacity: 0.9,
-                          backgroundColor: '#EE5233',
-                        }}>
+                      <View style={styles.deleteItemMainDiv}>
                         <FontAwesome5
                           name={'times'}
                           color={'black'}
                           solid
                           size={16}
-                          style={{
-                            opacity: 1,
-                            color: 'white',
-                          }}
+                          style={{opacity: 1, color: 'white'}}
                         />
                       </View>
                     </TouchableWithoutFeedback>
@@ -248,14 +206,7 @@ function Cart(props) {
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-            <View
-              style={{
-                width: '95%',
-                backgroundColor: 'white',
-                paddingVertical: 20,
-                marginBottom: 75,
-                paddingHorizontal: 20,
-              }}>
+            <View style={styles.subTotalDiv}>
               <View
                 style={{
                   flexDirection: 'row',
@@ -289,26 +240,8 @@ function Cart(props) {
           </View>
         </View>
       </ScrollView>
-      <View
-        style={{
-          position: 'absolute',
-          width: '100%',
-          bottom: 0,
-          height: 60,
-          backgroundColor: 'white',
-          borderTopColor: 'gray',
-          borderTopWidth: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-        <View
-          style={{
-            width: '90%',
-            maxWidth: 600,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}>
+      <View style={styles.cartBottomAction}>
+        <View style={styles.cartBottomInnerDiv}>
           <Text style={{fontSize: 18, fontWeight: 'bold'}}>₹ {totalPay}</Text>
           <View style={{width: '50%'}}>
             <FlatButton
@@ -329,45 +262,30 @@ function Cart(props) {
       </View>
     </View>
   ) : (
-    <View style={styles.container}>
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: 'white',
-          marginHorizontal: 10,
-          marginVertical: 10,
-          paddingVertical: 30,
-          alignItems: 'center',
-        }}>
-        <Image
-          source={require('../assets/images/emptycart.png')}
-          style={{width: 70, height: 70, opacity: 0.9}}
+    <View style={styles.emptyCartDiv}>
+      <Image
+        source={require('../assets/images/emptycart.png')}
+        style={{width: 70, height: 70, opacity: 0.9}}
+      />
+      <Text
+        style={{fontSize: 18, marginTop: 10, fontWeight: 'bold', opacity: 0.8}}>
+        YOUR CART IS CURRENTLY EMPTY
+      </Text>
+      <Text style={{fontSize: 16, marginTop: 10, textAlign: 'center'}}>
+        Before proceed to checkout you must add some products to you shopping
+        cart. You will find lots of intresting products on our products page
+      </Text>
+      <View style={{marginTop: 20}}>
+        <FlatButton
+          title="Go To Product Screen"
+          disabled={false}
+          color={'#2874F0'}
+          paddingHorizontal={20}
+          fontSize={14}
+          onPress={() => {
+            props.navigation.navigate('ViewProduct');
+          }}
         />
-        <Text
-          style={{
-            fontSize: 18,
-            marginTop: 10,
-            fontWeight: 'bold',
-            opacity: 0.8,
-          }}>
-          YOUR CART IS CURRENTLY EMPTY
-        </Text>
-        <Text style={{fontSize: 16, marginTop: 10, textAlign: 'center'}}>
-          Before proceed to checkout you must add some products to you shopping
-          cart. You will find lots of intresting products on our products page
-        </Text>
-        <View style={{marginTop: 20}}>
-          <FlatButton
-            title="Go To Product Screen"
-            disabled={false}
-            color={'#2874F0'}
-            paddingHorizontal={20}
-            fontSize={14}
-            onPress={() => {
-              props.navigation.navigate('ViewProduct');
-            }}
-          />
-        </View>
       </View>
     </View>
   );
@@ -377,7 +295,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-
   productCardContainer: {
     marginBottom: 20,
   },
@@ -404,6 +321,57 @@ const styles = StyleSheet.create({
     height: 36,
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  emptyCartDiv: {
+    flex: 1,
+    backgroundColor: 'white',
+    marginHorizontal: 10,
+    marginVertical: 10,
+    paddingVertical: 30,
+    alignItems: 'center',
+  },
+
+  cartBottomAction: {
+    position: 'absolute',
+    width: '100%',
+    bottom: 0,
+    height: 60,
+    backgroundColor: 'white',
+    borderTopColor: 'gray',
+    borderTopWidth: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  cartBottomInnerDiv: {
+    width: '90%',
+    maxWidth: 600,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  subTotalDiv: {
+    width: '95%',
+    backgroundColor: 'white',
+    paddingVertical: 20,
+    marginBottom: 75,
+    paddingHorizontal: 20,
+  },
+
+  deleteItemMainDiv: {
+    position: 'absolute',
+    right: 20,
+    top: 23,
+    padding: 3,
+    opacity: 0.9,
+    backgroundColor: '#EE5233',
+  },
+
+  userActionOnCartItem: {
+    height: '100%',
+    padding: 4,
+    paddingHorizontal: 9,
+    justifyContent: 'center',
+    backgroundColor: '#F0F0F0',
   },
 });
 

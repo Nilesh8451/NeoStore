@@ -108,24 +108,14 @@ function OrderSummary(props) {
                 borderBottomColor: 'gray',
                 borderBottomWidth: 1,
               }}>
-              <View
-                style={{
-                  width: '90%',
-                  paddingVertical: 15,
-                }}>
+              <View style={{width: '90%', paddingVertical: 15}}>
                 <Text
                   style={{fontSize: 18, fontWeight: 'bold', marginBottom: 10}}>
                   {props.user?.customer_details?.first_name}{' '}
                   {props.user?.customer_details?.last_name}
                 </Text>
                 {selectedAddress?.address && (
-                  <Text
-                    style={{
-                      fontSize: 18,
-                      fontWeight: 'bold',
-                      fontStyle: 'italic',
-                      opacity: 0.9,
-                    }}>
+                  <Text style={styles.selectedAddressView}>
                     {selectedAddress?.address}
                   </Text>
                 )}
@@ -268,6 +258,13 @@ const styles = StyleSheet.create({
   productCard: {
     width: '80%',
     maxWidth: 550,
+  },
+
+  selectedAddressView: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    fontStyle: 'italic',
+    opacity: 0.9,
   },
   footerAction: {
     position: 'absolute',
