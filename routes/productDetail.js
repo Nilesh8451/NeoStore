@@ -13,6 +13,7 @@ import {baseUrl, getProductById, rateProductByCustomer} from '../baseUrl';
 import {connect} from 'react-redux';
 import {addProductToCart} from '../redux/user/userAction';
 import SomethingWrong from './somethingWentWrong';
+import Share from 'react-native-share';
 
 /**
  * @author Nilesh Ganpat Chavan
@@ -30,6 +31,19 @@ function ProductDetail({user, addToCart, navigation, route}) {
   const [myProduct, setMYProduct] = useState({});
   const [productCost, setProductCost] = useState('');
   const [error, setError] = useState('');
+
+  const myCustomShare = async () => {
+    const shareOptions = {
+      message: `${myProduct?.product_name}  http://180.149.241.208:3023/#/productDetails/${product_id}`,
+    };
+
+    try {
+      const shareResponse = await Share.open(shareOptions);
+      console.log(shareResponse);
+    } catch (e) {
+      // console.log('Error ', e);
+    }
+  };
 
   useEffect(() => {
     axios
@@ -193,10 +207,12 @@ function ProductDetail({user, addToCart, navigation, route}) {
         }}>
         <View style={{width: '40%', height: '80%'}}>
           <FlatButton
-            title="Shop Now"
+            title="Share Now"
             disabled={!true}
             color={!true ? 'gray' : '#2874F0'}
-            onPress={() => {}}
+            onPress={() => {
+              myCustomShare();
+            }}
           />
         </View>
 

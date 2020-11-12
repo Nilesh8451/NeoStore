@@ -523,7 +523,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     paddingLeft: 40,
     paddingRight: 40,
-    borderRadius: 2,
+    borderRadius: 4,
   },
   inputImage: {
     flexDirection: 'row',

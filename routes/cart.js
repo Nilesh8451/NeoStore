@@ -343,7 +343,13 @@ function Cart(props) {
           source={require('../assets/images/emptycart.png')}
           style={{width: 70, height: 70, opacity: 0.9}}
         />
-        <Text style={{fontSize: 18, marginTop: 10}}>
+        <Text
+          style={{
+            fontSize: 18,
+            marginTop: 10,
+            fontWeight: 'bold',
+            opacity: 0.8,
+          }}>
           YOUR CART IS CURRENTLY EMPTY
         </Text>
         <Text style={{fontSize: 16, marginTop: 10, textAlign: 'center'}}>
