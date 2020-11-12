@@ -54,6 +54,7 @@ function ProductDetail({user, addToCart, navigation, route}) {
     axios
       .get(`${baseUrl}/${getProductById}/${product_id}`)
       .then((res) => {
+        // console.log('Get Product By Id Response ', res);
         productArray.push(res.data.product_details[0]);
         setMYProduct(res.data.product_details[0]);
         setSubImages([res.data.product_details[0].product_image]);
@@ -127,14 +128,48 @@ function ProductDetail({user, addToCart, navigation, route}) {
                   </View>
                 ))}
               </Swiper>
+
+              <TouchableWithoutFeedback
+                onPress={() => {
+                  myCustomShare();
+                }}
+                containerStyle={{
+                  ...styles.floatingButton,
+                  ...styles.shareProductContainer,
+                }}>
+                <FontAwesome5
+                  name={'share-alt'}
+                  color="white"
+                  solid
+                  size={24}
+                  style={{}}
+                />
+              </TouchableWithoutFeedback>
             </View>
             <View style={styles.productContent}>
               <Text style={{fontSize: 25}}>{myProduct?.product_name}</Text>
 
               <Text style={{fontSize: 18, marginTop: 10}}>
-                Product Category -{' '}
+                <Text style={{fontWeight: 'bold', opacity: 0.8}}>
+                  Product Category -{' '}
+                </Text>
                 <Text> {myProduct?.category_id?.category_name}</Text>
               </Text>
+
+              <Text style={{fontSize: 18, marginTop: 10}}>
+                <Text style={{fontWeight: 'bold', opacity: 0.8}}>
+                  Status -{' '}
+                </Text>
+                <Text
+                  style={{
+                    color: myProduct.product_stock == 0 ? 'red' : 'green',
+                    fontWeight: 'bold',
+                  }}>
+                  {' '}
+                  {myProduct.product_stock == 0 ? 'Out Of Stock' : 'In Stock'}
+                </Text>
+              </Text>
+
               <Text style={styles.productCostStyle}>₹ {productCost}</Text>
 
               <View
@@ -170,15 +205,22 @@ function ProductDetail({user, addToCart, navigation, route}) {
 
       <TouchableWithoutFeedback
         onPress={() => {
-          addToCart(myProduct);
-          navigation.pop();
+          if (myProduct.product_stock == 0) {
+            Toast.show('Product Out Of Stock');
+          } else {
+            addToCart(myProduct);
+            navigation.pop();
+          }
         }}
-        containerStyle={styles.shoppingCartContainer}>
+        containerStyle={{
+          ...styles.floatingButton,
+          ...styles.shoppingCartContainer,
+        }}>
         <FontAwesome5
           name={'shopping-cart'}
           color="white"
           solid
-          size={28}
+          size={25}
           style={{}}
         />
       </TouchableWithoutFeedback>
@@ -186,11 +228,17 @@ function ProductDetail({user, addToCart, navigation, route}) {
       <View style={styles.bottomActionView}>
         <View style={{width: '40%', height: '80%'}}>
           <FlatButton
-            title="Share Now"
+            title="Shop Now"
             disabled={!true}
             color={!true ? 'gray' : '#2874F0'}
             onPress={() => {
-              myCustomShare();
+              if (user?.token) {
+                navigation.navigate('BuyProduct', {
+                  product: myProduct,
+                });
+              } else {
+                Alert.alert('OOPS!', 'Please Login First To Buy The Product');
+              }
             }}
           />
         </View>
@@ -316,13 +364,12 @@ const styles = StyleSheet.create({
     marginTop: 10,
     color: '#EF5B3E',
   },
-  shoppingCartContainer: {
+
+  floatingButton: {
     position: 'absolute',
     backgroundColor: '#2874F0',
-    width: 60,
-    height: 60,
-    right: 15,
-    bottom: 82,
+    width: 50,
+    height: 50,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 30,
@@ -335,6 +382,18 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.43,
     shadowRadius: 9.51,
     elevation: 15,
+  },
+  shareProductContainer: {
+    width: 50,
+    height: 50,
+    right: 10,
+    bottom: 10,
+  },
+  shoppingCartContainer: {
+    width: 55,
+    height: 55,
+    right: 15,
+    bottom: 82,
   },
   bottomActionView: {
     paddingVertical: 8,

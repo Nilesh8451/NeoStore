@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, ScrollView, StyleSheet, Image} from 'react-native';
+import {View, Text, ScrollView, StyleSheet, Image, Alert} from 'react-native';
 import FlatButton from '../shared/button';
 import {connect} from 'react-redux';
 import {
@@ -70,6 +70,8 @@ function OrderSummary(props) {
       .catch((e) => {
         // console.log('Product To Checkout Error', e, e.response);
         setIsLoading(false);
+        Alert.alert('OOPS!', 'Something Went Wrong, Please Try Again Later!');
+        props.navigation.popToTop();
       });
   };
 

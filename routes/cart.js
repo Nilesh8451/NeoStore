@@ -159,7 +159,12 @@ function Cart(props) {
                             </View>
                             <TouchableWithoutFeedback
                               onPress={() => {
-                                if (item.quantity < 10) {
+                                if (item.product_stock == item.quantity) {
+                                  Toast.show(
+                                    `Product Out Of Stock`,
+                                    Toast.SHORT,
+                                  );
+                                } else if (item.quantity < 10) {
                                   props.incQuantity(item.product_id);
                                 } else {
                                   Toast.show(

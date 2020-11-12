@@ -10,6 +10,7 @@ import OrderSummary from '../routes/orderSummary';
 import SelectAddress from '../routes/selectAddress';
 import {connect} from 'react-redux';
 import OrderResponse from '../routes/orderResponse';
+import SingleOrderSummary from '../routes/singleOrderSummary';
 
 const Stack = createStackNavigator();
 
@@ -188,6 +189,20 @@ function HomeStack({user, cart, navigation}) {
         component={OrderSummary}
         options={{
           title: 'Order Summary',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#2874F0',
+            // borderBottomWidth: 0,
+            elevation: 0,
+          },
+        }}
+      />
+
+      <Stack.Screen
+        name="BuyProduct"
+        component={SingleOrderSummary}
+        options={{
+          title: 'Buy Product',
           headerTintColor: 'white',
           headerStyle: {
             backgroundColor: '#2874F0',
