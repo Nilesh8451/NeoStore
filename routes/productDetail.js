@@ -14,6 +14,7 @@ import {connect} from 'react-redux';
 import {addProductToCart} from '../redux/user/userAction';
 import SomethingWrong from './somethingWentWrong';
 import Share from 'react-native-share';
+import ImgToBase64 from 'react-native-image-base64';
 
 /**
  * @author Nilesh Ganpat Chavan
@@ -21,6 +22,9 @@ import Share from 'react-native-share';
  * @description productDetail screen is used to display full details of product which is selected by user.
  * @return jsx which is used to display information about product and also some buttons to perform add to cart, buy product and rate product.
  */
+
+let imageUrl = '';
+let base64Data = '';
 
 function ProductDetail({user, addToCart, navigation, route}) {
   const product_id = route.params.product_id;
@@ -35,6 +39,7 @@ function ProductDetail({user, addToCart, navigation, route}) {
   const myCustomShare = async () => {
     const shareOptions = {
       message: `${myProduct?.product_name}  http://180.149.241.208:3023/#/productDetails/${product_id}`,
+      url: base64Data,
     };
 
     try {
@@ -53,6 +58,8 @@ function ProductDetail({user, addToCart, navigation, route}) {
         setMYProduct(res.data.product_details[0]);
         setSubImages([res.data.product_details[0].product_image]);
 
+        imageUrl = res.data.product_details[0].product_image;
+
         res.data.product_details[0].subImages_id.product_subImages.map(
           (img) => {
             setSubImages((prevState) => {
@@ -69,6 +76,13 @@ function ProductDetail({user, addToCart, navigation, route}) {
         var res =
           otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + lastThree;
         setProductCost(res);
+
+        ImgToBase64.getBase64String(`http://180.149.241.208:3022/${imageUrl}`)
+          .then((base64String) => {
+            // console.log(base64String);
+            base64Data = 'data:image/jpeg;base64,' + base64String;
+          })
+          .catch((err) => console.log(err));
       })
       .catch((e) => {
         // console.log("Get Product By Product Id Error ",e, e.response);

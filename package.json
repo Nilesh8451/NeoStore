@@ -24,6 +24,7 @@
     "react-native": "0.62.2",
     "react-native-elements": "^3.0.0-alpha.1",
     "react-native-gesture-handler": "^1.8.0",
+    "react-native-image-base64": "^0.1.4",
     "react-native-image-picker": "^2.3.4",
     "react-native-paper": "^4.2.0",
     "react-native-ratings": "^7.3.0",
