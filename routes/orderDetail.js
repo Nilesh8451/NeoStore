@@ -1,6 +1,18 @@
-import React from 'react';
-import {View, Text, StyleSheet, ScrollView, Image} from 'react-native';
-import {baseUrl} from '../baseUrl';
+import React, {useEffect} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  Image,
+  PermissionsAndroid,
+  Alert,
+} from 'react-native';
+import {baseUrl, getInvoiceOfOrder} from '../baseUrl';
+import axios from 'axios';
+import {connect} from 'react-redux';
+import FlatButton from '../shared/button';
+import RNFetchBlob from 'rn-fetch-blob';
 
 /**
  * @author Nilesh Ganpat Chavan
@@ -20,6 +32,63 @@ function OrderDetail(props) {
   if (otherNumbers != '') lastThree = ',' + lastThree;
   var totalCartCost =
     otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + lastThree;
+
+  let orderPdf = '';
+
+  useEffect(() => {
+    if (props.route?.params?.order && props.user?.token) {
+      axios
+        .post(`${baseUrl}/${getInvoiceOfOrder}`, props.route.params.order, {
+          headers: {
+            Authorization: `bearer ${props.user.token}`,
+          },
+        })
+        .then((res) => {
+          // console.log(res);
+          orderPdf = res.data.receipt;
+        })
+        .catch((e) => {
+          // console.log(e);
+        });
+    }
+  }, [props?.user]);
+
+  const actualDownload = () => {
+    RNFetchBlob.config({
+      fileCache: true,
+      addAndroidDownloads: {
+        useDownloadManager: true,
+        notification: true,
+        mediaScannable: true,
+        title: `${orderPdf}`,
+      },
+    })
+      .fetch('GET', `${baseUrl}/${orderPdf}`, {})
+      .then((res) => {
+        // console.log('The file saved to ', res.path());
+      })
+      .catch((e) => {
+        // console.log(e, e.response);
+      });
+  };
+
+  const downloadFile = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        actualDownload();
+      } else {
+        Alert.alert(
+          'Permission Denied!',
+          'You need to give storage permission to download the file',
+        );
+      }
+    } catch (err) {
+      // console.warn(err);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -118,6 +187,17 @@ function OrderDetail(props) {
               </View>
             </View>
           </View>
+          <View style={{width: `70%`, backgroundColor: 'pink'}}>
+            <FlatButton
+              title="Download Invoice As PDF"
+              disabled={false}
+              fontSize={14}
+              paddingHorizontal={20}
+              paddingVertical={8}
+              color={'#2874F0'}
+              onPress={downloadFile}
+            />
+          </View>
         </View>
       </ScrollView>
 
@@ -204,4 +284,10 @@ const styles = StyleSheet.create({
   },
 });
 
-export default OrderDetail;
+const mapStateToProps = (state) => {
+  return {
+    user: state.userReducer.user,
+  };
+};
+
+export default connect(mapStateToProps)(OrderDetail);
