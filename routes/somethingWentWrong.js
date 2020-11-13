@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, Image} from 'react-native';
+import {View, Text, Image, ScrollView} from 'react-native';
 
 /**
  * @author Nilesh Ganpat Chavan
@@ -9,23 +9,27 @@ import {View, Text, Image} from 'react-native';
 
 function SomethingWrong() {
   return (
-    <View style={{flex: 1, alignItems: 'center', backgroundColor: 'white'}}>
-      {/* <Image
-        style={{width: 200, height: 200, marginTop: 60}}
-        source={require('../assets/images/somethingWrong.png')}
-      /> */}
-      <Image
-        style={{width: 250, height: 250, marginTop: 60}}
-        source={require('../assets/images/oops.jpg')}
-      />
-
-      <Text style={{fontSize: 22, fontWeight: 'bold'}}>
-        Something went wrong!
-      </Text>
-      <Text
-        style={{fontSize: 19, fontWeight: 'bold', opacity: 0.8, marginTop: 10}}>
-        Please come back later.
-      </Text>
+    <View style={{flex: 1, backgroundColor: 'white'}}>
+      <ScrollView>
+        <View style={{flex: 1, alignItems: 'center', paddingBottom: 50}}>
+          <Image
+            style={{width: 250, height: 250, marginTop: 60}}
+            source={require('../assets/images/oops.jpg')}
+          />
+          <Text style={{fontSize: 22, fontWeight: 'bold'}}>
+            Something went wrong!
+          </Text>
+          <Text
+            style={{
+              fontSize: 19,
+              fontWeight: 'bold',
+              opacity: 0.8,
+              marginTop: 10,
+            }}>
+            Please come back later.
+          </Text>
+        </View>
+      </ScrollView>
     </View>
   );
 }

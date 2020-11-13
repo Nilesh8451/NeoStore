@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, ScrollView, Image} from 'react-native';
 import FlatButton from '../shared/button';
 
 /**
@@ -14,26 +14,39 @@ function OrderResponse(props) {
     <View
       style={{
         flex: 1,
+        backgroundColor: 'white',
       }}>
-      <View style={{alignItems: 'center', width: '100%', marginTop: 70}}>
-        <Text style={{fontSize: 24, fontWeight: 'bold'}}>
-          Thank you for your order
-        </Text>
-        <Text style={styles.placedOrderInfo}>
-          Your order has been placed and is being processed
-        </Text>
+      <ScrollView>
+        <View
+          style={{
+            alignItems: 'center',
+            width: '100%',
+            marginTop: 70,
+            paddingBottom: 50,
+          }}>
+          <Image
+            style={{width: 100, height: 100}}
+            source={require('../assets/images/thankYou.png')}
+          />
+          <Text style={{fontSize: 24, fontWeight: 'bold', marginTop: 20}}>
+            Thank you for your order
+          </Text>
+          <Text style={styles.placedOrderInfo}>
+            Your order has been placed and is being processed
+          </Text>
 
-        <FlatButton
-          title="Back To DashBoard"
-          disabled={false}
-          color={'#2874F0'}
-          fontSize={14}
-          paddingHorizontal={20}
-          onPress={() => {
-            props.navigation.navigate('Home');
-          }}
-        />
-      </View>
+          <FlatButton
+            title="Back To DashBoard"
+            disabled={false}
+            color={'#2874F0'}
+            fontSize={14}
+            paddingHorizontal={20}
+            onPress={() => {
+              props.navigation.navigate('Home');
+            }}
+          />
+        </View>
+      </ScrollView>
     </View>
   );
 }
