@@ -176,7 +176,7 @@ function Home({
                 size={21}
                 style={{
                   position: 'absolute',
-                  left: 14,
+                  left: 16,
                   top: 22,
                   opacity: 0.5,
                   zIndex: 1,
@@ -441,9 +441,10 @@ const styles = StyleSheet.create({
     padding: 10,
     paddingHorizontal: 12,
     fontSize: 17,
-    paddingLeft: 43,
+    paddingLeft: 45,
     paddingRight: 40,
     borderRadius: 5,
+    marginHorizontal: 2,
   },
 
   sliderContainer: {

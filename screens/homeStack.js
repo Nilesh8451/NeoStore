@@ -31,12 +31,8 @@ function HomeStack({user, cart, navigation}) {
           title: 'NeoSTORE',
           headerStyle: {
             backgroundColor: '#2874F0',
-            // borderBottomWidth: 0,
             elevation: 0,
           },
-          // FF0000
-          // 2874F0
-          // headerTitleAlign: 'center',
           headerTintColor: 'white',
           headerLeft: () => (
             <FontAwesome5
@@ -56,7 +52,6 @@ function HomeStack({user, cart, navigation}) {
           headerRight: () => (
             <View
               style={{
-                // backgroundColor: 'pink',
                 paddingVertical: 10,
               }}>
               <FontAwesome5
@@ -65,10 +60,9 @@ function HomeStack({user, cart, navigation}) {
                 solid
                 size={20}
                 style={{
-                  marginRight: 25,
+                  marginRight: 30,
                 }}
                 onPress={() => {
-                  // logoutHandler();
                   navigation.navigate('Cart');
                 }}
               />
@@ -80,7 +74,6 @@ function HomeStack({user, cart, navigation}) {
                   top: -3,
                   backgroundColor: 'red',
                   padding: 1,
-                  //   width: 20,
                   borderRadius: 20,
                   borderWidth: 1,
                   borderColor: 'white',
@@ -108,7 +101,6 @@ function HomeStack({user, cart, navigation}) {
           headerTintColor: 'white',
           headerStyle: {
             backgroundColor: '#2874F0',
-            // borderBottomWidth: 0,
             elevation: 0,
           },
         }}
@@ -137,7 +129,6 @@ function HomeStack({user, cart, navigation}) {
           headerRight: () => (
             <View
               style={{
-                // backgroundColor: 'pink',
                 paddingVertical: 10,
               }}>
               <FontAwesome5
@@ -146,10 +137,9 @@ function HomeStack({user, cart, navigation}) {
                 solid
                 size={20}
                 style={{
-                  marginRight: 25,
+                  marginRight: 30,
                 }}
                 onPress={() => {
-                  // logoutHandler();
                   navigation.navigate('Cart');
                 }}
               />
@@ -160,7 +150,6 @@ function HomeStack({user, cart, navigation}) {
                   top: -3,
                   backgroundColor: 'red',
                   padding: 1,
-                  //   width: 20,
                   borderRadius: 20,
                   borderWidth: 1,
                   borderColor: 'white',
@@ -199,7 +188,6 @@ function HomeStack({user, cart, navigation}) {
           headerTintColor: 'white',
           headerStyle: {
             backgroundColor: '#2874F0',
-            // borderBottomWidth: 0,
             elevation: 0,
           },
         }}
@@ -213,7 +201,6 @@ function HomeStack({user, cart, navigation}) {
           headerTintColor: 'white',
           headerStyle: {
             backgroundColor: '#2874F0',
-            // borderBottomWidth: 0,
             elevation: 0,
           },
         }}
@@ -227,7 +214,6 @@ function HomeStack({user, cart, navigation}) {
           headerTintColor: 'white',
           headerStyle: {
             backgroundColor: '#2874F0',
-            // borderBottomWidth: 0,
             elevation: 0,
           },
         }}
@@ -240,12 +226,8 @@ function HomeStack({user, cart, navigation}) {
           title: 'NeoSTORE',
           headerStyle: {
             backgroundColor: '#2874F0',
-            // borderBottomWidth: 0,
             elevation: 0,
           },
-          // FF0000
-          // 2874F0
-          // headerTitleAlign: 'center',
           headerTintColor: 'white',
           headerLeft: () => (
             <FontAwesome5

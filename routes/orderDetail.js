@@ -187,7 +187,7 @@ function OrderDetail(props) {
               </View>
             </View>
           </View>
-          <View style={{width: `70%`, backgroundColor: 'pink'}}>
+          <View style={{width: `70%`}}>
             <FlatButton
               title="Download Invoice As PDF"
               disabled={false}

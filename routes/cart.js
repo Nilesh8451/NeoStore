@@ -107,7 +107,12 @@ function Cart(props) {
                         />
                       </View>
                       <View style={styles.cardDetail}>
-                        <Text style={{fontSize: 20, marginRight: 35}}>
+                        <Text
+                          style={{
+                            fontSize: 19,
+                            marginRight: 42,
+                            // backgroundColor: 'red',
+                          }}>
                           {item.product_name}
                         </Text>
                         <Text
@@ -122,7 +127,7 @@ function Cart(props) {
                             justifyContent: 'space-between',
                             alignItems: 'center',
                           }}>
-                          <Text style={{fontSize: 20, color: '#FE5555'}}>
+                          <Text style={{fontSize: 19, color: '#FE5555'}}>
                             ₹ {productTotalCost}
                           </Text>
                           <View style={styles.cartItemAction}>
@@ -371,7 +376,7 @@ const styles = StyleSheet.create({
 
   deleteItemMainDiv: {
     position: 'absolute',
-    right: 20,
+    right: 15,
     top: 23,
     padding: 3,
     opacity: 0.9,
@@ -381,7 +386,7 @@ const styles = StyleSheet.create({
   userActionOnCartItem: {
     height: '100%',
     padding: 4,
-    paddingHorizontal: 9,
+    paddingHorizontal: 8,
     justifyContent: 'center',
     backgroundColor: '#F0F0F0',
   },
