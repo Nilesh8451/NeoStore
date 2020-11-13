@@ -55,6 +55,13 @@ var radio_props = [
   {label: 'Female', value: 1},
 ];
 
+/**
+ * @author Nilesh Ganpat Chavan
+ * @param {object} props which contains user details.
+ * @description this screen shows customer details and  input fields to change the user details.
+ * @returns jsx which contains input fields and button to perform changes.
+ */
+
 function EditProfile(props) {
   const [imgData, setImgData] = useState({});
   const [loadingAPI, setLoadingAPI] = useState(false);

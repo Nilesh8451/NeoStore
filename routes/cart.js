@@ -24,6 +24,13 @@ let totalCartCost = 0;
 let gstTax = 0;
 let totalPay = 0;
 
+/**
+ * @author Nilesh Ganpat Chavan
+ * @param {object} props is a object contains redux state and some actions to perform changes in redux state.
+ * @description This screen contains user cart items along with some buttons to perform action on user cart such as increment & decrement product quantity, delete product from cart, buy all product of cart.
+ * @returns jsx which contain cards to show the cart item.
+ */
+
 function Cart(props) {
   const [allProducts, setAllProducts] = useState([]);
 

@@ -41,6 +41,13 @@ const placeSchema = yup.object({
     .matches(/^[a-zA-Z]+$/, 'Must contain only alphabets'),
 });
 
+/**
+ * @author Nilesh Ganpat Chavan
+ * @param {object} props contains address of user that he/she want to change.
+ * @description this screen contains different input fields where user can edit the address.
+ * @returns jsx which contains input fields and button to perform changes in database.
+ */
+
 function EditAddress(props) {
   const addressObj = props.route.params.address;
 

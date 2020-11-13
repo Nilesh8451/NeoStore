@@ -20,6 +20,13 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Toast from 'react-native-simple-toast';
 import axios from 'axios';
 
+/**
+ * @author Nilesh Ganpat Chavan
+ * @param {object} props contains user information and single product that user want to buy and some actions that user can use to perform some action on redux store.
+ * @description this screen will show product and button to select delivery address and increment, decrement to change quantity of product.
+ * @returns jsx
+ */
+
 function SingleOrderSummary(props) {
   const [selectedAddress, setSelectedAddress] = useState({});
   const [isLoading, setIsLoading] = useState(false);

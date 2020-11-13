@@ -23,7 +23,7 @@ const mySchema = yup.object({
 
 /**
  * @author Nilesh Ganpat Chavan
- * @param {navigation}: navigation is a object which is use to navigate between different screens
+ * @param {object} props contains navigation object which is use to navigate between different screens
  * @description forgotPassword screen is used if user of a application forgot his/her password, Using this screen user can enter  registered email so that app can send verification code to change password.
  * @return jsx which is used to get registered email as a input from user.
  */

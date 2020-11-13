@@ -7,6 +7,13 @@ import axios from 'axios';
 import {baseUrl, updateUserAddress} from '../baseUrl';
 import FlatButton from '../shared/button';
 
+/**
+ *
+ * @param {object} props contains user information and list of address added by user.
+ * @description this screen will show all address of user from which user will select address that he want product to be delivered.
+ * @returns jsx which contains list of address.
+ */
+
 function SelectAddress(props) {
   useEffect(() => {
     if (props.userAdd?.length > 0) {

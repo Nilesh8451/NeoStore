@@ -14,6 +14,13 @@ import SingleOrderSummary from '../routes/singleOrderSummary';
 
 const Stack = createStackNavigator();
 
+/**
+ * @author Nilesh Ganpat Chavan
+ * @param {object} props contains user information, cart products and navigation object used to navigate between different screen
+ * @description this function contains navigations screens of home stack.
+ * @returns jsx
+ */
+
 function HomeStack({user, cart, navigation}) {
   return (
     <Stack.Navigator>

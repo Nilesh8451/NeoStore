@@ -17,6 +17,13 @@ import LottieView from 'lottie-react-native';
 import {getCustomerAddress} from '../redux/user/userAction';
 import {connect} from 'react-redux';
 
+/**
+ * @author Nilesh Ganpat Chavan
+ * @param {object} props contains user address and function to get that user address.
+ * @description this screen shows list of address from which user can perform either edit or delete that address
+ * @returns jsx
+ */
+
 function UpdateAddress(props) {
   const [custAdd, setCustAdd] = useState([]);
   const handleDelete = (id) => {

@@ -1,15 +1,19 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createDrawerNavigator} from '@react-navigation/drawer';
-import {createStackNavigator} from '@react-navigation/stack';
 import LoginStack from './screens/loginStack';
 import RegisterStack from './screens/registrationStack';
 import HomeStack from './screens/homeStack';
 import ProfileStack from './screens/profileStack';
 import DrawerContent from './routes/drawerContent';
 
-const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
+
+/**
+ * @author Nilesh Ganpat Chavan
+ * @description this screen load first when app opens, this screen contains drawer navigation screens.Default HomeDrawer is opened first.
+ * @returns jsx.
+ */
 
 function App() {
   return (

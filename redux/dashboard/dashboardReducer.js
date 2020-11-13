@@ -14,6 +14,13 @@ const initialState = {
   error: null,
 };
 
+/**
+ * @author Nilesh Ganpat Chavan
+ * @param {state,action} : state is initialState of redux store and action contains information passed by action creater.
+ * @description this function performs changes in redux state.
+ * @returns function new state after performing changes in redux state.
+ */
+
 const dashBoardReducer = (state = initialState, action) => {
   switch (action.type) {
     case GETALLCATEGORIES_REQUEST:

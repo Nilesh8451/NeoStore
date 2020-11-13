@@ -2,6 +2,13 @@ import React from 'react';
 import {View, Text, StyleSheet, ScrollView, Image} from 'react-native';
 import {baseUrl} from '../baseUrl';
 
+/**
+ * @author Nilesh Ganpat Chavan
+ * @param {object} props which contains user order details of specific order on which user clicked on myOrder screen.
+ * @description this screen will show order detail information.
+ * @returns jsx
+ */
+
 function OrderDetail(props) {
   let subTotal = 0;
   const order = props.route.params.order;

@@ -41,6 +41,13 @@ const placeSchema = yup.object({
     .matches(/^[a-zA-Z]+$/, 'Must contain only alphabets'),
 });
 
+/**
+ * @author Nilesh Ganpat Chavan
+ * @param {object} props : object contain token of logged in user and navigation object
+ * @description This screen is use to add user new address which will be use for delivery of Products.
+ * @returns jsx which contain input fields to enter address details
+ */
+
 function AddAddress(props) {
   const token = props.route.params.token;
 

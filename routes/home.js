@@ -43,7 +43,7 @@ const debounce = (fn, delay) => {
 
 /**
  * @author Nilesh Ganpat Chavan
- * @param {LoadingData,categories,topRatedProduct,getAllCategories,getTopRatingProducts,restoreData,navigation}:  LoadingData is a boolean value which is true if application is making asynchronous call and false otherwise,categories is array contains all categories available in app, topRatedProduct which is array of object which contains top product of each category, getAllCategories and getTopRatingProducts is a function to make call to api to fetch data and store in redux store, restore data is a function which grab user information from async storage if user havan't perform signout last time he/she visited app. navigation is a object which is use to navigate between different screens.
+ * @param {LoadingData,categories,topRatedProduct,getAllCategories,getTopRatingProducts,restoreData,navigation} props  LoadingData is a boolean value which is true if application is making asynchronous call and false otherwise,categories is array contains all categories available in app, topRatedProduct which is array of object which contains top product of each category, getAllCategories and getTopRatingProducts is a function to make call to api to fetch data and store in redux store, restore data is a function which grab user information from async storage if user havan't perform signout last time he/she visited app. navigation is a object which is use to navigate between different screens.
  * @description home screen contains carousel of each category available in app and top rated products of each category.
  * @return jsx which is used to display content of products and some buttons to perform action.
  */

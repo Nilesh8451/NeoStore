@@ -18,7 +18,7 @@ import ImgToBase64 from 'react-native-image-base64';
 
 /**
  * @author Nilesh Ganpat Chavan
- * @param {navigation,route}:navigation is a object which is use to navigate between different screens, route is a object contains product_id property.
+ * @param {navigation, route, user, addToCart} props is a object contains navigation is a object which is use to navigate between different screens, route is a object contains product_id property.user contains logged in user details. addToCart is a redux action use to add product to cart.
  * @description productDetail screen is used to display full details of product which is selected by user.
  * @return jsx which is used to display information about product and also some buttons to perform add to cart, buy product and rate product.
  */

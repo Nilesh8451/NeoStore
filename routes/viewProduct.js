@@ -28,7 +28,7 @@ import SomethingWrong from './somethingWentWrong';
 
 /**
  * @author Nilesh Ganpat Chavan
- * @param {navigation,route}:  navigation is a object which is use to navigate between different screens. route is an object which contains category information if provided from home screen.
+ * @param {navigation,route} props  navigation is a object which is use to navigate between different screens. route is an object which contains category information if provided from home screen.
  * @description viewProduct screen shows all product which is availble in application. Also this screen contains various filtering options to filter products based on category,color, price, rating.
  * @return jsx which is used to display cards which contains product image, name, price, rating and some buttons to perform action.
  */

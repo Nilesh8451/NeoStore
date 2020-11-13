@@ -2,6 +2,13 @@ import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import FlatButton from '../shared/button';
 
+/**
+ * @author Nilesh Ganpat Chavan
+ * @param {object} props which contains navigation object used to navigate between different screens.
+ * @description this screen will be visible after user successfully placed order.
+ * @returns jsx
+ */
+
 function OrderResponse(props) {
   return (
     <View

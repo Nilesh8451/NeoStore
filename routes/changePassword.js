@@ -38,6 +38,13 @@ const mySchema = yup.object({
     .oneOf([yup.ref('password')], 'Must be same as password'),
 });
 
+/**
+ * @author Nilesh Ganpat Chavan
+ * @param {object} props which contain token of logged in user and navigation object.
+ * @description This screen is used by user to change his/her password from my account screen.
+ * @returns jsx which contains input field to get details from user to change password.
+ */
+
 function ChangePassword(props) {
   const [secureOldPassword, setSecureOldPassword] = useState(true);
   const [securePassword, setSecurePassword] = useState(true);

@@ -33,17 +33,37 @@ import {Alert} from 'react-native';
 import Toast from 'react-native-simple-toast';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+/**
+ * @author Nilesh Ganpat Chavan
+ * @param {user} user contains user information.
+ * @description this function stores user information on async storage.
+ */
+
 const storeData = async (user) => {
   try {
     await AsyncStorage.setItem('userInfo', JSON.stringify(user));
   } catch (e) {}
 };
 
+/**
+ * @author Nilesh Ganpat Chavan
+ * @param {user} user contains user information.
+ * @description this function stores user information in redux store.
+ * @returns function that accepts dispatch function to dispatch some action in redux.
+ */
+
 export const restoreLoginData = (user) => {
   return (dispatch) => {
     dispatch({type: RESTORE_LOGINDATA, data: user});
   };
 };
+
+/**
+ * @author Nilesh Ganpat Chavan
+ * @param {user} user contains user credential such as email and password.
+ * @description this function perform login functionality in app and store user information if successfully login is done else store error occured while performing login.
+ * @returns function that accepts dispatch function to dispatch some action in redux.
+ */
 
 export const login = (user) => {
   return (dispatch) => {
@@ -72,6 +92,11 @@ export const login = (user) => {
   };
 };
 
+/**
+ * @author Nilesh Ganpat Chavan
+ * @description this function remove user information stored in async storage and set cart data in async storage.
+ */
+
 const removeData = async () => {
   const data = [];
   try {
@@ -80,12 +105,25 @@ const removeData = async () => {
   } catch (e) {}
 };
 
+/**
+ * @author Nilesh Ganpat Chavan
+ * @description this function perform signout functionality.
+ * @returns object contains action type.
+ */
+
 export const signOut = () => {
   removeData();
   return {
     type: SIGNOUT,
   };
 };
+
+/**
+ * @author Nilesh Ganpat Chavan
+ * @param {cus_detail} cus_detail contains user updated information that user is trying to update.
+ * @description this function perform update on user information and dispatches an action in redux.
+ * @returns function that accepts dispatch function to dispatch some action in redux.
+ */
 
 export const updateUserInformation = (cus_detail) => {
   return async (dispatch) => {
@@ -101,6 +139,13 @@ export const updateUserInformation = (cus_detail) => {
     });
   };
 };
+
+/**
+ * @author Nilesh Ganpat Chavan
+ * @param {token} token contains user credentials to perform profile specific operation.
+ * @description this function fetches user address from database and dispatch action to store that address in store.
+ * @returns function that accepts dispatch function to dispatch some action in redux.
+ */
 
 export const getCustomerAddress = (token) => {
   return (dispatch) => {
@@ -124,17 +169,37 @@ export const getCustomerAddress = (token) => {
   };
 };
 
+/**
+ * @author Nilesh Ganpat Chavan
+ * @param {cartData} cartData contains cart items.
+ * @description this function stores cart items in async storage.
+ */
+
 const storeCartData = async (cartData) => {
   try {
     await AsyncStorage.setItem('userCartData', JSON.stringify(cartData));
   } catch (e) {}
 };
 
+/**
+ * @author Nilesh Ganpat Chavan
+ * @param {cartData} cartData contains cart items.
+ * @description this function stores cart data in redux store.
+ * @returns function that accepts dispatch function to dispatch some action in redux.
+ */
+
 export const restoreUserCartData = (cartData) => {
   return (dispatch) => {
     dispatch({type: RESTORE_USERCART_DATA, data: cartData});
   };
 };
+
+/**
+ * @author Nilesh Ganpat Chavan
+ * @param {token} token contains user credentials.
+ * @description this function fetches user cart data from database and dispatches specific action.
+ * @returns function that accepts dispatch function to dispatch some action in redux.
+ */
 
 export const getUserCartData = (token) => {
   return (dispatch) => {
@@ -168,11 +233,25 @@ export const getUserCartData = (token) => {
   };
 };
 
+/**
+ * @author Nilesh Ganpat Chavan
+ * @param {product} product object which contains product details.
+ * @description this function add product to cart.
+ * @returns object that contains action type and data that we have to store in redux state.
+ */
+
 export const addProductToCart = (product) => {
   product.total = product.product_cost;
   product.quantity = 1;
   return {type: ADD_PRODUCT_TO_CART, data: product};
 };
+
+/**
+ * @author Nilesh Ganpat Chavan
+ * @param {productId} productId is id of product.
+ * @description this function perform increment on quantity of product.
+ * @returns object that contains action type and product id on which we have to perform increment quantity.
+ */
 
 export const incrementQuantity = (productId) => {
   return {
@@ -181,12 +260,26 @@ export const incrementQuantity = (productId) => {
   };
 };
 
+/**
+ * @author Nilesh Ganpat Chavan
+ * @param {productId} productId is id of product.
+ * @description this function perform decrement on quantity of product.
+ * @returns object that contains action type and product id on which we have to perform decrement quantity.
+ */
+
 export const decrementQuantity = (productId) => {
   return {
     type: DECREMENT_QUANTITY,
     data: productId,
   };
 };
+
+/**
+ * @author Nilesh Ganpat Chavan
+ * @param {productId,token}:  productId is id of product and token is user credentials.
+ * @description this function perform deletion of product from cart.
+ * @returns function that accepts dispatch function to dispatch redux action.
+ */
 
 export const deleteProductFromCart = (productId, token) => {
   if (token === undefined) {
@@ -220,6 +313,13 @@ export const deleteProductFromCart = (productId, token) => {
   };
 };
 
+/**
+ * @author Nilesh Ganpat Chavan
+ * @param {cartData,token}: cartData is array of product, token is logged in user credentials.
+ * @description this function perform buying of product functionality.
+ * @returns function that accepts dispatch function to dispatch any actions.
+ */
+
 export const addProductToCartCheckout = (cartData, token) => {
   const cart = [...cartData];
 
@@ -245,9 +345,22 @@ export const addProductToCartCheckout = (cartData, token) => {
   };
 };
 
+/**
+ * @author Nilesh Ganpat Chavan
+ * @description this function empties the user cart after successful buying of product.
+ * @returns object that contains action type.
+ */
+
 export const buyProduct = () => {
   return {type: BUY_PRODUCT};
 };
+
+/**
+ * @author Nilesh Ganpat Chavan
+ * @param {token} token is logged in user information.
+ * @description this function fetches order details of specific order of user.
+ * @returns function that accepts dispatch function to dispatch any actions.
+ */
 
 export const getCustomerOrderDetails = (token) => {
   return (dispatch) => {

@@ -13,6 +13,12 @@ import {
 } from './types';
 import axios from 'axios';
 
+/**
+ * @author Nilesh Ganpat Chavan
+ * @description this function use to get all categories available in NeoSTORE.
+ * @returns function which accepts dispatch function to dispatch actions in redux store.
+ */
+
 export const getAllCategoriesData = () => {
   return (dispatch) => {
     dispatch({type: GETALLCATEGORIES_REQUEST});
@@ -31,6 +37,12 @@ export const getAllCategoriesData = () => {
       });
   };
 };
+
+/**
+ * @author Nilesh Ganpat Chavan
+ * @description this function use to get to rated product available in NeoSTORE.
+ * @returns function which accepts dispatch function to dispatch actions in redux store.
+ */
 
 export const getDefaultTopRatingProducts = () => {
   return (dispatch) => {

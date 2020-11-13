@@ -11,6 +11,13 @@ import LottieView from 'lottie-react-native';
 import {connect} from 'react-redux';
 import moment from 'moment';
 
+/**
+ * @author Nilesh Ganpat Chavan
+ * @param {object} props contains user order from redux state.
+ * @description this screen will show user orders in short information which contains order number total cost and transaction date.
+ * @returns jsx which contains user orders in card
+ */
+
 function MyOrders(props) {
   const [myOrder, setMyOrder] = useState([]);
   const [isLoading, setIsLoading] = useState(true);

@@ -15,6 +15,13 @@ let totalCartCost = 0;
 let gstTax = 0;
 let totalPay = 0;
 
+/**
+ * @author Nilesh Ganpat Chavan
+ * @param {object} props which contains cart and user data from redux store and some actions that we can perform on redux store.
+ * @description this screen contains order summary of cart data that user want to buy and option to select address for delivery.
+ * @returns jsx
+ */
+
 function OrderSummary(props) {
   const [selectedAddress, setSelectedAddress] = useState({});
   const [isLoading, setIsLoading] = useState(true);

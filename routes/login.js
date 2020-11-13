@@ -30,7 +30,7 @@ const loginSchema = yup.object({
 
 /**
  * @author Nilesh Ganpat Chavan
- * @param {user, isLoading,error,login,navigation}: user is a object coming from redux contains user information if user has logged in successfully. isLoading is a boolean value coming from redux which may be true if app is making api call and false if no api call is running for login operation. error is an object coming from redux contains status code and message if any error happens while performing signin. navigation is a object which is use to navigate between different screens.
+ * @param {user, isLoading,error,login,navigation} props user is a object coming from redux contains user information if user has logged in successfully. isLoading is a boolean value coming from redux which may be true if app is making api call and false if no api call is running for login operation. error is an object coming from redux contains status code and message if any error happens while performing signin. navigation is a object which is use to navigate between different screens.
  * @description login screen is use to take inputs to perform login into application for registered users.
  * @return jsx which is used to display content to perform authentication.
  */

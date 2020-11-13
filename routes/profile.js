@@ -13,6 +13,13 @@ import {baseUrl} from '../baseUrl';
 import {getCustomerOrderDetails} from '../redux/user/userAction';
 import SomethingWrong from './somethingWentWrong';
 
+/**
+ * @author Nilesh Ganpat Chavan
+ * @param {object} props which contains user information like personal info, order details etc.
+ * @description this screen contains my account screen which will contains all information about user and certains features to perform changes in  his/her profile.
+ * @returns jsx
+ */
+
 function Profile(props) {
   const userInfo = props.user;
 

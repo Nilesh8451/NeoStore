@@ -6,6 +6,13 @@ import {connect} from 'react-redux';
 import {signOut, addProductToCartCheckout} from '../redux/user/userAction';
 import {baseUrl} from '../baseUrl';
 
+/**
+ * @author Nilesh Ganpat Chavan
+ * @param {object} props which contains navigation object use to navigate between different screens.
+ * @description this screen contains drawer content which contains user information if logged in else will show Neostore logo along with different options to navigate between availble screens based on login status.
+ * @returns jsx
+ */
+
 function DrawerContent({...props}) {
   signoutHandler = () => {
     Alert.alert('Warning!', 'Are you sure you want to signout', [
