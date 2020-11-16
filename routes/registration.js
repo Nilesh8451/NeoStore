@@ -426,7 +426,7 @@ function Registration({navigation}) {
                     ...globalStyles.authContainer,
                     justifyContent: 'center',
                     alignItems: 'center',
-                    paddingTop: 100,
+                    paddingTop: 150,
                   }}>
                   <LottieView
                     source={require('../assets/json/loader2.json')}
