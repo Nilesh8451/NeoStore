@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -17,6 +17,7 @@ import {connect} from 'react-redux';
 import {login, getUserCartData} from '../redux/user/userAction';
 import {globalStyles} from '../shared/globalStyle';
 import LoadingScreen from './loadingScreen';
+import {useFocusEffect} from '@react-navigation/native';
 
 const loginSchema = yup.object({
   email: yup.string().required().email(),
@@ -45,6 +46,7 @@ function Login({
 }) {
   const [securePassword, setSecurePassword] = useState(true);
   const [eyeStyle, setEyeStyle] = useState('eye-slash');
+  const [reloadKey, setReloadKey] = useState(1);
 
   const handleEyeClick = () => {
     setSecurePassword(!securePassword);
@@ -55,13 +57,20 @@ function Login({
     }
   };
 
+  useFocusEffect(() => {
+    setReloadKey(2);
+    return () => {
+      setReloadKey(1);
+    };
+  }, []);
+
   if (user?.token) {
     getDataOfUserCart(user.token);
     navigation.navigate('HomeDrawer');
   }
 
   return isLoading === false ? (
-    <View style={{flex: 1, backgroundColor: 'white'}}>
+    <View key={reloadKey} style={{flex: 1, backgroundColor: 'white'}}>
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <ScrollView
           contentContainerStyle={{

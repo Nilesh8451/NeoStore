@@ -19,6 +19,7 @@ import axios from 'axios';
 import {baseUrl, register} from '../baseUrl';
 import LottieView from 'lottie-react-native';
 import {globalStyles} from '../shared/globalStyle';
+import {useFocusEffect} from '@react-navigation/native';
 
 const loginSchema = yup.object({
   firstname: yup
@@ -75,6 +76,7 @@ function Registration({navigation}) {
   const [PEyeStyle, setPEyeStyle] = useState('eye-slash');
   const [CPEyeStyle, setCPEyeStyle] = useState('eye-slash');
   const [loading, setLoading] = useState(false);
+  const [reloadKey, setReloadKey] = useState(1);
 
   const handlePasswordEyeClick = () => {
     setSecurePassword(!securePassword);
@@ -124,8 +126,17 @@ function Registration({navigation}) {
       });
   };
 
+  useFocusEffect(() => {
+    setReloadKey(2);
+    return () => {
+      setReloadKey(1);
+    };
+  }, []);
+
   return (
-    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+    <TouchableWithoutFeedback
+      key={reloadKey}
+      onPress={() => Keyboard.dismiss()}>
       <ScrollView
         contentContainerStyle={{
           backgroundColor: loading ? 'transparent' : 'white',

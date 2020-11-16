@@ -145,6 +145,18 @@ function ViewProduct({navigation, route}) {
     getColor();
   }, []);
 
+  useEffect(() => {
+    if (categoryCode) {
+      getFilteredProducts('Category', categoryCode, '');
+    }
+  }, [categoryCode]);
+
+  useEffect(() => {
+    if (colorCode) {
+      getFilteredProducts('Color', categoryCode, colorCode);
+    }
+  }, [colorCode]);
+
   const loadMore = () => {
     let start = batch * 5;
     let end = (batch + 1) * 5;
@@ -305,7 +317,7 @@ function ViewProduct({navigation, route}) {
           open={openCategoryModal}
           setOpen={setOpenCategoryModal}
           title="Select Category"
-          setClickedVal={() => handleChipClose('Category', '', colorCode)}>
+          setClickedVal={() => {}}>
           <View style={styles.modalInnerContainer}>
             <ScrollView style={{flex: 1}}>
               <View style={styles.modalMainContent}>
@@ -320,6 +332,10 @@ function ViewProduct({navigation, route}) {
                     onPress={() => {
                       setCategoryVal(category.category_name);
                       setCategoryCode(category.category_id);
+                      setColorVal('');
+                      setColorCode('');
+                      setCostVal('');
+                      setOpenCategoryModal(false);
                     }}>
                     <View
                       style={{
@@ -350,21 +366,6 @@ function ViewProduct({navigation, route}) {
                 ))}
               </View>
             </ScrollView>
-          </View>
-          <View style={{marginTop: 10}}>
-            <FlatButton
-              title="FILTER"
-              disabled={!categoryVal}
-              color={!categoryVal ? 'gray' : '#2874F0'}
-              onPress={() => {
-                setColorVal('');
-                setColorCode('');
-                setCostVal('');
-                setOpenCategoryModal(false);
-
-                getFilteredProducts('Category', categoryCode, '');
-              }}
-            />
           </View>
         </CustomModal>
 
@@ -398,7 +399,7 @@ function ViewProduct({navigation, route}) {
               open={openColorModal}
               setOpen={setOpenColorModal}
               title="Select Color"
-              setClickedVal={() => handleChipClose('Color', categoryCode, '')}>
+              setClickedVal={() => {}}>
               <View style={styles.modalInnerContainer}>
                 <ScrollView style={{flex: 1}}>
                   <View style={styles.modalMainContent}>
@@ -410,6 +411,8 @@ function ViewProduct({navigation, route}) {
                           setColorVal(color.color_code);
                           setColorCode(color.color_id);
                           setColorName(color.color_name);
+                          setOpenColorModal(false);
+                          // getFilteredProducts('Color', categoryCode, colorCode);
                         }}>
                         <View
                           style={{
@@ -427,18 +430,6 @@ function ViewProduct({navigation, route}) {
                     ))}
                   </View>
                 </ScrollView>
-              </View>
-              <View style={{marginTop: 10}}>
-                <FlatButton
-                  title="FILTER"
-                  disabled={!colorVal}
-                  color={!colorVal ? 'gray' : '#2874F0'}
-                  onPress={() => {
-                    setOpenColorModal(false);
-
-                    getFilteredProducts('Color', categoryCode, colorCode);
-                  }}
-                />
               </View>
             </CustomModal>
 
@@ -489,6 +480,41 @@ function ViewProduct({navigation, route}) {
                         }}
                         onPress={() => {
                           setCostVal(type);
+                          setOpenCostModal(false);
+                          axios
+                            .get(`${baseUrl}/${commonProducts}`, {
+                              params: {
+                                category_id: categoryCode,
+                                color_id: colorCode,
+                                sortBy: 'product_cost',
+                                sortIn:
+                                  type == 'Price: Low To High' ? false : true,
+                              },
+                            })
+                            .then((res) => {
+                              if (
+                                res.data.message != 'No Product is available'
+                              ) {
+                                setCommonPro(res.data);
+                                setDisplayProducts(
+                                  res.data.product_details.slice(0, 5),
+                                );
+                                setBatch(1);
+                                Toast.show(
+                                  `Filtered List With ${type}`,
+                                  Toast.SHORT,
+                                );
+                              } else {
+                                setCommonPro({});
+                                setDisplayProducts([]);
+                                setBatch(1);
+                              }
+                            })
+                            .catch((e) => {
+                              setCommonPro({});
+                              setDisplayProducts([]);
+                              setBatch(1);
+                            });
                         }}>
                         <View
                           style={{
@@ -513,50 +539,6 @@ function ViewProduct({navigation, route}) {
                     ))}
                   </View>
                 </ScrollView>
-              </View>
-              <View style={{marginTop: 10}}>
-                <FlatButton
-                  title="FILTER"
-                  disabled={!costVal}
-                  color={!costVal ? 'gray' : '#2874F0'}
-                  onPress={() => {
-                    setOpenCostModal(false);
-                    axios
-                      .get(`${baseUrl}/${commonProducts}`, {
-                        params: {
-                          category_id: categoryCode,
-                          color_id: colorCode,
-                          sortBy: 'product_cost',
-                          sortIn:
-                            costVal == 'Price: Low To High' ? false : true,
-                        },
-                      })
-                      .then((res) => {
-                        if (res.data.message != 'No Product is available') {
-                          setCommonPro(res.data);
-                          setDisplayProducts(
-                            res.data.product_details.slice(0, 5),
-                          );
-                          setBatch(1);
-                          Toast.show(
-                            `Filtered List With ${costVal}`,
-                            Toast.SHORT,
-                          );
-                        } else {
-                          setCommonPro({});
-                          setDisplayProducts([]);
-
-                          setBatch(1);
-                        }
-                      })
-                      .catch((e) => {
-                        setCommonPro({});
-                        setDisplayProducts([]);
-
-                        setBatch(1);
-                      });
-                  }}
-                />
               </View>
             </CustomModal>
 
