@@ -10,6 +10,7 @@ function LoadingScreen() {
         ...globalStyles.authContainer,
         justifyContent: 'center',
         alignItems: 'center',
+        backgroundColor: 'white',
       }}>
       <LottieView
         source={require('../assets/json/loader2.json')}
