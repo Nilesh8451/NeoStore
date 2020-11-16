@@ -3,6 +3,12 @@ import {View} from 'react-native';
 import LottieView from 'lottie-react-native';
 import {globalStyles} from '../shared/globalStyle';
 
+/**
+ * @author Nilesh Ganpat Chavan
+ * @description this screen show loader to the screen.
+ * @return jsx.
+ */
+
 function LoadingScreen() {
   return (
     <View

@@ -9,6 +9,13 @@ import {
 import {baseUrl} from '../baseUrl';
 import {Rating} from 'react-native-ratings';
 
+/**
+ * @author Nilesh Ganpat Chavan
+ * @param {*} props index is unique index for each card, productName is name of product, productId is unique id of that product, productImage is image of perticular product, productCost is cost of that product, product is object contains detail information of product, navigation is use to navigate between different screens, rating is boolean value to indicate to show rating of product or not.
+ * @description this screen give information of product to users.
+ * @return jsx.
+ */
+
 function Card({
   index,
   productName,
