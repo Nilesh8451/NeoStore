@@ -19,10 +19,10 @@ import {connect} from 'react-redux';
 import {updateUserInformation} from '../redux/user/userAction';
 import axios from 'axios';
 import {baseUrl, updateProfile} from '../baseUrl';
-import LottieView from 'lottie-react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import LoadingScreen from './loadingScreen';
 
 const profileSchema = yup.object({
   firstname: yup
@@ -116,22 +116,7 @@ function EditProfile(props) {
       }}>
       {loadingAPI ? (
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-          <View
-            style={{
-              ...styles.container,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <LottieView
-              source={require('../assets/json/loader2.json')}
-              autoPlay
-              style={{
-                width: 200,
-                height: 200,
-              }}
-              loop
-            />
-          </View>
+          <LoadingScreen />
         </View>
       ) : (
         <ScrollView>

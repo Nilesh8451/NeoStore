@@ -13,9 +13,9 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Toast from 'react-native-simple-toast';
 import axios from 'axios';
 import {baseUrl, deleteUserAddress, getUserAddress} from '../baseUrl';
-import LottieView from 'lottie-react-native';
 import {getCustomerAddress} from '../redux/user/userAction';
 import {connect} from 'react-redux';
+import LoadingScreen from './loadingScreen';
 
 /**
  * @author Nilesh Ganpat Chavan
@@ -63,24 +63,7 @@ function UpdateAddress(props) {
   }, [props.isLoading]);
 
   if (props.isLoading) {
-    return (
-      <View
-        style={{
-          ...styles.container,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-        <LottieView
-          source={require('../assets/json/loader2.json')}
-          autoPlay
-          style={{
-            width: 200,
-            height: 200,
-          }}
-          loop
-        />
-      </View>
-    );
+    return <LoadingScreen />;
   } else {
     return custAdd.length > 0 ? (
       <View

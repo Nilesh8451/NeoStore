@@ -9,7 +9,7 @@ import {
 } from '../redux/user/userAction';
 import axios from 'axios';
 import {baseUrl, productToCartCheckout} from '../baseUrl';
-import LottieView from 'lottie-react-native';
+import LoadingScreen from './loadingScreen';
 
 let totalCartCost = 0;
 let gstTax = 0;
@@ -83,25 +83,7 @@ function OrderSummary(props) {
   };
 
   if (isLoading) {
-    return (
-      <View
-        style={{
-          ...styles.container,
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-        <LottieView
-          source={require('../assets/json/loader2.json')}
-          autoPlay
-          style={{
-            width: 200,
-            height: 200,
-          }}
-          loop
-        />
-      </View>
-    );
+    return <LoadingScreen />;
   } else {
     return (
       <View style={{flex: 1, backgroundColor: 'white'}}>

@@ -19,6 +19,7 @@ import {
 } from '../redux/user/userAction';
 import {baseUrl} from '../baseUrl';
 import SomethingWrong from './somethingWentWrong';
+import SubTotal from './subTotal';
 
 let totalCartCost = 0;
 let gstTax = 0;
@@ -218,43 +219,11 @@ function Cart(props) {
               );
             })}
           </View>
-          <View
-            style={{
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <View style={styles.subTotalDiv}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  marginBottom: 3,
-                }}>
-                <Text style={{fontSize: 18}}>Sub Total</Text>
-                <Text style={{fontSize: 16}}>₹ {totalCartCost}</Text>
-              </View>
-
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  marginBottom: 15,
-                  marginTop: 10,
-                }}>
-                <Text style={{fontSize: 18}}>GST(5%)</Text>
-                <Text style={{fontSize: 16}}>₹ {gstTax}</Text>
-              </View>
-              <View
-                style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                <Text style={{fontSize: 18, fontWeight: 'bold'}}>
-                  Total Amount
-                </Text>
-                <Text style={{fontSize: 16, fontWeight: 'bold'}}>
-                  ₹ {totalPay}
-                </Text>
-              </View>
-            </View>
-          </View>
+          <SubTotal
+            totalPrice={totalCartCost}
+            gst={gstTax}
+            payAmount={totalPay}
+          />
         </View>
       </ScrollView>
       <View style={styles.cartBottomAction}>
@@ -365,13 +334,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-  },
-  subTotalDiv: {
-    width: '95%',
-    backgroundColor: 'white',
-    paddingVertical: 20,
-    marginBottom: 75,
-    paddingHorizontal: 20,
   },
 
   deleteItemMainDiv: {

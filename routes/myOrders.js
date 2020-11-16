@@ -7,9 +7,9 @@ import {
   Image,
   ScrollView,
 } from 'react-native';
-import LottieView from 'lottie-react-native';
 import {connect} from 'react-redux';
 import moment from 'moment';
+import LoadingScreen from './loadingScreen';
 
 /**
  * @author Nilesh Ganpat Chavan
@@ -30,24 +30,7 @@ function MyOrders(props) {
   }, [props.order]);
 
   if (isLoading) {
-    return (
-      <View
-        style={{
-          ...styles.container,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-        <LottieView
-          source={require('../assets/json/loader2.json')}
-          autoPlay
-          style={{
-            width: 200,
-            height: 200,
-          }}
-          loop
-        />
-      </View>
-    );
+    return <LoadingScreen />;
   } else {
     return myOrder.length > 0 ? (
       <View style={{flex: 1}}>

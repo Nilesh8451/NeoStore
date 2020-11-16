@@ -15,10 +15,11 @@ import {
   getCustomerOrderDetails,
 } from '../redux/user/userAction';
 import {baseUrl, productToCartCheckout} from '../baseUrl';
-import LottieView from 'lottie-react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Toast from 'react-native-simple-toast';
 import axios from 'axios';
+import LoadingScreen from './loadingScreen';
+import SubTotal from './subTotal';
 
 /**
  * @author Nilesh Ganpat Chavan
@@ -98,25 +99,7 @@ function SingleOrderSummary(props) {
   };
 
   if (isLoading) {
-    return (
-      <View
-        style={{
-          ...styles.container,
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-        <LottieView
-          source={require('../assets/json/loader2.json')}
-          autoPlay
-          style={{
-            width: 200,
-            height: 200,
-          }}
-          loop
-        />
-      </View>
-    );
+    return <LoadingScreen />;
   } else {
     return (
       <View style={{flex: 1, backgroundColor: 'white'}}>
@@ -310,46 +293,11 @@ function SingleOrderSummary(props) {
               </View>
             </View>
 
-            <View
-              style={{
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <View style={styles.subTotalDiv}>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    marginBottom: 3,
-                  }}>
-                  <Text style={{fontSize: 18}}>Sub Total</Text>
-                  <Text style={{fontSize: 16}}>₹ {totalPrice}</Text>
-                </View>
-
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    marginBottom: 15,
-                    marginTop: 10,
-                  }}>
-                  <Text style={{fontSize: 18}}>GST(5%)</Text>
-                  <Text style={{fontSize: 16}}>₹ {gst}</Text>
-                </View>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                  }}>
-                  <Text style={{fontSize: 18, fontWeight: 'bold'}}>
-                    Total Amount
-                  </Text>
-                  <Text style={{fontSize: 16, fontWeight: 'bold'}}>
-                    ₹ {grandTotal}
-                  </Text>
-                </View>
-              </View>
-            </View>
+            <SubTotal
+              totalPrice={totalPrice}
+              gst={gst}
+              payAmount={grandTotal}
+            />
           </View>
         </ScrollView>
         <View style={styles.footerAction}>
@@ -430,13 +378,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 9,
     justifyContent: 'center',
     backgroundColor: '#F0F0F0',
-  },
-  subTotalDiv: {
-    width: '95%',
-    backgroundColor: 'white',
-    paddingVertical: 20,
-    marginBottom: 75,
-    paddingHorizontal: 20,
   },
 });
 

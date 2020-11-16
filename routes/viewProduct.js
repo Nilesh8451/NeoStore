@@ -5,16 +5,13 @@ import {
   StyleSheet,
   ScrollView,
   TouchableWithoutFeedback,
-  ImageBackground,
   TouchableOpacity,
   FlatList,
   ActivityIndicator,
 } from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import LottieView from 'lottie-react-native';
 import CustomModal from '../shared/modal';
 import FlatButton from '../shared/button';
-import {Rating} from 'react-native-ratings';
 import Toast from 'react-native-simple-toast';
 import axios from 'axios';
 import {
@@ -25,6 +22,8 @@ import {
 } from '../baseUrl';
 import CustomChip from '../shared/chip';
 import SomethingWrong from './somethingWentWrong';
+import LoadingScreen from './loadingScreen';
+import Card from '../shared/card';
 
 /**
  * @author Nilesh Ganpat Chavan
@@ -214,24 +213,7 @@ function ViewProduct({navigation, route}) {
   }
 
   if (isLoading) {
-    return (
-      <View
-        style={{
-          ...styles.container,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-        <LottieView
-          source={require('../assets/json/loader2.json')}
-          autoPlay
-          style={{
-            width: 200,
-            height: 200,
-          }}
-          loop
-        />
-      </View>
-    );
+    return <LoadingScreen />;
   } else {
     return (
       <View style={styles.container}>
@@ -283,67 +265,17 @@ function ViewProduct({navigation, route}) {
                   lastThree;
 
                 return (
-                  <TouchableWithoutFeedback
-                    onPress={() => {
-                      navigation.navigate('ProductDetail', {
-                        product_name: item.product_name,
-                        product_id: item.product_id,
-                      });
-                    }}>
-                    <View style={styles.productCardContent}>
-                      <View style={styles.productCard}>
-                        <ImageBackground
-                          source={{
-                            uri: `${baseUrl}/${item.product_image}`,
-                          }}
-                          style={{
-                            width: '100%',
-                            height: '100%',
-                          }}
-                          resizeMode={'cover'}
-                          borderRadius={6}
-                          imageStyle={{}}>
-                          <View
-                            style={{
-                              ...styles.productInfoWrapper,
-                              justifyContent:
-                                index % 2 ? 'flex-start' : 'flex-end',
-                            }}>
-                            <View
-                              style={{
-                                marginLeft: index % 2 && 30,
-                                marginRight: index % 2 ? 0 : 30,
-                                alignItems:
-                                  index % 2 ? 'flex-start' : 'flex-end',
-                                maxWidth: 200,
-                              }}>
-                              <Text
-                                style={{fontSize: 21, color: 'white'}}
-                                numberOfLines={1}>
-                                {item.product_name}
-                              </Text>
-                              <Rating
-                                ratingCount={5}
-                                startingValue={parseFloat(item.product_rating)}
-                                imageSize={20}
-                                type={'custom'}
-                                readonly={true}
-                                tintColor="rgba( 0, 0, 0, 0.7 )"
-                              />
-                              <Text
-                                style={{
-                                  fontSize: 16,
-                                  color: 'white',
-                                  fontWeight: 'bold',
-                                }}>
-                                ₹ {res}
-                              </Text>
-                            </View>
-                          </View>
-                        </ImageBackground>
-                      </View>
-                    </View>
-                  </TouchableWithoutFeedback>
+                  <Card
+                    key={index}
+                    navigation={navigation}
+                    index={index}
+                    productId={item.product_id}
+                    productName={item.product_name}
+                    productCost={res}
+                    productImage={item.product_image}
+                    product={item}
+                    rating={true}
+                  />
                 );
               }}
             />
@@ -720,14 +652,6 @@ function ViewProduct({navigation, route}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  productCardContent: {
-    paddingHorizontal: 16,
-    marginVertical: 10,
-  },
-  productCard: {
-    flexDirection: 'row',
-    height: 120,
   },
   bottomActionView: {
     height: 60,

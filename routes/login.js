@@ -15,8 +15,8 @@ import * as yup from 'yup';
 import FlatButton from '../shared/button';
 import {connect} from 'react-redux';
 import {login, getUserCartData} from '../redux/user/userAction';
-import LottieView from 'lottie-react-native';
 import {globalStyles} from '../shared/globalStyle';
+import LoadingScreen from './loadingScreen';
 
 const loginSchema = yup.object({
   email: yup.string().required().email(),
@@ -225,22 +225,7 @@ function Login({
       </TouchableWithoutFeedback>
     </View>
   ) : (
-    <View
-      style={{
-        ...globalStyles.authContainer,
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}>
-      <LottieView
-        source={require('../assets/json/loader2.json')}
-        autoPlay
-        style={{
-          width: 200,
-          height: 200,
-        }}
-        loop
-      />
-    </View>
+    <LoadingScreen />
   );
 }
 

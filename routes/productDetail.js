@@ -8,13 +8,13 @@ import Toast from 'react-native-simple-toast';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 import axios from 'axios';
-import LottieView from 'lottie-react-native';
 import {baseUrl, getProductById, rateProductByCustomer} from '../baseUrl';
 import {connect} from 'react-redux';
 import {addProductToCart} from '../redux/user/userAction';
 import SomethingWrong from './somethingWentWrong';
 import Share from 'react-native-share';
 import ImgToBase64 from 'react-native-image-base64';
+import LoadingScreen from './loadingScreen';
 
 /**
  * @author Nilesh Ganpat Chavan
@@ -258,6 +258,9 @@ function ProductDetail({user, addToCart, navigation, route}) {
               }}
               defaultRating={3}
               size={30}
+              starStyle={{
+                backgroundColor: '#F2F2F2',
+              }}
             />
           </View>
           <View style={{marginTop: 10}}>
@@ -309,22 +312,7 @@ function ProductDetail({user, addToCart, navigation, route}) {
       </View>
     </View>
   ) : (
-    <View
-      style={{
-        ...styles.container,
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}>
-      <LottieView
-        source={require('../assets/json/loader2.json')}
-        autoPlay
-        style={{
-          width: 200,
-          height: 200,
-        }}
-        loop
-      />
-    </View>
+    <LoadingScreen />
   );
 }
 

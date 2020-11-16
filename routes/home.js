@@ -7,13 +7,11 @@ import {
   ScrollView,
   Image,
   TouchableOpacity,
-  ImageBackground,
   TouchableWithoutFeedback,
   ActivityIndicator,
   Keyboard,
 } from 'react-native';
 import Swiper from 'react-native-swiper';
-import LottieView from 'lottie-react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {
   getAllCategoriesData,
@@ -28,6 +26,8 @@ import {connect} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import SomethingWrong from './somethingWentWrong';
+import LoadingScreen from './loadingScreen';
+import Card from '../shared/card';
 
 let timerId;
 
@@ -129,31 +129,14 @@ function Home({
       });
   };
 
-  const debounceSearch = debounce(handleSearch, 1000);
+  const debounceSearch = debounce(handleSearch, 400);
 
   if (error) {
     return <SomethingWrong />;
   }
 
   if (LoadingData) {
-    return (
-      <View
-        style={{
-          ...styles.container,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-        <LottieView
-          source={require('../assets/json/loader2.json')}
-          autoPlay
-          style={{
-            width: 200,
-            height: 200,
-          }}
-          loop
-        />
-      </View>
-    );
+    return <LoadingScreen />;
   } else {
     return (
       <View style={styles.container}>
@@ -249,78 +232,18 @@ function Home({
                       lastThree;
 
                     return (
-                      <TouchableWithoutFeedback
+                      <Card
                         key={index}
-                        onPress={() => {
-                          navigation.navigate('ProductDetail', {
-                            product_name:
-                              product.DashboardProducts[0].product_name,
-                            product_id: product.DashboardProducts[0].product_id,
-                          });
-                        }}>
-                        <View style={styles.productCardContent}>
-                          <View style={styles.productCard}>
-                            <ImageBackground
-                              source={{
-                                uri: `http://180.149.241.208:3022/${product.DashboardProducts[0].product_image}`,
-                              }}
-                              style={{
-                                width: '100%',
-                                height: '100%',
-                              }}
-                              resizeMode={'cover'}
-                              borderRadius={6}
-                              imageStyle={{}}>
-                              <View
-                                style={{
-                                  flex: 1,
-                                  borderRadius: 6,
-                                  flexDirection: 'row',
-                                  alignItems: 'center',
-                                  justifyContent:
-                                    index % 2 ? 'flex-start' : 'flex-end',
-                                  backgroundColor: 'rgba( 0, 0, 0, 0.5 )',
-                                  shadowColor: '#000',
-                                  shadowOffset: {
-                                    width: 0,
-                                    height: 3,
-                                  },
-                                  shadowOpacity: 0.27,
-                                  shadowRadius: 4.65,
-
-                                  elevation: 3,
-                                }}>
-                                <View
-                                  style={{
-                                    marginLeft: index % 2 && 30,
-                                    marginRight: index % 2 ? 0 : 30,
-                                    alignItems:
-                                      index % 2 ? 'flex-start' : 'flex-end',
-                                    maxWidth: 200,
-                                  }}>
-                                  <Text
-                                    style={{
-                                      fontSize: 20,
-                                      color: 'white',
-                                      fontWeight: 'bold',
-                                    }}
-                                    numberOfLines={1}>
-                                    {product.DashboardProducts[0].product_name}
-                                  </Text>
-                                  <Text
-                                    style={{
-                                      fontSize: 17,
-                                      color: 'white',
-                                      fontWeight: 'bold',
-                                    }}>
-                                    ₹ {res}
-                                  </Text>
-                                </View>
-                              </View>
-                            </ImageBackground>
-                          </View>
-                        </View>
-                      </TouchableWithoutFeedback>
+                        index={index}
+                        productName={product.DashboardProducts[0].product_name}
+                        productCost={res}
+                        productId={product.DashboardProducts[0].product_id}
+                        navigation={navigation}
+                        productImage={
+                          product.DashboardProducts[0].product_image
+                        }
+                        product={product}
+                      />
                     );
                   })}
                 </View>
@@ -481,22 +404,6 @@ const styles = StyleSheet.create({
   },
   productCardContainer: {
     marginBottom: 20,
-  },
-  productCardContent: {
-    paddingHorizontal: 16,
-    marginVertical: 10,
-  },
-  productCard: {
-    flexDirection: 'row',
-    height: 120,
-  },
-  cardImage: {
-    width: '100%',
-    height: '100%',
-  },
-  cardDetail: {
-    width: '68%',
-    marginLeft: 20,
   },
 
   searchResultMainDiv: {

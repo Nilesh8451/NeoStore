@@ -16,8 +16,8 @@ import FlatButton from '../shared/button';
 import Toast from 'react-native-simple-toast';
 import axios from 'axios';
 import {baseUrl, changePassword} from '../baseUrl';
-import LottieView from 'lottie-react-native';
 import {globalStyles} from '../shared/globalStyle';
+import LoadingScreen from './loadingScreen';
 
 const mySchema = yup.object({
   oldPassword: yup
@@ -112,24 +112,7 @@ function ChangePassword(props) {
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
       {loadingAPI ? (
-        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-          <View
-            style={{
-              ...globalStyles.authContainer,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <LottieView
-              source={require('../assets/json/loader2.json')}
-              autoPlay
-              style={{
-                width: 200,
-                height: 200,
-              }}
-              loop
-            />
-          </View>
-        </View>
+        <LoadingScreen />
       ) : (
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
           <ScrollView>
