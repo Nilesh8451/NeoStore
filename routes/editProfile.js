@@ -152,7 +152,7 @@ function EditProfile(props) {
                     ? {
                         uri: `${baseUrl}/${props.user.customer_details.profile_img}`,
                       }
-                    : require('../assets/images/userDefaultImage.png')
+                    : require('../assets/images/userDefaultImage.jpg')
                 }
               />
             )}
