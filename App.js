@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import LoginStack from './screens/loginStack';
@@ -6,6 +6,7 @@ import RegisterStack from './screens/registrationStack';
 import HomeStack from './screens/homeStack';
 import ProfileStack from './screens/profileStack';
 import DrawerContent from './routes/drawerContent';
+import SplashScreen from 'react-native-splash-screen';
 
 const Drawer = createDrawerNavigator();
 
@@ -16,6 +17,10 @@ const Drawer = createDrawerNavigator();
  */
 
 function App() {
+  useEffect(() => {
+    SplashScreen.hide();
+  }, []);
+
   return (
     <NavigationContainer>
       <Drawer.Navigator
