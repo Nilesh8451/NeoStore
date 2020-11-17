@@ -88,7 +88,6 @@ function SetPassword(props) {
         setLoading(false);
         Toast.show(res.data.message, Toast.LONG);
         props.navigation.popToTop();
-        action.resetForm();
       })
       .catch((e) => {
         Alert.alert('OPPS!', e.response.data.message);
